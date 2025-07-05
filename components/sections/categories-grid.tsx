@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import type { Category } from "@/types"
 
 interface CategoriesGridProps {
@@ -9,6 +10,9 @@ interface CategoriesGridProps {
 }
 
 export default function CategoriesGrid({ categories }: CategoriesGridProps) {
+  const params = useParams()
+  const lang = params.lang as string
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {categories.map((category, index) => (
@@ -23,7 +27,7 @@ export default function CategoriesGrid({ categories }: CategoriesGridProps) {
           }}
         >
           <Link
-            href={`/zh/categories/${category.slug}`}
+            href={`/${lang}/categories/${category.slug}`}
             className="group block glass rounded-2xl p-8 hover:scale-105 transition-all duration-300"
           >
             <div className="text-center">

@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useCallback, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import { Search, X, Clock, TrendingUp, Loader2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useDebounce } from "@/hooks/use-debounce"
@@ -41,6 +42,8 @@ export default function OptimizedSearchBar({
   const [selectedIndex, setSelectedIndex] = useState(-1)
 
   const router = useRouter()
+  const params = useParams()
+  const lang = params.lang as string
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -104,12 +107,12 @@ export default function OptimizedSearchBar({
         localStorage.setItem("recentSearches", JSON.stringify(updatedRecent))
 
         // 导航到搜索结果页
-        router.push(`/search?q=${encodeURIComponent(searchTerm)}`)
+        router.push(`/${lang}/search?q=${encodeURIComponent(searchTerm)}`)
         setIsOpen(false)
         inputRef.current?.blur()
       }
     },
-    [recentSearches, router],
+    [recentSearches, router, lang],
   )
 
   // 键盘导航

@@ -5,9 +5,24 @@ import { Sparkles, TrendingUp, ArrowRight, Play } from "lucide-react"
 import OptimizedSearchBar from "@/components/ui/optimized-search-bar"
 import { containerVariants, itemVariants } from "@/lib/animations"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 
 export default function HeroSection() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const router = useRouter()
+  const params = useParams()
+  const lang = params.lang as string
+
+  // 处理热门搜索点击
+  const handleHotSearchClick = (term: string) => {
+    router.push(`/${lang}/search?q=${encodeURIComponent(term)}`)
+  }
+
+  // 处理探索工具按钮点击
+  const handleExploreClick = () => {
+    router.push(`/${lang}/tools`)
+  }
 
   return (
     <motion.section
@@ -76,7 +91,8 @@ export default function HeroSection() {
                 key={term}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-3 py-1 rounded-full bg-neutral-800/50 hover:bg-neutral-700/50 text-neutral-300 hover:text-white transition-all duration-300 border border-neutral-700/50 hover:border-neutral-600/50"
+                onClick={() => handleHotSearchClick(term)}
+                className="px-3 py-1 rounded-full bg-neutral-800/50 hover:bg-neutral-700/50 text-neutral-300 hover:text-white transition-all duration-300 border border-neutral-700/50 hover:border-neutral-600/50 cursor-pointer"
               >
                 {term}
               </motion.button>
@@ -89,7 +105,8 @@ export default function HeroSection() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25"
+            onClick={handleExploreClick}
+            className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 cursor-pointer"
           >
             开始探索
             <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -99,7 +116,7 @@ export default function HeroSection() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsVideoPlaying(true)}
-            className="group inline-flex items-center px-8 py-4 bg-transparent border-2 border-neutral-700/50 hover:border-neutral-600/50 text-neutral-300 hover:text-white font-semibold rounded-2xl transition-all duration-300 hover:bg-neutral-800/20"
+            className="group inline-flex items-center px-8 py-4 bg-transparent border-2 border-neutral-700/50 hover:border-neutral-600/50 text-neutral-300 hover:text-white font-semibold rounded-2xl transition-all duration-300 hover:bg-neutral-800/20 cursor-pointer"
           >
             <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
             观看介绍

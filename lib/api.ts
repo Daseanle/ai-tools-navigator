@@ -4,7 +4,19 @@ import type { Database } from "./database.types"
 /* -------------------------------------------------------------
    0. 运行环境检测
 ----------------------------------------------------------------*/
-const SUPABASE_READY = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const SUPABASE_READY = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && 
+                         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
+                         process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('https://') &&
+                         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.startsWith('eyJ'))
+
+// 调试日志（仅在开发环境）
+if (process.env.NODE_ENV === 'development') {
+  console.log('🔍 Supabase环境检查:', {
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ 已设置' : '❌ 未设置',
+    key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? '✅ 已设置' : '❌ 未设置',
+    ready: SUPABASE_READY ? '✅ 就绪' : '❌ 未就绪'
+  })
+}
 
 /* -------------------------------------------------------------
    1. 本地/预览假数据（只需少量条目即可渲染页面）

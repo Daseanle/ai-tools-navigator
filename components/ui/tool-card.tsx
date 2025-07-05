@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Heart, ExternalLink, Star, Users } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useParams } from "next/navigation"
 import type { Tool } from "@/types"
 import { useFavorites } from "@/hooks/use-favorites"
 
@@ -17,6 +18,8 @@ export default function ToolCard({ tool, className = "" }: ToolCardProps) {
   const [imageError, setImageError] = useState(false)
   const { isFavorite, toggleFavorite } = useFavorites()
   const favorite = isFavorite(tool.id)
+  const params = useParams()
+  const lang = params.lang as string
 
   return (
     <motion.div
@@ -39,7 +42,7 @@ export default function ToolCard({ tool, className = "" }: ToolCardProps) {
         <Heart className={`w-4 h-4 ${favorite ? "fill-current" : ""}`} />
       </button>
 
-      <Link href={`/tools/${tool.slug}`} className="flex flex-col h-full">
+      <Link href={`/${lang}/tools/${tool.slug}`} className="flex flex-col h-full">
         {/* Logo */}
         <div className="flex items-center space-x-4 mb-4">
           <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">

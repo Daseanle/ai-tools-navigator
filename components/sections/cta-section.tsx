@@ -2,8 +2,22 @@
 
 import { motion } from "framer-motion"
 import { ArrowRight, Sparkles } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 
 export default function CTASection() {
+  const router = useRouter()
+  const params = useParams()
+  const lang = params.lang as string
+
+  const handleRegisterClick = () => {
+    // 这里可以打开注册模态框或跳转到注册页面
+    console.log("注册功能待实现")
+  }
+
+  const handleExploreClick = () => {
+    router.push(`/${lang}/tools`)
+  }
   return (
     <motion.section
       initial={{ opacity: 0, y: 40 }}
@@ -60,11 +74,17 @@ export default function CTASection() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <button className="group inline-flex items-center px-8 py-4 bg-white text-blue-700 font-semibold rounded-2xl hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform">
+            <button 
+              onClick={handleRegisterClick}
+              className="group inline-flex items-center px-8 py-4 bg-white text-blue-700 font-semibold rounded-2xl hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform cursor-pointer"
+            >
               免费注册
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white/30 text-white font-semibold rounded-2xl hover:bg-white/10 hover:border-white/50 transition-all duration-300">
+            <button 
+              onClick={handleExploreClick}
+              className="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white/30 text-white font-semibold rounded-2xl hover:bg-white/10 hover:border-white/50 transition-all duration-300 cursor-pointer"
+            >
               探索工具
             </button>
           </motion.div>
