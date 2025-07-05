@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { ExternalLink, Star, Users, Calendar, Heart, Share2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import type { Tool } from "@/types"
 import { useFavorites } from "@/hooks/use-favorites"
 
@@ -16,6 +17,8 @@ export default function ToolDetail({ tool }: ToolDetailProps) {
   const [imageError, setImageError] = useState(false)
   const { isFavorite, toggleFavorite } = useFavorites()
   const favorite = isFavorite(tool.id)
+  const params = useParams()
+  const lang = params.lang as string || 'zh'
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -116,7 +119,7 @@ export default function ToolDetail({ tool }: ToolDetailProps) {
               <div className="flex flex-wrap items-center gap-2 mb-6">
                 {tool.category && (
                   <Link
-                    href={`/zh/categories/${tool.category.slug}`}
+                    href={`/${lang}/categories/${tool.category.slug}`}
                     className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm font-medium hover:bg-blue-500/30 transition-colors"
                   >
                     {tool.category.name}
