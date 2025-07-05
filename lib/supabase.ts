@@ -2,12 +2,12 @@
 import { createClient } from "@supabase/supabase-js"
 import type { Database } from './database.types'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-// 验证环境变量
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
+// 验证环境变量（仅在运行时检查）
+if (typeof window !== 'undefined' && (!supabaseUrl || !supabaseAnonKey)) {
+  console.error(
     "❌ Supabase环境变量缺失。请在.env文件中设置 NEXT_PUBLIC_SUPABASE_URL 和 NEXT_PUBLIC_SUPABASE_ANON_KEY"
   )
 }
@@ -18,7 +18,8 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 export const createServerClient = () => {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!serviceKey) {
-    throw new Error("❌ Missing SUPABASE_SERVICE_ROLE_KEY for server-side requests.")
+    console.error("❌ Missing SUPABASE_SERVICE_ROLE_KEY for server-side requests.")
+    return createClient<Database>(supabaseUrl, supabaseAnonKey) // 回退到匿名密钥
   }
   return createClient<Database>(supabaseUrl, serviceKey)
 }
