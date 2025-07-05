@@ -12,16 +12,20 @@ if (typeof window !== 'undefined' && (!supabaseUrl || !supabaseAnonKey)) {
   )
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+// 确保URL是有效的
+const validUrl = supabaseUrl || 'https://placeholder.supabase.co'
+const validKey = supabaseAnonKey || 'placeholder-key'
+
+export const supabase = createClient<Database>(validUrl, validKey)
 
 // Helper for server-side service-role access
 export const createServerClient = () => {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!serviceKey) {
     console.error("❌ Missing SUPABASE_SERVICE_ROLE_KEY for server-side requests.")
-    return createClient<Database>(supabaseUrl, supabaseAnonKey) // 回退到匿名密钥
+    return createClient<Database>(validUrl, validKey) // 回退到匿名密钥
   }
-  return createClient<Database>(supabaseUrl, serviceKey)
+  return createClient<Database>(validUrl, serviceKey)
 }
 
 // 认证相关工具函数
