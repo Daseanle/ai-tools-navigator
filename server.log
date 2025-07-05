@@ -1,0 +1,316 @@
+
+> my-v0-project@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.16
+  - Local:        http://localhost:3000
+  - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 1641ms
+ ✓ Compiled /middleware in 184ms (73 modules)
+ ○ Compiling /[lang] ...
+ ✓ Compiled /[lang] in 2.2s (1907 modules)
+ ✓ Compiled in 161ms (889 modules)
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+ GET /zh 200 in 3506ms
+ ✓ Compiled /[lang]/search in 487ms (1911 modules)
+ ✓ Compiled /_not-found in 238ms (1912 modules)
+ GET /icons/icon-144x144.png 404 in 289ms
+Error searching tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ ✓ Compiled /[lang]/categories in 327ms (1919 modules)
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+ GET /icons/icon-144x144.png 404 in 46ms
+ ✓ Compiled in 248ms (897 modules)
+ ○ Compiling /[lang]/tools ...
+ ✓ Compiled /[lang]/tools in 619ms (1931 modules)
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ GET /icons/icon-144x144.png 404 in 32ms
+ GET /icons/icon-144x144.png 404 in 21ms
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ GET /icons/icon-144x144.png 404 in 33ms
+ ✓ Compiled in 436ms (901 modules)
+ ✓ Compiled in 262ms (901 modules)
+ ✓ Compiled in 640ms (901 modules)
+ ✓ Compiled in 405ms (901 modules)
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ GET /zh 200 in 1516ms
+ GET /icons/icon-144x144.png 404 in 51ms
+ ✓ Compiled in 376ms (901 modules)
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ GET /icons/icon-144x144.png 404 in 38ms
+ ✓ Compiled in 601ms (901 modules)
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+ ✓ Compiled in 394ms (901 modules)
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ ✓ Compiled in 426ms (901 modules)
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ ✓ Compiled in 369ms (901 modules)
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+ ✓ Compiled in 388ms (901 modules)
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+ ✓ Compiled in 918ms (901 modules)
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ ✓ Compiled in 203ms (901 modules)
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+ ✓ Compiled in 364ms (901 modules)
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ GET /zh 200 in 545ms
+ GET /icons/icon-144x144.png 404 in 35ms
+ ✓ Compiled in 428ms (901 modules)
+Error fetching hot tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+Error fetching categories: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column categories.is_active does not exist'
+}
+Error fetching featured tools: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column tools.is_active does not exist'
+}
+ GET /icons/icon-144x144.png 404 in 28ms
