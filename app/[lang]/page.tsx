@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import type { Metadata } from "next"
 import dynamic from "next/dynamic"
-import { getHotTools, getCategories, getFeaturedTools } from "@/lib/api"
+import { getHotTools, getCategories, getFeaturedTools, getStats } from "@/lib/api"
 import HeroSection from "@/components/sections/hero-section"
 import HomePageSkeleton from "@/components/skeletons/home-page-skeleton"
 import { generateMetadata as generatePageMetadata } from "@/lib/metadata"
@@ -51,15 +51,17 @@ export async function generateStaticParams() {
 
 export default async function HomePage({ params }: PageProps) {
   // 并行获取数据以优化性能
-  const [hotTools, categories, featuredTools] = await Promise.allSettled([
-    getHotTools(8),
+  const [hotTools, categories, featuredTools, stats] = await Promise.allSettled([
+    getHotTools(24),
     getCategories(),
-    getFeaturedTools(6),
+    getFeaturedTools(12),
+    getStats(),
   ])
 
   const hotToolsData = hotTools.status === "fulfilled" ? hotTools.value : []
   const categoriesData = categories.status === "fulfilled" ? categories.value : []
   const featuredToolsData = featuredTools.status === "fulfilled" ? featuredTools.value : []
+  const statsData = stats.status === "fulfilled" ? stats.value : { toolsCount: 0, categoriesCount: 0 }
 
   return (
     <Suspense fallback={<HomePageSkeleton />}>
@@ -69,7 +71,7 @@ export default async function HomePage({ params }: PageProps) {
           <HeroSection />
 
           {/* Stats Section - 展示网站统计 */}
-          <StatsSection />
+          <StatsSection toolsCount={statsData.toolsCount} categoriesCount={statsData.categoriesCount} />
 
           {/* Category Section - 分类导航 */}
           <CategorySection categories={categoriesData} />

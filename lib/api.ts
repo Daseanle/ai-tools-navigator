@@ -202,6 +202,62 @@ export async function getFeaturedTools(limit = 6): Promise<Tool[]> {
   }
 }
 
+export async function getAllTools(limit = 100): Promise<Tool[]> {
+  if (!SUPABASE_READY) return mockTools.slice(0, Math.min(limit, mockTools.length))
+
+  try {
+    const { data, error } = await supabase
+      .from("tools")
+      .select(`
+        *,
+        tool_categories!inner(
+          category:categories(*)
+        ),
+        tool_tags(
+          tag:tags(*)
+        )
+      `)
+      .order("upvotes_count", { ascending: false })
+      .limit(limit)
+
+    if (error) throw error
+    return normalizeTools(data)
+  } catch (err) {
+    console.error("Error fetching all tools:", err)
+    console.log("🔄 使用模拟数据作为备选")
+    return mockTools.slice(0, Math.min(limit, mockTools.length))
+  }
+}
+
+export async function getStats(): Promise<{ toolsCount: number; categoriesCount: number }> {
+  if (!SUPABASE_READY) return { toolsCount: mockTools.length, categoriesCount: mockCategories.length }
+
+  try {
+    // 获取工具总数
+    const { count: toolsCount, error: toolsError } = await supabase
+      .from("tools")
+      .select("*", { count: "exact", head: true })
+
+    if (toolsError) throw toolsError
+
+    // 获取分类总数
+    const { count: categoriesCount, error: categoriesError } = await supabase
+      .from("categories")
+      .select("*", { count: "exact", head: true })
+
+    if (categoriesError) throw categoriesError
+
+    return { 
+      toolsCount: toolsCount || 0, 
+      categoriesCount: categoriesCount || 0 
+    }
+  } catch (err) {
+    console.error("Error fetching stats:", err)
+    console.log("🔄 使用模拟数据作为备选")
+    return { toolsCount: mockTools.length, categoriesCount: mockCategories.length }
+  }
+}
+
 export async function getCategories(): Promise<Category[]> {
   if (!SUPABASE_READY) return mockCategories
 

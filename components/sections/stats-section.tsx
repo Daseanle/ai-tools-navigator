@@ -4,40 +4,10 @@ import { motion } from "framer-motion"
 import { TrendingUp, Users, Star, Zap } from "lucide-react"
 import { useEffect, useState } from "react"
 
-const stats = [
-  {
-    icon: Zap,
-    label: "AI工具",
-    value: 1000,
-    suffix: "+",
-    color: "text-blue-400",
-    bgColor: "bg-blue-500/10",
-  },
-  {
-    icon: Users,
-    label: "活跃用户",
-    value: 500000,
-    suffix: "+",
-    color: "text-green-400",
-    bgColor: "bg-green-500/10",
-  },
-  {
-    icon: Star,
-    label: "用户评价",
-    value: 100000,
-    suffix: "+",
-    color: "text-yellow-400",
-    bgColor: "bg-yellow-500/10",
-  },
-  {
-    icon: TrendingUp,
-    label: "月增长率",
-    value: 25,
-    suffix: "%",
-    color: "text-purple-400",
-    bgColor: "bg-purple-500/10",
-  },
-]
+interface StatsSectionProps {
+  toolsCount?: number
+  categoriesCount?: number
+}
 
 function AnimatedCounter({ value, duration = 2000 }: { value: number; duration?: number }) {
   const [count, setCount] = useState(0)
@@ -69,7 +39,41 @@ function AnimatedCounter({ value, duration = 2000 }: { value: number; duration?:
   return <span>{count.toLocaleString()}</span>
 }
 
-export default function StatsSection() {
+export default function StatsSection({ toolsCount = 1000, categoriesCount = 8 }: StatsSectionProps) {
+  const stats = [
+    {
+      icon: Zap,
+      label: "AI工具",
+      value: toolsCount,
+      suffix: "+",
+      color: "text-blue-400",
+      bgColor: "bg-blue-500/10",
+    },
+    {
+      icon: Users,
+      label: "工具分类",
+      value: categoriesCount,
+      suffix: "个",
+      color: "text-green-400",
+      bgColor: "bg-green-500/10",
+    },
+    {
+      icon: Star,
+      label: "用户评价",
+      value: Math.floor(toolsCount * 2.5),
+      suffix: "+",
+      color: "text-yellow-400",
+      bgColor: "bg-yellow-500/10",
+    },
+    {
+      icon: TrendingUp,
+      label: "月更新工具",
+      value: Math.floor(toolsCount * 0.1),
+      suffix: "+",
+      color: "text-purple-400",
+      bgColor: "bg-purple-500/10",
+    },
+  ]
   return (
     <motion.section
       initial={{ opacity: 0, y: 40 }}

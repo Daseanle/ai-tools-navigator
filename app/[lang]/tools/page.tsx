@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import type { Metadata } from "next"
-import { getHotTools, getCategories } from "@/lib/api"
+import { getAllTools, getCategories } from "@/lib/api"
 import { generateMetadata as generatePageMetadata } from "@/lib/metadata"
 import ToolsGrid from "@/components/sections/tools-grid"
 import ToolsFilter from "@/components/sections/tools-filter"
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ToolsPage({ params, searchParams }: PageProps) {
-  const [tools, categories] = await Promise.allSettled([getHotTools(24), getCategories()])
+  const [tools, categories] = await Promise.allSettled([getAllTools(200), getCategories()])
 
   const toolsData = tools.status === "fulfilled" ? tools.value : []
   const categoriesData = categories.status === "fulfilled" ? categories.value : []
@@ -34,6 +34,7 @@ export default async function ToolsPage({ params, searchParams }: PageProps) {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-white mb-4">AI工具大全</h1>
           <p className="text-lg text-neutral-400 max-w-2xl mx-auto">发现最新最热门的AI工具，提升你的工作效率</p>
+          <div className="mt-4 text-sm text-neutral-500">共收录 {toolsData.length} 个AI工具</div>
         </div>
 
         {/* 筛选器 */}
