@@ -82,7 +82,12 @@
       "Bash(chmod +x start-server.sh)",
       "Bash(./start-server.sh)",
       "Bash(chmod +x quick-start.sh)",
-      "Bash(./quick-start.sh)"
+      "Bash(./quick-start.sh)",
+      "Bash(NEXT_PUBLIC_SUPABASE_URL=https://msxadilzanoezfbidzyr.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeGFkaWx6YW5vZXpmYmlkenlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMDA4MjAsImV4cCI6MjA2NjY3NjgyMH0.Wuxn_wHPqGhqMqAMQSgZXlPR2Zrp9myUq3b5CKylx00 npm run build)",
+      "Bash(NEXT_PUBLIC_SUPABASE_URL=https://msxadilzanoezfbidzyr.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeGFkaWx6YW5vZXpmYmlkenlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMDA4MjAsImV4cCI6MjA2NjY3NjgyMH0.Wuxn_wHPqGhqMqAMQSgZXlPR2Zrp9myUq3b5CKylx00 npm run start)",
+      "Bash(NEXT_PUBLIC_SUPABASE_URL=https://msxadilzanoezfbidzyr.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeGFkaWx6YW5vZXpmYmlkenlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMDA4MjAsImV4cCI6MjA2NjY3NjgyMH0.Wuxn_wHPqGhqMqAMQSgZXlPR2Zrp9myUq3b5CKylx00 PORT=3001 npm run dev -- --turbo)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(node test-supabase-connection.js)"
     ],
     "deny": []
   }
