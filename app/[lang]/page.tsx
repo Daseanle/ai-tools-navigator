@@ -45,6 +45,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   })
 }
 
+export async function generateStaticParams() {
+  return [{ lang: 'zh' }, { lang: 'en' }]
+}
+
 export default async function HomePage({ params }: PageProps) {
   // 并行获取数据以优化性能
   const [hotTools, categories, featuredTools] = await Promise.allSettled([

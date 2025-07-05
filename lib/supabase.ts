@@ -13,8 +13,8 @@ if (typeof window !== 'undefined' && (!supabaseUrl || !supabaseAnonKey)) {
 }
 
 // 确保URL是有效的
-const validUrl = supabaseUrl || 'https://placeholder.supabase.co'
-const validKey = supabaseAnonKey || 'placeholder-key'
+const validUrl = supabaseUrl || 'https://xyzxyzxyz.supabase.co'
+const validKey = supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5enh5enh5eiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE5NjAwMDAwMDB9.0'
 
 export const supabase = createClient<Database>(validUrl, validKey)
 

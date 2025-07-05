@@ -31,6 +31,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   })
 }
 
+export async function generateStaticParams() {
+  try {
+    // For build time, we'll return empty array and let ISR handle it
+    return []
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
+
 export default async function ToolPage({ params }: PageProps) {
   const tool = await getToolBySlug(params.slug)
 

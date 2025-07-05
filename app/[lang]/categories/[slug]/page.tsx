@@ -31,6 +31,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   })
 }
 
+export async function generateStaticParams() {
+  try {
+    const categories = await getCategories()
+    const langs = ['zh', 'en']
+    
+    return langs.flatMap(lang => 
+      categories.map(category => ({
+        lang,
+        slug: category.slug
+      }))
+    )
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
+
 export default async function CategoryPage({ params }: PageProps) {
   const [tools, categories] = await Promise.allSettled([getToolsByCategory(params.slug), getCategories()])
 
