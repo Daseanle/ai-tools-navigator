@@ -124,14 +124,18 @@ const mockTools = [
 ] as any[]
 
 const mockCategories = [
-  { id: 1, name: "AI写作", slug: "ai-writing", icon: "✍️", tools_count: 245 },
-  { id: 2, name: "AI图像", slug: "ai-image", icon: "🎨", tools_count: 189 },
-  { id: 3, name: "AI智能体", slug: "ai-agent", icon: "🤖", tools_count: 156 },
-  { id: 4, name: "AI编程", slug: "ai-programming", icon: "💻", tools_count: 134 },
-  { id: 5, name: "AI视频", slug: "ai-video", icon: "🎬", tools_count: 98 },
-  { id: 6, name: "AI音频", slug: "ai-audio", icon: "🎵", tools_count: 87 },
-  { id: 7, name: "生产力", slug: "productivity", icon: "📈", tools_count: 156 },
-  { id: 8, name: "设计UI", slug: "design-ui", icon: "🎯", tools_count: 123 }
+  { id: 1, name: "AI写作", slug: "ai-writing", icon: "✍️", tools_count: 245, description: "专业的AI写作助手" },
+  { id: 2, name: "AI图像", slug: "ai-image", icon: "🎨", tools_count: 189, description: "创意图像生成与编辑" },
+  { id: 3, name: "AI智能体", slug: "ai-agent", icon: "🤖", tools_count: 156, description: "智能助手与对话机器人" },
+  { id: 4, name: "AI编程", slug: "ai-programming", icon: "💻", tools_count: 134, description: "代码生成与编程助手" },
+  { id: 5, name: "AI视频", slug: "ai-video", icon: "🎬", tools_count: 98, description: "视频制作与编辑工具" },
+  { id: 6, name: "AI音频", slug: "ai-audio", icon: "🎵", tools_count: 87, description: "音频处理与语音合成" },
+  { id: 7, name: "生产力", slug: "productivity", icon: "📈", tools_count: 156, description: "提升效率的办公工具" },
+  { id: 8, name: "设计UI", slug: "design-ui", icon: "🎯", tools_count: 123, description: "界面设计与用户体验" },
+  { id: 9, name: "数据分析", slug: "data-analysis", icon: "📊", tools_count: 89, description: "数据洞察与商业智能" },
+  { id: 10, name: "营销推广", slug: "marketing", icon: "📢", tools_count: 76, description: "数字营销与推广工具" },
+  { id: 11, name: "教育培训", slug: "education", icon: "🎓", tools_count: 65, description: "在线学习与知识管理" },
+  { id: 12, name: "游戏娱乐", slug: "gaming", icon: "🎮", tools_count: 54, description: "游戏开发与娱乐应用" }
 ] as any[]
 
 /* -------------------------------------------------------------

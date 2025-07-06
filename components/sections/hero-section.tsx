@@ -127,27 +127,6 @@ export default function HeroSection({ toolsCount = 2188, categoriesCount = 8 }: 
             观看介绍
           </motion.button>
         </motion.div>
-
-        {/* 信任指标 */}
-        <motion.div variants={itemVariants} className="pt-12 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-2xl mx-auto">
-          {[
-            { label: "AI工具", value: `${toolsCount.toLocaleString()}+` },
-            { label: "用户", value: `${Math.floor(toolsCount * 25).toLocaleString()}+` },
-            { label: "评价", value: `${Math.floor(toolsCount * 3).toLocaleString()}+` },
-            { label: "更新", value: "每日" },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.5 + index * 0.1 }}
-              className="text-center"
-            >
-              <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-              <div className="text-sm text-neutral-400">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
 
       {/* 视频模态框 */}

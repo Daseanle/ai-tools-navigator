@@ -4,15 +4,17 @@ import { motion } from "framer-motion"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
+import { useState } from "react"
+import RegistrationModal from "@/components/modals/registration-modal"
 
 export default function CTASection() {
   const router = useRouter()
   const params = useParams()
   const lang = params.lang as string
+  const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false)
 
   const handleRegisterClick = () => {
-    // 这里可以打开注册模态框或跳转到注册页面
-    console.log("注册功能待实现")
+    setIsRegistrationModalOpen(true)
   }
 
   const handleExploreClick = () => {
@@ -90,6 +92,12 @@ export default function CTASection() {
           </motion.div>
         </div>
       </div>
+
+      {/* Registration Modal */}
+      <RegistrationModal 
+        isOpen={isRegistrationModalOpen} 
+        onClose={() => setIsRegistrationModalOpen(false)} 
+      />
     </motion.section>
   )
 }
