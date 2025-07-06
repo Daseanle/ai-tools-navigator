@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     tool.tagline,
     tool.category?.name,
     ...(tool.tags?.map(tag => typeof tag === 'string' ? tag : tag.name) || [])
-  ].filter(Boolean)
+  ].filter((keyword): keyword is string => Boolean(keyword))
 
   return generatePageMetadata({
     title: `${tool.name} - ${tool.tagline || "AI工具"}`,

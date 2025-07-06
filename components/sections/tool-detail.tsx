@@ -126,13 +126,20 @@ export default function ToolDetail({ tool }: ToolDetailProps) {
                   </Link>
                 )}
                 {tool.tags?.map((tag) => {
-                  const tagName = typeof tag === "string" ? tag : tag.name
-                  const tagSlug = typeof tag === "string" ? tag.toLowerCase() : tag.slug
-                  return (
-                    <span key={tagSlug || tagName} className="px-3 py-1 bg-neutral-800/50 text-neutral-300 rounded-full text-sm">
-                      {tagName}
-                    </span>
-                  )
+                  if (typeof tag === "string") {
+                    return (
+                      <span key={tag} className="px-3 py-1 bg-neutral-800/50 text-neutral-300 rounded-full text-sm">
+                        {tag}
+                      </span>
+                    )
+                  } else if (tag && typeof tag === "object" && "name" in tag) {
+                    return (
+                      <span key={tag.slug || tag.name} className="px-3 py-1 bg-neutral-800/50 text-neutral-300 rounded-full text-sm">
+                        {tag.name}
+                      </span>
+                    )
+                  }
+                  return null
                 })}
               </div>
 

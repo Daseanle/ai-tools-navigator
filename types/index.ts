@@ -32,9 +32,9 @@ export interface Category {
   name: string
   slug: string
   description?: string | null
-  icon?: string
+  icon?: string | null
   tools_count?: number
-  color?: string
+  color?: string | null
   sort_order?: number | null
   is_active?: boolean | null
   created_at?: string | null
