@@ -17,12 +17,16 @@ import {
   LogOut, 
   Settings, 
   Heart, 
-  Star,
+  BarChart3,
   Loader2 
 } from 'lucide-react'
+import { useRouter, useParams } from 'next/navigation'
 
 export function UserNav() {
   const { user, signOut, loading } = useAuth()
+  const router = useRouter()
+  const params = useParams()
+  const lang = params.lang as string || 'zh'
 
   if (loading) {
     return (
@@ -49,6 +53,10 @@ export function UserNav() {
     .substring(0, 2)
     .toUpperCase()
 
+  const handleMenuClick = (path: string) => {
+    router.push(`/${lang}/dashboard/${path}`)
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -73,15 +81,15 @@ export function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleMenuClick('favorites')}>
           <Heart className="mr-2 h-4 w-4" />
-          <span>我的收藏</span>
+          <span>智能收藏</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Star className="mr-2 h-4 w-4" />
-          <span>我的评价</span>
+        <DropdownMenuItem onClick={() => handleMenuClick('analytics')}>
+          <BarChart3 className="mr-2 h-4 w-4" />
+          <span>数据分析</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleMenuClick('settings')}>
           <Settings className="mr-2 h-4 w-4" />
           <span>设置</span>
         </DropdownMenuItem>
