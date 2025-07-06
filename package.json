@@ -10,7 +10,12 @@
     "test:db": "node scripts/test-database.js",
     "deploy:supabase": "./scripts/deploy-supabase.sh",
     "import:data": "./scripts/import-data.sh",
-    "setup:env": "cp .env.local.example .env.local"
+    "setup:env": "cp .env.local.example .env.local",
+    "build:analyze": "ANALYZE=true next build",
+    "export": "next build && next export",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .next out",
+    "production:build": "npm run clean && npm run type-check && npm run build"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
