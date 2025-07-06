@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { User, Mail, Lock, Globe, Bell, Shield, Trash2, Save } from "lucide-react"
 import { supabase } from "@/lib/supabase"
-import type { User as SupabaseUser } from "@supabase/auth-helpers-nextjs"
+import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 interface UserSettingsProps {
   user: SupabaseUser

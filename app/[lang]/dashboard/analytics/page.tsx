@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createServerComponentClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { generateMetadata as generatePageMetadata } from "@/lib/metadata"
 import UserAnalytics from "@/components/sections/user-analytics"
