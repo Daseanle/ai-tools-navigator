@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { FavoritesProvider } from '@/components/providers/favorites-provider'
 
 export const metadata: Metadata = {
   title: 'v0 App',
@@ -16,9 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ErrorBoundary>
-          {children}
-        </ErrorBoundary>
+        <FavoritesProvider>
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
+        </FavoritesProvider>
       </body>
     </html>
   )

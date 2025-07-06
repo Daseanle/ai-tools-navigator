@@ -31,7 +31,7 @@ export default function ToolCard({ tool, className = "" }: ToolCardProps) {
       <button
         onClick={(e) => {
           e.preventDefault()
-          toggleFavorite(tool.id)
+          toggleFavorite(tool.id).catch(console.error)
         }}
         className={`absolute top-4 right-4 p-2 rounded-full transition-all duration-300 ${
           favorite

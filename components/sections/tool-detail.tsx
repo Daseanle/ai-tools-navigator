@@ -76,7 +76,7 @@ export default function ToolDetail({ tool }: ToolDetailProps) {
                 {/* 操作按钮 */}
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => toggleFavorite(tool.id)}
+                    onClick={() => toggleFavorite(tool.id).catch(console.error)}
                     className={`p-3 rounded-xl transition-all duration-300 ${
                       favorite ? "bg-red-500/20 text-red-400" : "bg-neutral-800/50 text-neutral-400 hover:text-red-400"
                     }`}
