@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { ChevronRight, Folder } from "lucide-react"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import type { Category } from "@/types"
 
 interface CategorySectionProps {
@@ -10,6 +11,9 @@ interface CategorySectionProps {
 }
 
 export default function CategorySection({ categories }: CategorySectionProps) {
+  const params = useParams()
+  const lang = params.lang as string || 'zh'
+  
   return (
     <motion.section
       initial={{ opacity: 0, y: 40 }}
@@ -29,7 +33,7 @@ export default function CategorySection({ categories }: CategorySectionProps) {
           </div>
         </div>
         <Link
-          href="/categories"
+          href={`/${lang}/categories`}
           className="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-500 dark:text-purple-400 dark:hover:text-purple-300 bg-purple-50 dark:bg-purple-900/30 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-all duration-300"
         >
           查看全部
@@ -54,7 +58,7 @@ export default function CategorySection({ categories }: CategorySectionProps) {
               className="group"
             >
               <Link
-                href={`/categories/${category.slug}`}
+                href={`/${lang}/categories/${category.slug}`}
                 className="block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg hover:shadow-gray-200/30 dark:hover:shadow-gray-900/20 transition-all duration-300 text-center"
               >
                 <div className="w-8 h-8 mx-auto mb-2 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 transition-colors">

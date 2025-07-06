@@ -1,8 +1,5 @@
 import { Suspense } from "react"
 import type { Metadata } from "next"
-import { redirect } from "next/navigation"
-import { createServerComponentClient } from "@supabase/ssr"
-import { cookies } from "next/headers"
 import { generateMetadata as generatePageMetadata } from "@/lib/metadata"
 import UserAnalytics from "@/components/sections/user-analytics"
 import LoadingSkeleton from "@/components/ui/loading-skeleton"
@@ -20,17 +17,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   })
 }
 
-export default async function AnalyticsPage({ params }: PageProps) {
-  const supabase = createServerComponentClient({ cookies })
-  
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  if (!session) {
-    redirect(`/${params.lang}`)
-  }
-
+export default function AnalyticsPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -42,7 +29,7 @@ export default async function AnalyticsPage({ params }: PageProps) {
 
         {/* 数据分析内容 */}
         <Suspense fallback={<LoadingSkeleton variant="card" count={6} className="grid grid-cols-1 lg:grid-cols-2 gap-6" />}>
-          <UserAnalytics userId={session.user.id} />
+          <UserAnalytics />
         </Suspense>
       </div>
     </div>
