@@ -283,19 +283,20 @@ const mockTools = [
   }
 ] as any[]
 
+// 智能分类系统 - 根据工具内容自动匹配最佳分类
 const mockCategories = [
-  { id: 1, name: "AI写作", slug: "ai-writing", icon: "✍️", tools_count: 245, description: "专业的AI写作助手" },
-  { id: 2, name: "AI图像", slug: "ai-image", icon: "🎨", tools_count: 189, description: "创意图像生成与编辑" },
-  { id: 3, name: "AI智能体", slug: "ai-agent", icon: "🤖", tools_count: 156, description: "智能助手与对话机器人" },
-  { id: 4, name: "AI编程", slug: "ai-programming", icon: "💻", tools_count: 134, description: "代码生成与编程助手" },
-  { id: 5, name: "AI视频", slug: "ai-video", icon: "🎬", tools_count: 98, description: "视频制作与编辑工具" },
-  { id: 6, name: "AI音频", slug: "ai-audio", icon: "🎵", tools_count: 87, description: "音频处理与语音合成" },
-  { id: 7, name: "生产力", slug: "productivity", icon: "📈", tools_count: 156, description: "提升效率的办公工具" },
-  { id: 8, name: "设计UI", slug: "design-ui", icon: "🎯", tools_count: 123, description: "界面设计与用户体验" },
-  { id: 9, name: "数据分析", slug: "data-analysis", icon: "📊", tools_count: 89, description: "数据洞察与商业智能" },
-  { id: 10, name: "营销推广", slug: "marketing", icon: "📢", tools_count: 76, description: "数字营销与推广工具" },
-  { id: 11, name: "教育培训", slug: "education", icon: "🎓", tools_count: 65, description: "在线学习与知识管理" },
-  { id: 12, name: "游戏娱乐", slug: "gaming", icon: "🎮", tools_count: 54, description: "游戏开发与娱乐应用" }
+  { id: 1, name: "对话AI", slug: "chat-ai", icon: "🤖", tools_count: 0, description: "智能对话与问答助手" },
+  { id: 2, name: "图像生成", slug: "image-generation", icon: "🎨", tools_count: 0, description: "AI图像创作与编辑" },
+  { id: 3, name: "编程助手", slug: "coding", icon: "💻", tools_count: 0, description: "代码生成与开发工具" },
+  { id: 4, name: "生产力", slug: "productivity", icon: "📈", tools_count: 0, description: "效率提升与办公工具" },
+  { id: 5, name: "视频生成", slug: "video-generation", icon: "🎬", tools_count: 0, description: "视频制作与编辑" },
+  { id: 6, name: "写作助手", slug: "writing", icon: "✍️", tools_count: 0, description: "内容创作与文案生成" },
+  { id: 7, name: "数据分析", slug: "data-analysis", icon: "📊", tools_count: 0, description: "数据洞察与分析" },
+  { id: 8, name: "设计工具", slug: "design", icon: "🎯", tools_count: 0, description: "UI/UX设计与创意" },
+  { id: 9, name: "音频处理", slug: "audio", icon: "🎵", tools_count: 0, description: "音频生成与处理" },
+  { id: 10, name: "搜索引擎", slug: "search", icon: "🔍", tools_count: 0, description: "智能搜索与信息检索" },
+  { id: 11, name: "开发平台", slug: "platform", icon: "🛠️", tools_count: 0, description: "AI模型部署与开发" },
+  { id: 12, name: "创意工具", slug: "creative", icon: "✨", tools_count: 0, description: "创意生成与艺术创作" }
 ] as any[]
 
 /* -------------------------------------------------------------
@@ -424,7 +425,24 @@ export async function getStats(): Promise<{ toolsCount: number; categoriesCount:
 }
 
 export async function getCategories(): Promise<Category[]> {
-  if (!SUPABASE_READY) return mockCategories
+  if (!SUPABASE_READY) {
+    // 动态计算分类中的工具数量
+    const categoriesWithCounts = mockCategories.map(category => {
+      const toolCount = mockTools.filter(tool => {
+        // 使用智能分类系统重新计算
+        const intelligentCategory = intelligentCategoryMapping(tool)
+        return intelligentCategory.slug === category.slug || tool.category?.slug === category.slug
+      }).length
+      
+      return {
+        ...category,
+        tools_count: toolCount
+      }
+    })
+    
+    // 按工具数量排序，热门分类在前
+    return categoriesWithCounts.sort((a, b) => b.tools_count - a.tools_count)
+  }
 
   try {
     // 首先获取所有分类
@@ -452,11 +470,25 @@ export async function getCategories(): Promise<Category[]> {
       })
     )
 
-    return categoriesWithCounts
+    return categoriesWithCounts.sort((a, b) => b.tools_count - a.tools_count)
   } catch (err) {
     console.error("Error fetching categories:", err)
     console.log("🔄 使用模拟数据作为备选")
-    return mockCategories
+    
+    // 备选：使用智能分类计算
+    const categoriesWithCounts = mockCategories.map(category => {
+      const toolCount = mockTools.filter(tool => {
+        const intelligentCategory = intelligentCategoryMapping(tool)
+        return intelligentCategory.slug === category.slug || tool.category?.slug === category.slug
+      }).length
+      
+      return {
+        ...category,
+        tools_count: toolCount
+      }
+    })
+    
+    return categoriesWithCounts.sort((a, b) => b.tools_count - a.tools_count)
   }
 }
 
@@ -491,7 +523,23 @@ export async function searchTools(query: string, limit = 10): Promise<Tool[]> {
 
 export async function getToolsByCategory(categorySlug: string, limit = 20): Promise<Tool[]> {
   if (!SUPABASE_READY) {
-    return mockTools.filter((t) => t.category?.slug === categorySlug).slice(0, limit)
+    // 使用智能分类系统过滤工具
+    const filteredTools = mockTools.filter((tool) => {
+      // 检查现有分类
+      if (tool.category?.slug === categorySlug) {
+        return true
+      }
+      
+      // 使用智能分类系统检查
+      const intelligentCategory = intelligentCategoryMapping(tool)
+      return intelligentCategory.slug === categorySlug
+    }).slice(0, limit)
+    
+    // 应用自动补全数据
+    return filteredTools.map(tool => {
+      const completed = autoCompleteToolData(tool)
+      return normalizeTool(completed)
+    }).filter((tool): tool is Tool => tool !== null)
   }
 
   try {
@@ -514,22 +562,35 @@ export async function getToolsByCategory(categorySlug: string, limit = 20): Prom
   } catch (err) {
     console.error("Error fetching tools by category:", err)
     console.log("🔄 使用模拟数据作为备选")
-    return mockTools.filter((t) => t.category?.slug === categorySlug).slice(0, limit)
+    
+    // 备选：使用智能分类系统
+    const filteredTools = mockTools.filter((tool) => {
+      if (tool.category?.slug === categorySlug) {
+        return true
+      }
+      const intelligentCategory = intelligentCategoryMapping(tool)
+      return intelligentCategory.slug === categorySlug
+    }).slice(0, limit)
+    
+    return filteredTools.map(tool => {
+      const completed = autoCompleteToolData(tool)
+      return normalizeTool(completed)
+    }).filter((tool): tool is Tool => tool !== null)
   }
 }
 
 export async function getToolBySlug(slug: string): Promise<Tool | null> {
-  console.log('🔍 getToolBySlug 调用:', { slug, SUPABASE_READY })
-  
   if (!SUPABASE_READY) {
-    console.log('⚠️ Supabase 未就绪，使用模拟数据')
     const found = mockTools.find((t) => t.slug === slug)
-    console.log('🔍 模拟数据查找结果:', found ? `找到 ${found.name}` : '未找到')
-    return found || null
+    
+    if (found) {
+      const normalized = normalizeTool(found)
+      return normalized
+    }
+    return null
   }
 
   try {
-    console.log('🔌 尝试从 Supabase 获取数据...')
     const { data, error } = await supabase
       .from("tools")
       .select(`
@@ -545,18 +606,15 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
       .single()
 
     if (error) {
-      console.error('❌ Supabase 查询错误:', error)
       throw error
     }
     
-    console.log('✅ Supabase 查询成功:', data?.name)
     return normalizeTool(data)
   } catch (err) {
-    console.error("❌ Error fetching tool by slug:", err)
-    console.log("🔄 使用模拟数据作为备选")
+    console.error("Error fetching tool by slug:", err)
     const found = mockTools.find((t) => t.slug === slug)
-    console.log('🔍 备选模拟数据查找结果:', found ? `找到 ${found.name}` : '未找到')
-    return found || null
+    const normalized = found ? normalizeTool(found) : null
+    return normalized
   }
 }
 
@@ -564,7 +622,121 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
    4. 小工具：格式统一和自动补全
 ----------------------------------------------------------------*/
 
-// 智能生成 website_url
+// 智能分类匹配系统
+function intelligentCategoryMapping(tool: any): any {
+  const name = (tool.name || '').toLowerCase()
+  const tagline = (tool.tagline || '').toLowerCase()
+  const description = (tool.description || '').toLowerCase()
+  const slug = (tool.slug || '').toLowerCase()
+  
+  // 基于内容的智能分类映射
+  const categoryMappings = [
+    {
+      keywords: ['chatgpt', 'claude', 'perplexity', 'character', '对话', 'chat', 'conversation', 'ai助手', '问答'],
+      category: { id: 1, name: "对话AI", slug: "chat-ai" }
+    },
+    {
+      keywords: ['midjourney', 'dalle', 'leonardo', 'firefly', 'stable-diffusion', '图像', 'image', '绘画', '艺术', 'art'],
+      category: { id: 2, name: "图像生成", slug: "image-generation" }
+    },
+    {
+      keywords: ['copilot', 'cursor', 'replicate', 'huggingface', '编程', 'code', 'coding', 'github', 'developer'],
+      category: { id: 3, name: "编程助手", slug: "coding" }
+    },
+    {
+      keywords: ['notion', 'jasper', '生产力', 'productivity', '办公', '笔记', 'note'],
+      category: { id: 4, name: "生产力", slug: "productivity" }
+    },
+    {
+      keywords: ['runway', '视频', 'video', '编辑'],
+      category: { id: 5, name: "视频生成", slug: "video-generation" }
+    },
+    {
+      keywords: ['writing', '写作', '文案', 'content', '内容'],
+      category: { id: 6, name: "写作助手", slug: "writing" }
+    },
+    {
+      keywords: ['search', '搜索', 'perplexity'],
+      category: { id: 10, name: "搜索引擎", slug: "search" }
+    },
+    {
+      keywords: ['platform', '平台', 'api', 'model'],
+      category: { id: 11, name: "开发平台", slug: "platform" }
+    }
+  ]
+  
+  // 检查每个分类映射
+  for (const mapping of categoryMappings) {
+    const matchCount = mapping.keywords.filter(keyword => 
+      name.includes(keyword) || 
+      tagline.includes(keyword) || 
+      description.includes(keyword) ||
+      slug.includes(keyword)
+    ).length
+    
+    if (matchCount > 0) {
+      return mapping.category
+    }
+  }
+  
+  // 默认分类：创意工具
+  return { id: 12, name: "创意工具", slug: "creative" }
+}
+
+// 智能标签生成系统
+function intelligentTagGeneration(tool: any): any[] {
+  const name = (tool.name || '').toLowerCase()
+  const tagline = (tool.tagline || '').toLowerCase()
+  const description = (tool.description || '').toLowerCase()
+  const content = `${name} ${tagline} ${description}`
+  
+  const availableTags = [
+    { id: 1, name: "免费", slug: "free" },
+    { id: 2, name: "开源", slug: "open-source" },
+    { id: 3, name: "企业版", slug: "enterprise" },
+    { id: 4, name: "付费", slug: "paid" },
+    { id: 5, name: "API", slug: "api" },
+    { id: 6, name: "云端", slug: "cloud" },
+    { id: 7, name: "本地", slug: "local" },
+    { id: 8, name: "实时", slug: "realtime" },
+    { id: 9, name: "高质量", slug: "high-quality" },
+    { id: 10, name: "易用", slug: "easy-to-use" }
+  ]
+  
+  const tags = []
+  
+  // 根据定价类型添加标签
+  if (tool.pricing_type === 'free') tags.push(availableTags[0])
+  else if (tool.pricing_type === 'paid') tags.push(availableTags[3])
+  else if (tool.pricing_type === 'freemium') tags.push(availableTags[0])
+  
+  // 根据内容特征添加标签
+  if (content.includes('开源') || content.includes('open source') || content.includes('github')) {
+    tags.push(availableTags[1])
+  }
+  if (content.includes('api') || content.includes('开发者')) {
+    tags.push(availableTags[4])
+  }
+  if (content.includes('云端') || content.includes('cloud') || content.includes('在线')) {
+    tags.push(availableTags[5])
+  }
+  if (content.includes('实时') || content.includes('real-time') || content.includes('即时')) {
+    tags.push(availableTags[7])
+  }
+  if (content.includes('高质量') || content.includes('专业') || content.includes('professional')) {
+    tags.push(availableTags[8])
+  }
+  
+  // 确保至少有一个标签
+  if (tags.length === 0) {
+    tags.push(availableTags[9]) // 易用
+  }
+  
+  // 去重
+  return tags.filter((tag, index, self) => 
+    index === self.findIndex(t => t.id === tag.id)
+  ).slice(0, 3) // 最多3个标签
+}
 function generateWebsiteUrl(tool: any): string {
   if (tool.website_url) return tool.website_url
   
@@ -662,9 +834,10 @@ function generateDescription(tool: any): string {
   return `${tool.name} ${baseDesc}它具有强大的AI能力，为用户提供智能化的解决方案。`
 }
 
-// 自动补全工具数据
+// 自动补全工具数据 - 集成智能分类和标签系统
 function autoCompleteToolData(tool: any): any {
-  return {
+  // 首先生成基础数据
+  const baseData = {
     ...tool,
     website_url: generateWebsiteUrl(tool),
     description: generateDescription(tool),
@@ -675,6 +848,18 @@ function autoCompleteToolData(tool: any): any {
     users_count: tool.users_count || Math.floor(Math.random() * 50000000) + 1000000,
     pricing_type: tool.pricing_type || 'freemium'
   }
+  
+  // 应用智能分类（如果还没有分类）
+  if (!baseData.category) {
+    baseData.category = intelligentCategoryMapping(baseData)
+  }
+  
+  // 应用智能标签生成（如果还没有标签）
+  if (!baseData.tags || baseData.tags.length === 0) {
+    baseData.tags = intelligentTagGeneration(baseData)
+  }
+  
+  return baseData
 }
 
 function normalizeTools(raw: any[]): Tool[] {
@@ -689,11 +874,17 @@ function normalizeTool(raw: any): Tool | null {
     // 生成slug如果不存在
     const slug = completed.slug || completed.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `tool-${completed.id}`
     
-    // 处理分类 - 从tool_categories关联中获取第一个分类
-    const category = completed.tool_categories?.[0]?.category || completed.category || null
+    // 处理分类 - 优先使用现有分类，否则使用智能分类
+    let category = completed.tool_categories?.[0]?.category || completed.category || undefined
+    if (!category) {
+      category = intelligentCategoryMapping(completed)
+    }
     
-    // 处理标签 - 从tool_tags关联中获取所有标签
-    const tags = completed.tool_tags?.map((tt: any) => tt.tag).filter(Boolean) || completed.tags || []
+    // 处理标签 - 优先使用现有标签，否则使用智能标签生成
+    let tags = completed.tool_tags?.map((tt: any) => tt.tag).filter(Boolean) || completed.tags || []
+    if (!tags || tags.length === 0) {
+      tags = intelligentTagGeneration(completed)
+    }
     
     // 构建并验证工具数据
     const toolData = {

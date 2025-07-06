@@ -144,6 +144,11 @@ export const sanitizeString = (input: string): string => {
 
 export const sanitizeUrl = (url: string): string => {
   try {
+    // 如果是相对URL，直接返回（允许相对路径）
+    if (url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) {
+      return url
+    }
+    
     const parsed = new URL(url)
     // 只允许 http 和 https 协议
     if (!['http:', 'https:'].includes(parsed.protocol)) {
@@ -151,6 +156,10 @@ export const sanitizeUrl = (url: string): string => {
     }
     return parsed.toString()
   } catch {
+    // 如果无法解析为URL，检查是否是相对路径
+    if (url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) {
+      return url
+    }
     throw new Error('Invalid URL format')
   }
 }
