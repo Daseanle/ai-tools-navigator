@@ -39,7 +39,7 @@ function AnimatedCounter({ value, duration = 2000 }: { value: number; duration?:
   return <span>{count.toLocaleString()}</span>
 }
 
-export default function StatsSection({ toolsCount = 1000, categoriesCount = 8 }: StatsSectionProps) {
+export default function StatsSection({ toolsCount = 2188, categoriesCount = 8 }: StatsSectionProps) {
   const stats = [
     {
       icon: Zap,

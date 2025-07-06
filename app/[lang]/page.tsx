@@ -68,7 +68,7 @@ export default async function HomePage({ params }: PageProps) {
       <main className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section - 关键内容，立即渲染 */}
-          <HeroSection />
+          <HeroSection toolsCount={statsData.toolsCount} categoriesCount={statsData.categoriesCount} />
 
           {/* Stats Section - 展示网站统计 */}
           <StatsSection toolsCount={statsData.toolsCount} categoriesCount={statsData.categoriesCount} />

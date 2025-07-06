@@ -8,7 +8,12 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  toolsCount?: number
+  categoriesCount?: number
+}
+
+export default function HeroSection({ toolsCount = 2188, categoriesCount = 8 }: HeroSectionProps) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const router = useRouter()
   const params = useParams()
@@ -75,7 +80,7 @@ export default function HeroSection() {
           >
             探索、评测、精通。为你找到解决问题的最佳AI工具，提升工作效率，释放创造力。
             <br />
-            <span className="text-blue-400 font-medium">已收录 1000+ 优质AI工具</span>
+            <span className="text-blue-400 font-medium">已收录 {toolsCount.toLocaleString()}+ 优质AI工具</span>
           </motion.p>
         </motion.div>
 
@@ -126,9 +131,9 @@ export default function HeroSection() {
         {/* 信任指标 */}
         <motion.div variants={itemVariants} className="pt-12 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-2xl mx-auto">
           {[
-            { label: "AI工具", value: "1000+" },
-            { label: "用户", value: "50万+" },
-            { label: "评价", value: "10万+" },
+            { label: "AI工具", value: `${toolsCount.toLocaleString()}+` },
+            { label: "用户", value: `${Math.floor(toolsCount * 25).toLocaleString()}+` },
+            { label: "评价", value: `${Math.floor(toolsCount * 3).toLocaleString()}+` },
             { label: "更新", value: "每日" },
           ].map((stat, index) => (
             <motion.div
