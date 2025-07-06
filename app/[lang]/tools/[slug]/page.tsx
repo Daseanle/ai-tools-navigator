@@ -22,12 +22,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     })
   }
 
+  // 生成关键词
+  const keywords = [
+    tool.name,
+    tool.tagline,
+    tool.category?.name,
+    ...(tool.tags?.map(tag => typeof tag === 'string' ? tag : tag.name) || [])
+  ].filter(Boolean)
+
   return generatePageMetadata({
     title: `${tool.name} - ${tool.tagline || "AI工具"}`,
     description: tool.description || tool.tagline || `${tool.name} 是一个优秀的AI工具`,
     path: `/${params.lang}/tools/${params.slug}`,
     locale: params.lang,
-    keywords: tool.keywords || [],
+    keywords,
   })
 }
 

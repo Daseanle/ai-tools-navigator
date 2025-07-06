@@ -98,7 +98,7 @@ export default function ToolDetail({ tool }: ToolDetailProps) {
                   <div className="flex items-center space-x-1">
                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
                     <span className="text-white font-medium">{tool.rating}</span>
-                    <span>({tool.rating_count || 0} 评价)</span>
+                    <span>({tool.upvotes_count || 0} 评价)</span>
                   </div>
                 )}
                 {tool.users_count && (
@@ -127,8 +127,9 @@ export default function ToolDetail({ tool }: ToolDetailProps) {
                 )}
                 {tool.tags?.map((tag) => {
                   const tagName = typeof tag === "string" ? tag : tag.name
+                  const tagSlug = typeof tag === "string" ? tag.toLowerCase() : tag.slug
                   return (
-                    <span key={tagName} className="px-3 py-1 bg-neutral-800/50 text-neutral-300 rounded-full text-sm">
+                    <span key={tagSlug || tagName} className="px-3 py-1 bg-neutral-800/50 text-neutral-300 rounded-full text-sm">
                       {tagName}
                     </span>
                   )

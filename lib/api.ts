@@ -1,5 +1,6 @@
 import { supabase } from "./supabase"
 import type { Database } from "./database.types"
+import { validateTool, sanitizeString, sanitizeUrl, type Tool } from "./validation"
 
 /* -------------------------------------------------------------
    0. 运行环境检测
@@ -136,7 +137,7 @@ const mockCategories = [
 /* -------------------------------------------------------------
    2. 公共类型（Supabase & Mock 统一）
 ----------------------------------------------------------------*/
-type Tool = Database["public"]["Tables"]["tools"]["Row"] & {
+type SupabaseTool = Database["public"]["Tables"]["tools"]["Row"] & {
   category?: Database["public"]["Tables"]["categories"]["Row"]
   tags?: Database["public"]["Tables"]["tags"]["Row"][]
 }
@@ -373,27 +374,43 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
    4. 小工具：格式统一
 ----------------------------------------------------------------*/
 function normalizeTools(raw: any[]): Tool[] {
-  return raw.map(normalizeTool)
+  return raw.map(normalizeTool).filter((tool): tool is Tool => tool !== null)
 }
 
-function normalizeTool(raw: any): Tool {
-  // 生成slug如果不存在
-  const slug = raw.slug || raw.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `tool-${raw.id}`
-  
-  // 处理分类 - 从tool_categories关联中获取第一个分类
-  const category = raw.tool_categories?.[0]?.category || null
-  
-  // 处理标签 - 从tool_tags关联中获取所有标签
-  const tags = raw.tool_tags?.map((tt: any) => tt.tag).filter(Boolean) || []
-  
-  return {
-    ...raw,
-    slug,
-    category,
-    tags,
-    // 确保数值字段有默认值
-    rating: raw.rating || (4.0 + Math.random() * 1.0), // 生成4.0-5.0的随机评分
-    users_count: raw.users_count || raw.upvotes_count || 0,
-    pricing_type: raw.pricing_type || (raw.pricing === 'Free' ? 'free' : 'paid'),
+function normalizeTool(raw: any): Tool | null {
+  try {
+    // 生成slug如果不存在
+    const slug = raw.slug || raw.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `tool-${raw.id}`
+    
+    // 处理分类 - 从tool_categories关联中获取第一个分类
+    const category = raw.tool_categories?.[0]?.category || null
+    
+    // 处理标签 - 从tool_tags关联中获取所有标签
+    const tags = raw.tool_tags?.map((tt: any) => tt.tag).filter(Boolean) || []
+    
+    // 构建并验证工具数据
+    const toolData = {
+      id: raw.id,
+      slug,
+      name: sanitizeString(raw.name || ''),
+      tagline: sanitizeString(raw.tagline || ''),
+      description: raw.description ? sanitizeString(raw.description) : undefined,
+      logo_url: raw.logo_url ? sanitizeUrl(raw.logo_url) : undefined,
+      website_url: raw.website_url ? sanitizeUrl(raw.website_url) : undefined,
+      category,
+      tags,
+      rating: raw.rating || (4.0 + Math.random() * 1.0), // 生成4.0-5.0的随机评分
+      users_count: raw.users_count || raw.upvotes_count || 0,
+      upvotes_count: raw.upvotes_count || 0,
+      pricing_type: (raw.pricing_type || raw.pricing || 'freemium').toLowerCase() as 'free' | 'paid' | 'freemium',
+      created_at: raw.created_at,
+      updated_at: raw.updated_at,
+    }
+
+    // 验证数据
+    return validateTool(toolData)
+  } catch (error) {
+    console.error('Error normalizing tool:', error, raw)
+    return null
   }
 }

@@ -1,110 +1,123 @@
-// 性能监控和优化工具
+"use client"
 
-export class PerformanceMonitor {
-  private static instance: PerformanceMonitor
-  private metrics: Map<string, number> = new Map()
+import React from 'react'
 
-  static getInstance(): PerformanceMonitor {
-    if (!PerformanceMonitor.instance) {
-      PerformanceMonitor.instance = new PerformanceMonitor()
-    }
-    return PerformanceMonitor.instance
-  }
-
-  // 测量函数执行时间
-  measureFunction<T>(name: string, fn: () => T): T {
-    const start = performance.now()
-    const result = fn()
-    const end = performance.now()
-    this.metrics.set(name, end - start)
-
-    if (process.env.NODE_ENV === "development") {
-      console.log(`${name} took ${end - start} milliseconds`)
-    }
-
-    return result
-  }
-
-  // 测量异步函数执行时间
-  async measureAsyncFunction<T>(name: string, fn: () => Promise<T>): Promise<T> {
-    const start = performance.now()
-    const result = await fn()
-    const end = performance.now()
-    this.metrics.set(name, end - start)
-
-    if (process.env.NODE_ENV === "development") {
-      console.log(`${name} took ${end - start} milliseconds`)
-    }
-
-    return result
-  }
-
-  // 获取性能指标
-  getMetrics(): Record<string, number> {
-    return Object.fromEntries(this.metrics)
-  }
-
-  // 清除指标
-  clearMetrics(): void {
-    this.metrics.clear()
-  }
+// Generic memo wrapper for components
+export function withMemo<T extends object>(
+  Component: React.ComponentType<T>,
+  areEqual?: (prevProps: T, nextProps: T) => boolean
+) {
+  const MemoizedComponent = React.memo(Component, areEqual)
+  MemoizedComponent.displayName = `withMemo(${Component.displayName || Component.name})`
+  return MemoizedComponent
 }
 
-// Web Vitals 监控
-export function reportWebVitals(metric: any) {
-  if (process.env.NODE_ENV === "production") {
-    // 发送到分析服务
-    console.log(metric)
-  }
+// Custom debounce hook
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = React.useState<T>(value)
+
+  React.useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
 }
 
-// 图片预加载
-export function preloadImage(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => resolve()
-    img.onerror = reject
-    img.src = src
+// Request cancellation hook
+export function useCancelableRequest() {
+  const abortControllerRef = React.useRef<AbortController | null>(null)
+
+  const makeRequest = React.useCallback(async <T>(
+    requestFn: (signal: AbortSignal) => Promise<T>
+  ): Promise<T | null> => {
+    // Cancel previous request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+
+    // Create new controller
+    abortControllerRef.current = new AbortController()
+
+    try {
+      const result = await requestFn(abortControllerRef.current.signal)
+      return result
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return null // Request was cancelled
+      }
+      throw error // Re-throw other errors
+    }
+  }, [])
+
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
+  }, [])
+
+  return { makeRequest }
+}
+
+// Performance monitoring hook
+export function usePerformanceMonitor(componentName: string) {
+  const renderCountRef = React.useRef(0)
+  const startTimeRef = React.useRef<number>(0)
+
+  React.useEffect(() => {
+    renderCountRef.current += 1
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`${componentName} rendered ${renderCountRef.current} times`)
+    }
+  })
+
+  React.useEffect(() => {
+    startTimeRef.current = performance.now()
+    
+    return () => {
+      const endTime = performance.now()
+      const renderTime = endTime - startTimeRef.current
+      
+      if (process.env.NODE_ENV === 'development' && renderTime > 16) {
+        console.warn(`${componentName} slow render: ${renderTime.toFixed(2)}ms`)
+      }
+    }
   })
 }
 
-// 批量预加载图片
-export async function preloadImages(srcs: string[]): Promise<void> {
-  const promises = srcs.map(preloadImage)
-  await Promise.allSettled(promises)
-}
+// Cache for expensive computations
+const computationCache = new Map<string, any>()
 
-// 防抖函数
-export function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null
-
-  return (...args: Parameters<T>) => {
-    if (timeout) clearTimeout(timeout)
-    timeout = setTimeout(() => func(...args), wait)
-  }
-}
-
-// 节流函数
-export function throttle<T extends (...args: any[]) => any>(func: T, limit: number): (...args: Parameters<T>) => void {
-  let inThrottle: boolean
-
-  return (...args: Parameters<T>) => {
-    if (!inThrottle) {
-      func(...args)
-      inThrottle = true
-      setTimeout(() => (inThrottle = false), limit)
+export function useComputationCache<T>(
+  key: string,
+  computeFn: () => T,
+  dependencies: React.DependencyList
+): T {
+  return React.useMemo(() => {
+    const cacheKey = `${key}-${JSON.stringify(dependencies)}`
+    
+    if (computationCache.has(cacheKey)) {
+      return computationCache.get(cacheKey)
     }
-  }
-}
-
-// 懒加载观察器
-export function createIntersectionObserver(
-  callback: IntersectionObserverCallback,
-  options?: IntersectionObserverInit,
-): IntersectionObserver {
-  return new IntersectionObserver(callback, {
-    rootMargin: "50px",
-    threshold: 0.1,
-    ...options,
-  })
+    
+    const result = computeFn()
+    computationCache.set(cacheKey, result)
+    
+    // Cleanup old entries (simple LRU)
+    if (computationCache.size > 100) {
+      const firstKey = computationCache.keys().next().value
+      computationCache.delete(firstKey)
+    }
+    
+    return result
+  }, dependencies)
 }

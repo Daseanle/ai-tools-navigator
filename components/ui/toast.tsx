@@ -13,6 +13,12 @@ export interface ToastProps {
   onClose?: () => void
 }
 
+export interface ToastActionElement {
+  altText: string
+  action: () => void
+  label: string
+}
+
 const toastVariants = {
   initial: { opacity: 0, y: -50, scale: 0.95 },
   animate: { opacity: 1, y: 0, scale: 1 },
@@ -71,6 +77,19 @@ export function Toast({ id, title, description, variant = "default", duration = 
     </motion.div>
   )
 }
+
+// Export required components for compatibility
+export const ToastProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>
+export const ToastViewport = ({ className }: { className?: string }) => <div className={className} />
+export const ToastClose = ({ onClick }: { onClick?: () => void }) => (
+  <button onClick={onClick}><X className="w-4 h-4" /></button>
+)
+export const ToastTitle = ({ children }: { children: React.ReactNode }) => (
+  <div className="font-semibold text-sm">{children}</div>
+)
+export const ToastDescription = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-sm opacity-90">{children}</div>
+)
 
 export function Toaster() {
   const { toasts, dismiss } = useToast()

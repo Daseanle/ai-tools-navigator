@@ -2,29 +2,43 @@ export interface Tool {
   id: number
   slug: string
   name: string
-  tagline?: string
+  tagline: string
   description?: string
   logo_url?: string
   website_url?: string
-  tags?: Array<string | { name: string }>
   rating?: number
   users_count?: number
-  category_id?: number
-  category?: string
+  upvotes_count?: number
+  pricing_type?: "free" | "freemium" | "paid"
   created_at?: string
   updated_at?: string
-  is_featured?: boolean
-  pricing_type?: "free" | "freemium" | "paid"
+  category?: {
+    id: number
+    name: string
+    slug: string
+    description?: string | null
+    icon?: string
+  }
+  tags?: Array<{
+    id: number
+    name: string
+    slug: string
+    color?: string
+  }>
 }
 
 export interface Category {
   id: number
   name: string
   slug: string
-  description?: string
+  description?: string | null
   icon?: string
   tools_count?: number
   color?: string
+  sort_order?: number | null
+  is_active?: boolean | null
+  created_at?: string | null
+  updated_at?: string | null
 }
 
 export interface SearchResult {

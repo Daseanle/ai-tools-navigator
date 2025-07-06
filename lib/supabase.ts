@@ -5,27 +5,31 @@ import type { Database } from './database.types'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-// 验证环境变量（仅在运行时检查）
-if (typeof window !== 'undefined' && (!supabaseUrl || !supabaseAnonKey)) {
-  console.error(
-    "❌ Supabase环境变量缺失。请在.env文件中设置 NEXT_PUBLIC_SUPABASE_URL 和 NEXT_PUBLIC_SUPABASE_ANON_KEY"
-  )
+// 验证环境变量
+if (!supabaseUrl || !supabaseAnonKey) {
+  if (typeof window !== 'undefined') {
+    console.error(
+      "❌ Supabase环境变量缺失。请在.env文件中设置 NEXT_PUBLIC_SUPABASE_URL 和 NEXT_PUBLIC_SUPABASE_ANON_KEY"
+    )
+  }
+  throw new Error('Missing required Supabase environment variables')
 }
 
-// 确保URL是有效的
-const validUrl = supabaseUrl || 'https://xyzxyzxyz.supabase.co'
-const validKey = supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5enh5enh5eiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE5NjAwMDAwMDB9.0'
+// 验证URL格式
+if (!supabaseUrl.startsWith('https://') || !supabaseAnonKey.startsWith('eyJ')) {
+  throw new Error('Invalid Supabase credentials format')
+}
 
-export const supabase = createClient<Database>(validUrl, validKey)
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
 // Helper for server-side service-role access
 export const createServerClient = () => {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!serviceKey) {
     console.error("❌ Missing SUPABASE_SERVICE_ROLE_KEY for server-side requests.")
-    return createClient<Database>(validUrl, validKey) // 回退到匿名密钥
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY')
   }
-  return createClient<Database>(validUrl, serviceKey)
+  return createClient<Database>(supabaseUrl, serviceKey)
 }
 
 // 认证相关工具函数
