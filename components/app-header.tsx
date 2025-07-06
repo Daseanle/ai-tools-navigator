@@ -42,10 +42,22 @@ export default function AppHeader() {
             工具
           </Link>
           <Link 
-            href={`/${lang}/about`} 
-            className={`hover:text-white transition-colors ${pathname.includes('/about') ? "text-white font-medium" : ""}`}
+            href={`/${lang}/prompts`} 
+            className={`hover:text-white transition-colors ${pathname.includes('/prompts') ? "text-white font-medium" : ""}`}
           >
-            关于
+            Prompt市场
+          </Link>
+          <Link 
+            href={`/${lang}/membership`} 
+            className={`hover:text-white transition-colors ${pathname.includes('/membership') ? "text-white font-medium" : ""}`}
+          >
+            会员
+          </Link>
+          <Link 
+            href={`/${lang}/enterprise`} 
+            className={`hover:text-white transition-colors ${pathname.includes('/enterprise') ? "text-white font-medium" : ""}`}
+          >
+            企业服务
           </Link>
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
