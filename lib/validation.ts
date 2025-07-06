@@ -3,7 +3,7 @@ import { z } from 'zod'
 // 工具数据验证模式
 export const ToolSchema = z.object({
   id: z.number().positive(),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Invalid slug format'),
+  slug: z.string().min(1), // 移除严格的slug格式验证
   name: z.string().min(1).max(100),
   tagline: z.string().max(200),
   description: z.string().optional(),
@@ -33,7 +33,7 @@ export const ToolSchema = z.object({
 // 分类数据验证模式
 export const CategorySchema = z.object({
   id: z.number().positive(),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Invalid slug format'),
+  slug: z.string().min(1), // 移除严格的slug格式验证
   name: z.string().min(1).max(50),
   description: z.string().nullable().optional(),
   icon: z.string().optional(),
@@ -45,7 +45,7 @@ export const CategorySchema = z.object({
 // 标签数据验证模式
 export const TagSchema = z.object({
   id: z.number().positive(),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Invalid slug format'),
+  slug: z.string().min(1), // 移除严格的slug格式验证
   name: z.string().min(1).max(30),
   color: z.string().optional(),
   created_at: z.string().optional(), // 移除严格的datetime验证
@@ -85,7 +85,7 @@ export const ToolInputSchema = ToolSchema.omit({
 }).extend({
   name: z.string().min(1).max(100),
   tagline: z.string().min(1).max(200),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Invalid slug format'),
+  slug: z.string().min(1), // 移除严格的slug格式验证
 })
 
 // 验证工具函数
