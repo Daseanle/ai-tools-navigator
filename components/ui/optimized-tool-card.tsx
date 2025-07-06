@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { Star, Bookmark, ExternalLink, Users, Zap } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useParams } from "next/navigation"
 import { useFavorites } from "@/hooks/use-favorites"
 import { useToast } from "@/hooks/use-toast"
 import type { Tool } from "@/types"
@@ -30,6 +31,8 @@ export default function OptimizedToolCard({
   const [isLoading, setIsLoading] = useState(false)
   const { isFavorite, toggleFavorite } = useFavorites()
   const { toast } = useToast()
+  const params = useParams()
+  const lang = params.lang as string || 'zh'
 
   const favorite = isFavorite(tool.id)
 
@@ -73,7 +76,7 @@ export default function OptimizedToolCard({
       className={`group relative card-hover ${className}`}
     >
       <Link
-        href={`/tool/${tool.slug}`}
+        href={`/${lang}/tools/${tool.slug}`}
         className="block bg-neutral-900/80 backdrop-blur-sm border border-neutral-800/50 rounded-2xl p-6 hover:border-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 h-full"
       >
         {/* 收藏按钮 */}
