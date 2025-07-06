@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { ChevronRight, Star } from "lucide-react"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import ToolCard from "@/components/ui/tool-card"
 import type { Tool } from "@/types"
 
@@ -11,6 +12,8 @@ interface HotToolsSectionProps {
 }
 
 export default function HotToolsSection({ tools }: HotToolsSectionProps) {
+  const params = useParams()
+  const lang = params.lang as string || 'zh'
   return (
     <motion.section
       initial={{ opacity: 0, y: 40 }}
@@ -30,7 +33,7 @@ export default function HotToolsSection({ tools }: HotToolsSectionProps) {
           </div>
         </div>
         <Link
-          href="/tools"
+          href={`/${lang}/tools`}
           className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-900/30 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-all duration-300"
         >
           查看全部
