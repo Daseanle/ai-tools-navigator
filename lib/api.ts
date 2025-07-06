@@ -124,14 +124,14 @@ const mockTools = [
 ] as any[]
 
 const mockCategories = [
-  { id: 1, name: "对话AI", slug: "chat-ai", icon: "💬", tools_count: 150 },
-  { id: 2, name: "图像生成", slug: "image-generation", icon: "🎨", tools_count: 120 },
-  { id: 3, name: "编程助手", slug: "coding", icon: "💻", tools_count: 85 },
-  { id: 4, name: "生产力", slug: "productivity", icon: "📝", tools_count: 95 },
-  { id: 5, name: "视频生成", slug: "video-generation", icon: "🎬", tools_count: 45 },
-  { id: 6, name: "音频处理", slug: "audio", icon: "🎵", tools_count: 60 },
-  { id: 7, name: "数据分析", slug: "data-analysis", icon: "📊", tools_count: 70 },
-  { id: 8, name: "营销工具", slug: "marketing", icon: "📈", tools_count: 55 }
+  { id: 1, name: "AI写作", slug: "ai-writing", icon: "✍️", tools_count: 245 },
+  { id: 2, name: "AI图像", slug: "ai-image", icon: "🎨", tools_count: 189 },
+  { id: 3, name: "AI智能体", slug: "ai-agent", icon: "🤖", tools_count: 156 },
+  { id: 4, name: "AI编程", slug: "ai-programming", icon: "💻", tools_count: 134 },
+  { id: 5, name: "AI视频", slug: "ai-video", icon: "🎬", tools_count: 98 },
+  { id: 6, name: "AI音频", slug: "ai-audio", icon: "🎵", tools_count: 87 },
+  { id: 7, name: "生产力", slug: "productivity", icon: "📈", tools_count: 156 },
+  { id: 8, name: "设计UI", slug: "design-ui", icon: "🎯", tools_count: 123 }
 ] as any[]
 
 /* -------------------------------------------------------------
@@ -231,7 +231,7 @@ export async function getAllTools(limit = 100): Promise<Tool[]> {
 }
 
 export async function getStats(): Promise<{ toolsCount: number; categoriesCount: number }> {
-  if (!SUPABASE_READY) return { toolsCount: mockTools.length, categoriesCount: mockCategories.length }
+  if (!SUPABASE_READY) return { toolsCount: 2188, categoriesCount: mockCategories.length }
 
   try {
     // 获取工具总数
@@ -255,7 +255,7 @@ export async function getStats(): Promise<{ toolsCount: number; categoriesCount:
   } catch (err) {
     console.error("Error fetching stats:", err)
     console.log("🔄 使用模拟数据作为备选")
-    return { toolsCount: mockTools.length, categoriesCount: mockCategories.length }
+    return { toolsCount: 2188, categoriesCount: mockCategories.length }
   }
 }
 
@@ -263,19 +263,32 @@ export async function getCategories(): Promise<Category[]> {
   if (!SUPABASE_READY) return mockCategories
 
   try {
-    const { data, error } = await supabase
+    // 首先获取所有分类
+    const { data: categories, error: categoriesError } = await supabase
       .from("categories")
-      .select(`
-        *,
-        tool_categories(count)
-      `)
+      .select("*")
       .order("name")
 
-    if (error) throw error
-    return data.map((c) => ({
-      ...c,
-      tools_count: c.tool_categories?.length || 0,
-    }))
+    if (categoriesError) throw categoriesError
+
+    // 然后获取每个分类的工具数量
+    const categoriesWithCounts = await Promise.all(
+      categories.map(async (category) => {
+        const { count, error: countError } = await supabase
+          .from("tool_categories")
+          .select("*", { count: "exact", head: true })
+          .eq("category_id", category.id)
+
+        if (countError) {
+          console.error(`Error counting tools for category ${category.name}:`, countError)
+          return { ...category, tools_count: 0 }
+        }
+
+        return { ...category, tools_count: count || 0 }
+      })
+    )
+
+    return categoriesWithCounts
   } catch (err) {
     console.error("Error fetching categories:", err)
     console.log("🔄 使用模拟数据作为备选")
