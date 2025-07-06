@@ -7,14 +7,14 @@ export const ToolSchema = z.object({
   name: z.string().min(1).max(100),
   tagline: z.string().max(200),
   description: z.string().optional(),
-  logo_url: z.string().url().optional(),
-  website_url: z.string().url().optional(),
+  logo_url: z.string().optional(), // 移除URL验证，允许相对路径
+  website_url: z.string().optional(), // 移除URL验证
   rating: z.number().min(0).max(5).optional(),
   users_count: z.number().min(0).optional(),
   upvotes_count: z.number().min(0).optional(),
   pricing_type: z.enum(['free', 'paid', 'freemium']).optional(),
-  created_at: z.string().datetime().optional(),
-  updated_at: z.string().datetime().optional(),
+  created_at: z.string().optional(), // 移除严格的datetime验证
+  updated_at: z.string().optional(), // 移除严格的datetime验证
   category: z.object({
     id: z.number(),
     name: z.string(),
@@ -38,8 +38,8 @@ export const CategorySchema = z.object({
   description: z.string().nullable().optional(),
   icon: z.string().optional(),
   tools_count: z.number().min(0).optional(),
-  created_at: z.string().datetime().optional(),
-  updated_at: z.string().datetime().optional(),
+  created_at: z.string().optional(), // 移除严格的datetime验证
+  updated_at: z.string().optional(), // 移除严格的datetime验证
 })
 
 // 标签数据验证模式
@@ -48,7 +48,7 @@ export const TagSchema = z.object({
   slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Invalid slug format'),
   name: z.string().min(1).max(30),
   color: z.string().optional(),
-  created_at: z.string().datetime().optional(),
+  created_at: z.string().optional(), // 移除严格的datetime验证
 })
 
 // 搜索参数验证模式
