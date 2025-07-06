@@ -30,36 +30,48 @@ const mockTools = [
     slug: "chatgpt",
     name: "ChatGPT",
     tagline: "强大的 AI 对话助手",
+    description: "ChatGPT 是 OpenAI 开发的大型语言模型，能够进行自然对话、回答问题、协助写作等多种任务。它采用了先进的 GPT 架构，提供了强大的文本理解和生成能力。",
     logo_url: "/placeholder.svg?height=48&width=48",
+    website_url: "https://chat.openai.com",
     category: { id: 1, name: "对话AI", slug: "chat-ai" },
     tags: [{ id: 1, name: "免费", slug: "free" }],
     rating: 4.8,
     users_count: 100000000,
+    upvotes_count: 1500,
     pricing_type: "freemium",
+    created_at: "2022-11-30T00:00:00Z",
   },
   {
     id: 2,
     slug: "midjourney",
     name: "Midjourney",
     tagline: "AI 图像生成工具",
+    description: "Midjourney 是一个强大的 AI 图像生成平台，通过简单的文本描述就能创造出高质量的艺术作品和图像。它以其独特的艺术风格和创意表现力而闻名。",
     logo_url: "/placeholder.svg?height=48&width=48",
+    website_url: "https://midjourney.com",
     category: { id: 2, name: "图像生成", slug: "image-generation" },
     tags: [{ id: 4, name: "付费", slug: "paid" }],
     rating: 4.7,
     users_count: 15000000,
+    upvotes_count: 1200,
     pricing_type: "paid",
+    created_at: "2022-03-15T00:00:00Z",
   },
   {
     id: 3,
     slug: "claude",
     name: "Claude",
     tagline: "Anthropic 的 AI 助手",
+    description: "Claude 是 Anthropic 开发的 AI 助手，以其安全、有用和诚实的特性而著称。它能够进行复杂的推理、分析和创作任务，是一个可靠的 AI 伙伴。",
     logo_url: "/placeholder.svg?height=48&width=48",
+    website_url: "https://claude.ai",
     category: { id: 1, name: "对话AI", slug: "chat-ai" },
     tags: [{ id: 1, name: "免费", slug: "free" }],
     rating: 4.9,
     users_count: 50000000,
+    upvotes_count: 1800,
     pricing_type: "freemium",
+    created_at: "2023-07-11T00:00:00Z",
   },
   {
     id: 4,
@@ -359,11 +371,17 @@ export async function getToolsByCategory(categorySlug: string, limit = 20): Prom
 }
 
 export async function getToolBySlug(slug: string): Promise<Tool | null> {
+  console.log('🔍 getToolBySlug 调用:', { slug, SUPABASE_READY })
+  
   if (!SUPABASE_READY) {
-    return mockTools.find((t) => t.slug === slug) || null
+    console.log('⚠️ Supabase 未就绪，使用模拟数据')
+    const found = mockTools.find((t) => t.slug === slug)
+    console.log('🔍 模拟数据查找结果:', found ? `找到 ${found.name}` : '未找到')
+    return found || null
   }
 
   try {
+    console.log('🔌 尝试从 Supabase 获取数据...')
     const { data, error } = await supabase
       .from("tools")
       .select(`
@@ -378,12 +396,19 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
       .eq("slug", slug)
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('❌ Supabase 查询错误:', error)
+      throw error
+    }
+    
+    console.log('✅ Supabase 查询成功:', data?.name)
     return normalizeTool(data)
   } catch (err) {
-    console.error("Error fetching tool by slug:", err)
+    console.error("❌ Error fetching tool by slug:", err)
     console.log("🔄 使用模拟数据作为备选")
-    return mockTools.find((t) => t.slug === slug) || null
+    const found = mockTools.find((t) => t.slug === slug)
+    console.log('🔍 备选模拟数据查找结果:', found ? `找到 ${found.name}` : '未找到')
+    return found || null
   }
 }
 
