@@ -13,7 +13,7 @@ interface HeroSectionProps {
   categoriesCount?: number
 }
 
-export default function HeroSection({ toolsCount = 2188, categoriesCount = 8 }: HeroSectionProps) {
+export default function HeroSection({ toolsCount = 2180, categoriesCount = 8 }: HeroSectionProps) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const router = useRouter()
   const params = useParams()

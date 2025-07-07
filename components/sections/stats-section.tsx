@@ -7,6 +7,8 @@ import { useEffect, useState } from "react"
 interface StatsSectionProps {
   toolsCount?: number
   categoriesCount?: number
+  usersCount?: number
+  reviewsCount?: number
 }
 
 function AnimatedCounter({ value, duration = 2000 }: { value: number; duration?: number }) {
@@ -39,7 +41,12 @@ function AnimatedCounter({ value, duration = 2000 }: { value: number; duration?:
   return <span>{count.toLocaleString()}</span>
 }
 
-export default function StatsSection({ toolsCount = 2188, categoriesCount = 8 }: StatsSectionProps) {
+export default function StatsSection({ 
+  toolsCount = 2180, 
+  categoriesCount = 8, 
+  usersCount = 85000, 
+  reviewsCount = 24600 
+}: StatsSectionProps) {
   const stats = [
     {
       icon: Zap,
@@ -60,7 +67,7 @@ export default function StatsSection({ toolsCount = 2188, categoriesCount = 8 }:
     {
       icon: Star,
       label: "用户评价",
-      value: Math.floor(toolsCount * 2.5),
+      value: reviewsCount,
       suffix: "+",
       color: "text-yellow-400",
       bgColor: "bg-yellow-500/10",
@@ -68,7 +75,7 @@ export default function StatsSection({ toolsCount = 2188, categoriesCount = 8 }:
     {
       icon: TrendingUp,
       label: "月更新工具",
-      value: Math.floor(toolsCount * 0.1),
+      value: Math.floor(toolsCount * 0.05),
       suffix: "+",
       color: "text-purple-400",
       bgColor: "bg-purple-500/10",

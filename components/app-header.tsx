@@ -77,6 +77,12 @@ export default function AppHeader() {
           >
             企业服务
           </Link>
+          <Link 
+            href={`/${lang}/industries`} 
+            className={`hover:text-white transition-colors ${pathname.includes('/industries') ? "text-white font-medium" : ""}`}
+          >
+            行业方案
+          </Link>
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
             <ThemeToggle />
