@@ -42,10 +42,28 @@ export default function AppHeader() {
             工具
           </Link>
           <Link 
+            href={`/${lang}/trials`} 
+            className={`hover:text-white transition-colors ${pathname.includes('/trials') ? "text-white font-medium" : ""}`}
+          >
+            免费试用
+          </Link>
+          <Link 
             href={`/${lang}/prompts`} 
             className={`hover:text-white transition-colors ${pathname.includes('/prompts') ? "text-white font-medium" : ""}`}
           >
             Prompt市场
+          </Link>
+          <Link 
+            href={`/${lang}/community`} 
+            className={`hover:text-white transition-colors ${pathname.includes('/community') ? "text-white font-medium" : ""}`}
+          >
+            社区
+          </Link>
+          <Link 
+            href={`/${lang}/developers`} 
+            className={`hover:text-white transition-colors ${pathname.includes('/developers') ? "text-white font-medium" : ""}`}
+          >
+            开发者
           </Link>
           <Link 
             href={`/${lang}/membership`} 
