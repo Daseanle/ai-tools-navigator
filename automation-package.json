@@ -1,0 +1,9 @@
+{
+  "name": "ai-automation-system",
+  "description": "Complete AI automation scripts for autonomous revenue optimization",
+  "scripts": {
+    "automation:start": "node scripts/start-automation.js",
+    "automation:dev": "node scripts/start-automation.js --dev",
+    "automation:status": "node scripts/check-status.js"
+  }
+}

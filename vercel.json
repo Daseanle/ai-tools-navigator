@@ -4,7 +4,38 @@
   "installCommand": "npm install --legacy-peer-deps",
   "functions": {
     "app/**": {
-      "maxDuration": 30
+      "maxDuration": 300
     }
-  }
+  },
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "@supabase-url",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-key",
+    "NODE_ENV": "production"
+  },
+  "crons": [
+    {
+      "path": "/api/automation/seo-sync",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/automation/competitor-analysis", 
+      "schedule": "0 */12 * * *"
+    },
+    {
+      "path": "/api/automation/user-behavior-analysis",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/automation/recommendation-update",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/automation/content-generation",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/automation/performance-monitoring",
+      "schedule": "*/5 * * * *"
+    }
+  ]
 }

@@ -18,7 +18,10 @@
     "export": "next build && next export",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf .next out",
-    "production:build": "npm run clean && npm run type-check && npm run build"
+    "production:build": "npm run clean && npm run type-check && npm run build",
+    "automation:start": "node scripts/start-automation.js",
+    "automation:dev": "node scripts/start-automation.js --dev",
+    "automation:status": "curl http://localhost:3000/api/automation/status"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",

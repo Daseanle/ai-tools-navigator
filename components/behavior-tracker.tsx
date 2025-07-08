@@ -19,15 +19,25 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
     // 生成会话ID
     currentSessionRef.current = sessionId || `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
     
+    // 创建会话
+    createSession()
+    
     // 跟踪页面访问
     trackPageView()
     
     // 设置事件监听器
     setupEventListeners()
     
+    // 监听性能数据
+    trackPerformanceMetrics()
+    
     return () => {
       // 清理事件监听器
       cleanupEventListeners()
+      // 清理分析器资源
+      if (analyticsRef.current) {
+        analyticsRef.current.destroy()
+      }
     }
   }, [])
 
@@ -244,13 +254,35 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
   const handlePageUnload = () => {
     // 发送页面停留时间数据
     if (analyticsRef.current) {
+      // 计算页面停留时间
+      const timeSpent = Date.now() - window.performance.timing.navigationStart
+      
+      // 收集当前页面的热力图数据
+      const clickData = [] // 这里可以收集页面上的点击数据
+      const scrollData = [] // 这里可以收集滚动数据
+      const hoverData = [] // 这里可以收集悬停数据
+      
       // 使用 sendBeacon 确保数据发送
-      navigator.sendBeacon('/api/analytics/page-exit', JSON.stringify({
+      const exitData = {
         userId: userId || 'anonymous',
         sessionId: currentSessionRef.current,
         page: window.location.pathname,
-        timeSpent: Date.now() - window.performance.timing.navigationStart
-      }))
+        timeSpent: timeSpent
+      }
+      
+      try {
+        navigator.sendBeacon('/api/analytics/page-exit', JSON.stringify(exitData))
+        
+        // 发送热力图数据
+        analyticsRef.current.sendHeatmapData(
+          window.location.href,
+          clickData,
+          scrollData,
+          hoverData
+        )
+      } catch (error) {
+        console.error('Error sending unload data:', error)
+      }
     }
   }
 
@@ -336,6 +368,65 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
     if (userAgent.includes('Safari')) return 'Safari'
     if (userAgent.includes('Edge')) return 'Edge'
     return 'Unknown'
+  }
+
+  // 创建会话
+  const createSession = async () => {
+    if (!analyticsRef.current) return
+    
+    await analyticsRef.current.createSession(
+      currentSessionRef.current,
+      userId || 'anonymous'
+    )
+  }
+
+  // 跟踪性能指标
+  const trackPerformanceMetrics = () => {
+    if (!analyticsRef.current) return
+
+    // 等待页面加载完成
+    if (document.readyState === 'complete') {
+      collectPerformanceData()
+    } else {
+      window.addEventListener('load', collectPerformanceData)
+    }
+  }
+
+  const collectPerformanceData = () => {
+    if (!analyticsRef.current) return
+
+    // 获取导航时间
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
+    
+    // 获取Paint时间
+    const paintEntries = performance.getEntriesByType('paint')
+    const fcp = paintEntries.find(entry => entry.name === 'first-contentful-paint')?.startTime
+    
+    // 获取LCP
+    let lcp = 0
+    if ('PerformanceObserver' in window) {
+      try {
+        const observer = new PerformanceObserver((list) => {
+          const entries = list.getEntries()
+          const lastEntry = entries[entries.length - 1]
+          lcp = lastEntry.startTime
+        })
+        observer.observe({ entryTypes: ['largest-contentful-paint'] })
+      } catch (error) {
+        console.log('LCP observation not supported')
+      }
+    }
+
+    // 发送性能数据
+    setTimeout(() => {
+      analyticsRef.current?.sendPerformanceData(window.location.href, {
+        loadTime: navigation?.loadEventEnd - navigation?.navigationStart,
+        firstContentfulPaint: fcp,
+        largestContentfulPaint: lcp,
+        firstInputDelay: 0, // 需要通过事件监听器获取
+        cumulativeLayoutShift: 0 // 需要通过PerformanceObserver获取
+      })
+    }, 1000)
   }
 
   // 不渲染任何UI

@@ -157,10 +157,20 @@ export class UserBehaviorAnalytics {
     events: string[]
     pages: string[]
   }> = new Map()
+  
+  // API配置
+  private readonly apiBaseUrl = '/api/analytics'
+  private eventQueue: UserBehaviorEvent[] = []
+  private isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true
+  private flushTimer: NodeJS.Timeout | null = null
+  private readonly batchSize = 10
+  private readonly flushInterval = 5000 // 5秒
 
   constructor() {
     this.initializeDefaultFunnels()
     this.initializeDefaultSegments()
+    this.setupNetworkListeners()
+    this.startBatchProcessor()
   }
 
   // 初始化默认转化漏斗
@@ -358,9 +368,13 @@ export class UserBehaviorAnalytics {
       id: eventId
     }
 
+    // 本地存储
     this.events.push(fullEvent)
     this.updateSession(event.sessionId, event.userId, fullEvent)
     this.updateUserSegments(event.userId, fullEvent)
+
+    // 发送到服务器
+    this.queueEventForSending(fullEvent)
 
     // 实时分析
     this.processEventRealTime(fullEvent)
@@ -792,5 +806,237 @@ export class UserBehaviorAnalytics {
     return Object.entries(eventCounts)
       .map(([eventType, count]) => ({ eventType, count }))
       .sort((a, b) => b.count - a.count)
+  }
+
+  // ========== 新增API集成方法 ==========
+
+  // 设置网络状态监听器
+  private setupNetworkListeners(): void {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', () => {
+        this.isOnline = true
+        this.flushEventQueue()
+      })
+      
+      window.addEventListener('offline', () => {
+        this.isOnline = false
+      })
+    }
+  }
+
+  // 启动批处理器
+  private startBatchProcessor(): void {
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer)
+    }
+    
+    this.flushTimer = setInterval(() => {
+      this.flushEventQueue()
+    }, this.flushInterval)
+  }
+
+  // 将事件加入发送队列
+  private queueEventForSending(event: UserBehaviorEvent): void {
+    this.eventQueue.push(event)
+    
+    // 如果队列达到批处理大小，立即发送
+    if (this.eventQueue.length >= this.batchSize) {
+      this.flushEventQueue()
+    }
+  }
+
+  // 发送事件队列
+  private async flushEventQueue(): Promise<void> {
+    if (!this.isOnline || this.eventQueue.length === 0) {
+      return
+    }
+
+    const eventsToSend = this.eventQueue.splice(0, this.batchSize)
+    
+    try {
+      // 批量发送事件
+      await Promise.all(eventsToSend.map(event => this.sendEventToAPI(event)))
+    } catch (error) {
+      // 发送失败，重新加入队列
+      console.error('Failed to send events:', error)
+      this.eventQueue.unshift(...eventsToSend)
+    }
+  }
+
+  // 发送单个事件到API
+  private async sendEventToAPI(event: UserBehaviorEvent): Promise<void> {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: event.userId,
+          session_id: event.sessionId,
+          event_type: event.eventType,
+          event_data: event.eventData,
+          url: event.context.url,
+          referrer: event.context.referrer,
+          user_agent: event.context.userAgent,
+          viewport: event.context.viewport,
+          device_type: event.deviceInfo.type,
+          os: event.deviceInfo.os,
+          browser: event.deviceInfo.browser,
+          screen_resolution: event.deviceInfo.screenResolution,
+          geo_location: event.geoLocation,
+          timezone: event.context.timezone
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`)
+      }
+    } catch (error) {
+      console.error('Error sending event to API:', error)
+      throw error
+    }
+  }
+
+  // 创建会话
+  async createSession(sessionId: string, userId: string = 'anonymous', startTime?: string): Promise<void> {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/sessions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          user_id: userId,
+          start_time: startTime || new Date().toISOString(),
+          device_type: this.getDeviceType(),
+          source: this.getTrafficSource()
+        })
+      })
+
+      if (!response.ok) {
+        console.error('Failed to create session:', response.status)
+      }
+    } catch (error) {
+      console.error('Error creating session:', error)
+    }
+  }
+
+  // 发送热力图数据
+  async sendHeatmapData(pageUrl: string, clickData: any[], scrollData: any[], hoverData: any[]): Promise<void> {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/heatmap`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          page_url: pageUrl,
+          viewport: { width: window.innerWidth, height: window.innerHeight },
+          click_data: clickData,
+          scroll_data: scrollData,
+          hover_data: hoverData
+        })
+      })
+
+      if (!response.ok) {
+        console.error('Failed to send heatmap data:', response.status)
+      }
+    } catch (error) {
+      console.error('Error sending heatmap data:', error)
+    }
+  }
+
+  // 发送页面性能数据
+  async sendPerformanceData(url: string, performanceData: {
+    loadTime?: number
+    firstContentfulPaint?: number
+    largestContentfulPaint?: number
+    firstInputDelay?: number
+    cumulativeLayoutShift?: number
+  }): Promise<void> {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/performance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url,
+          load_time: performanceData.loadTime,
+          first_contentful_paint: performanceData.firstContentfulPaint,
+          largest_contentful_paint: performanceData.largestContentfulPaint,
+          first_input_delay: performanceData.firstInputDelay,
+          cumulative_layout_shift: performanceData.cumulativeLayoutShift,
+          device_type: this.getDeviceType(),
+          connection_type: this.getConnectionType()
+        })
+      })
+
+      if (!response.ok) {
+        console.error('Failed to send performance data:', response.status)
+      }
+    } catch (error) {
+      console.error('Error sending performance data:', error)
+    }
+  }
+
+  // 获取分析仪表板数据
+  async getDashboardData(days: number = 30): Promise<any> {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/dashboard?days=${days}`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch dashboard data: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      return data.data
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+      return null
+    }
+  }
+
+  // 工具方法
+  private getDeviceType(): string {
+    if (typeof window === 'undefined') return 'unknown'
+    
+    const width = window.innerWidth
+    if (width < 768) return 'mobile'
+    if (width < 1024) return 'tablet'
+    return 'desktop'
+  }
+
+  private getTrafficSource(): string {
+    if (typeof document === 'undefined') return 'direct'
+    
+    const referrer = document.referrer
+    if (!referrer) return 'direct'
+    
+    if (referrer.includes('google.com')) return 'search'
+    if (referrer.includes('facebook.com') || referrer.includes('twitter.com')) return 'social'
+    return 'referral'
+  }
+
+  private getConnectionType(): string {
+    if (typeof navigator === 'undefined' || !('connection' in navigator)) {
+      return 'unknown'
+    }
+    
+    const connection = (navigator as any).connection
+    return connection?.effectiveType || 'unknown'
+  }
+
+  // 清理资源
+  destroy(): void {
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer)
+      this.flushTimer = null
+    }
+    
+    // 发送剩余的事件
+    this.flushEventQueue()
   }
 }
