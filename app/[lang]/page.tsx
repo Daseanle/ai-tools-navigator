@@ -33,6 +33,11 @@ const StatsSection = dynamic(() => import("@/components/sections/stats-section")
   ssr: false,
 })
 
+const IntelligentRecommendations = dynamic(() => import("@/components/sections/intelligent-recommendations").then(mod => ({ default: mod.IntelligentRecommendations })), {
+  loading: () => <div className="h-96 skeleton rounded-2xl" />,
+  ssr: false,
+})
+
 interface PageProps {
   params: { lang: string }
 }
@@ -79,6 +84,14 @@ export default async function HomePage({ params }: PageProps) {
 
           {/* Category Section - 分类导航 */}
           <CategorySection categories={categoriesData} />
+
+          {/* Intelligent Recommendations - 智能推荐 */}
+          <section className="py-12">
+            <IntelligentRecommendations 
+              currentPage={`/${params.lang}`}
+              className="mb-12"
+            />
+          </section>
 
           {/* Hot Tools Section - 热门工具 */}
           <HotToolsSection tools={hotToolsData} />
