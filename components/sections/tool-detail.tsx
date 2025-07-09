@@ -97,7 +97,7 @@ export default function ToolDetail({ tool }: ToolDetailProps) {
                 {tool.rating && (
                   <div className="flex items-center space-x-1">
                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-white font-medium">{tool.rating}</span>
+                    <span className="text-white font-medium">{typeof tool.rating === 'number' ? tool.rating.toFixed(1) : tool.rating}</span>
                     <span>({tool.upvotes_count || 0} 评价)</span>
                   </div>
                 )}

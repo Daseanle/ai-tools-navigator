@@ -68,7 +68,7 @@ export default function ToolCard({ tool, className = "" }: ToolCardProps) {
             {tool.rating && (
               <div className="flex items-center space-x-1 mt-1">
                 <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">{tool.rating}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">{typeof tool.rating === 'number' ? tool.rating.toFixed(1) : tool.rating}</span>
               </div>
             )}
           </div>

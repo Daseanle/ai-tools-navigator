@@ -844,7 +844,7 @@ function autoCompleteToolData(tool: any): any {
     upvotes_count: tool.upvotes_count || Math.floor(Math.random() * 2000) + 500,
     created_at: tool.created_at || new Date(Date.now() - Math.floor(Math.random() * 365 * 24 * 60 * 60 * 1000 * 2)).toISOString(),
     logo_url: tool.logo_url || `/placeholder.svg?height=48&width=48&text=${encodeURIComponent(tool.name.charAt(0))}`,
-    rating: tool.rating || (4.0 + Math.random() * 1.0),
+    rating: tool.rating || parseFloat((4.0 + Math.random() * 1.0).toFixed(1)),
     users_count: tool.users_count || Math.floor(Math.random() * 50000000) + 1000000,
     pricing_type: tool.pricing_type || 'freemium'
   }
@@ -897,7 +897,7 @@ function normalizeTool(raw: any): Tool | null {
       website_url: raw.website_url ? sanitizeUrl(raw.website_url) : undefined,
       category,
       tags,
-      rating: raw.rating || (4.0 + Math.random() * 1.0), // 生成4.0-5.0的随机评分
+      rating: raw.rating || parseFloat((4.0 + Math.random() * 1.0).toFixed(1)), // 生成4.0-5.0的随机评分，保留1位小数
       users_count: raw.users_count || raw.upvotes_count || 0,
       upvotes_count: raw.upvotes_count || 0,
       pricing_type: (raw.pricing_type || raw.pricing || 'freemium').toLowerCase() as 'free' | 'paid' | 'freemium',
