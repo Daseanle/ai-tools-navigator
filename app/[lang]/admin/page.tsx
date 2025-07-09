@@ -1,7 +1,9 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { useAuth } from '@/components/providers/auth-provider'
 import { 
   Bot, 
   TrendingUp, 
@@ -24,7 +26,8 @@ import {
   Eye,
   Shield,
   Smartphone,
-  Brain
+  Brain,
+  Lock
 } from 'lucide-react'
 import { AutomationManager } from '@/lib/automation-manager'
 import { AIContentGenerator } from '@/lib/ai-content-generator'
@@ -82,6 +85,45 @@ interface SystemStatus {
 }
 
 export default function AdminDashboard() {
+  const { user, isAdmin, loading } = useAuth()
+  const router = useRouter()
+  
+  // 权限检查
+  useEffect(() => {
+    if (!loading && (!user || !isAdmin)) {
+      router.push('/')
+    }
+  }, [user, isAdmin, loading, router])
+
+  // 如果还在加载或者不是管理员，显示权限检查界面
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-neutral-400">正在验证权限...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user || !isAdmin) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
+        <div className="text-center">
+          <Lock className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold mb-2">访问受限</h1>
+          <p className="text-neutral-400 mb-4">您没有权限访问管理后台</p>
+          <button
+            onClick={() => router.push('/')}
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+          >
+            返回首页
+          </button>
+        </div>
+      </div>
+    )
+  }
   const [systemStatus, setSystemStatus] = useState<SystemStatus>({
     automation: {
       running: true,

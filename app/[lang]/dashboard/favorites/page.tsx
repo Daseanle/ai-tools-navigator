@@ -29,7 +29,7 @@ export default function FavoritesPage({ params }: PageProps) {
 
         {/* 收藏工具列表 */}
         <Suspense fallback={<LoadingSkeleton variant="card" count={8} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" />}>
-          <UserFavorites />
+          <UserFavorites userId="user-123" />
         </Suspense>
       </div>
     </div>

@@ -18,12 +18,13 @@ import {
   Settings, 
   Heart, 
   BarChart3,
+  Shield,
   Loader2 
 } from 'lucide-react'
 import { useRouter, useParams } from 'next/navigation'
 
 export function UserNav() {
-  const { user, signOut, loading } = useAuth()
+  const { user, signOut, loading, isAdmin } = useAuth()
   const router = useRouter()
   const params = useParams()
   const lang = params.lang as string || 'zh'
@@ -57,6 +58,10 @@ export function UserNav() {
     router.push(`/${lang}/dashboard/${path}`)
   }
 
+  const handleAdminClick = () => {
+    router.push(`/${lang}/admin`)
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -81,6 +86,18 @@ export function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        
+        {/* 管理员专用菜单项 */}
+        {isAdmin && (
+          <>
+            <DropdownMenuItem onClick={handleAdminClick}>
+              <Shield className="mr-2 h-4 w-4 text-orange-500" />
+              <span>管理后台</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        
         <DropdownMenuItem onClick={() => handleMenuClick('favorites')}>
           <Heart className="mr-2 h-4 w-4" />
           <span>智能收藏</span>

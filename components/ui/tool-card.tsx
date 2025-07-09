@@ -62,9 +62,24 @@ export default function ToolCard({ tool, className = "" }: ToolCardProps) {
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 dark:text-white text-lg truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              {tool.name}
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-gray-900 dark:text-white text-lg truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                {tool.name}
+              </h3>
+              {/* 直接访问工具网站按钮 - 移动到这里 */}
+              {tool.website_url && (
+                <a
+                  href={tool.website_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="p-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors opacity-0 group-hover:opacity-100 duration-200"
+                  title="访问工具网站"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+            </div>
             {tool.rating && (
               <div className="flex items-center space-x-1 mt-1">
                 <Star className="w-4 h-4 text-yellow-400 fill-current" />
@@ -112,25 +127,9 @@ export default function ToolCard({ tool, className = "" }: ToolCardProps) {
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
-            {/* 直接访问工具网站按钮 */}
-            {tool.website_url && (
-              <a
-                href={tool.website_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
-                title="访问工具网站"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            )}
-            
-            {/* 查看详情指示器 */}
-            <div className="text-gray-400 group-hover:text-blue-500 transition-colors text-sm">
-              查看详情
-            </div>
+          {/* 查看详情指示器 */}
+          <div className="text-gray-400 group-hover:text-blue-500 transition-colors text-sm">
+            查看详情
           </div>
         </div>
       </Link>

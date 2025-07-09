@@ -132,12 +132,28 @@ export default function OptimizedToolCard({
                   {tool.name}
                 </h3>
 
-                {tool.rating && (
-                  <div className="flex items-center ml-2 flex-shrink-0">
-                    <Star size={14} className="text-yellow-400 fill-yellow-400 mr-1" />
-                    <span className="text-sm text-neutral-300 font-medium">{tool.rating.toFixed(1)}</span>
-                  </div>
-                )}
+                <div className="flex items-center space-x-2 flex-shrink-0">
+                  {/* 直接访问工具网站按钮 */}
+                  {tool.website_url && (
+                    <a
+                      href={tool.website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-1.5 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-colors opacity-0 group-hover:opacity-100 duration-200 border border-blue-500/20"
+                      title="访问工具网站"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  )}
+                  
+                  {tool.rating && (
+                    <div className="flex items-center ml-2">
+                      <Star size={14} className="text-yellow-400 fill-yellow-400 mr-1" />
+                      <span className="text-sm text-neutral-300 font-medium">{tool.rating.toFixed(1)}</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {tool.tagline && !compact && (
@@ -182,7 +198,9 @@ export default function OptimizedToolCard({
                 )}
               </div>
 
-              <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-blue-400 transition-colors duration-300 flex-shrink-0" />
+              <div className="text-neutral-400 group-hover:text-blue-400 transition-colors duration-300 text-sm">
+                查看详情
+              </div>
             </div>
           </div>
         </div>

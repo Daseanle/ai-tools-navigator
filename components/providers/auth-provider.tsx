@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
+  isAdmin: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
@@ -20,6 +21,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  // 管理员邮箱列表 - 您可以在这里添加您的管理员邮箱
+  const adminEmails = [
+    'admin@example.com',
+    'dasean@example.com',
+    // 从环境变量获取管理员邮箱
+    process.env.NEXT_PUBLIC_ADMIN_EMAIL,
+    // 您可以在这里添加您的真实管理员邮箱
+  ].filter(Boolean) as string[]
+
+  const checkAdminStatus = (user: User | null) => {
+    if (!user?.email) return false
+    return adminEmails.includes(user.email)
+  }
 
   useEffect(() => {
     // 获取初始会话
@@ -27,6 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: { session } } = await supabase.auth.getSession()
       setSession(session)
       setUser(session?.user ?? null)
+      setIsAdmin(checkAdminStatus(session?.user ?? null))
       setLoading(false)
     }
 
@@ -37,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async (event, session) => {
         setSession(session)
         setUser(session?.user ?? null)
+        setIsAdmin(checkAdminStatus(session?.user ?? null))
         setLoading(false)
       }
     )
@@ -81,6 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     session,
     loading,
+    isAdmin,
     signIn,
     signUp,
     signOut,

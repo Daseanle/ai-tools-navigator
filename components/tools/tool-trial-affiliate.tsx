@@ -27,25 +27,107 @@ export default function ToolTrialAffiliate() {
   const [affiliateStats, setAffiliateStats] = useState<any>(null)
   const [copiedLink, setCopiedLink] = useState<string | null>(null)
 
-  // 模拟用户是否已加入分销计划
+  // 用户分销状态
   const [isAffiliate, setIsAffiliate] = useState(false)
-  const [affiliateId] = useState('affiliate-' + Math.random().toString(36).substr(2, 9))
+  const [affiliateId, setAffiliateId] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // 模拟加载分销数据
-    if (isAffiliate) {
-      AffiliateSystem.generatePayoutReport(affiliateId, 'current_month').then(setAffiliateStats)
+    // 检查用户是否已经是分销伙伴
+    const checkAffiliateStatus = async () => {
+      try {
+        const response = await fetch('/api/affiliate?userId=user-123') // 实际应该从用户context获取
+        const result = await response.json()
+        
+        if (result.success && result.partner) {
+          setIsAffiliate(true)
+          setAffiliateId(result.partner.id)
+          setAffiliateStats({
+            totalEarnings: result.partner.total_earnings,
+            pendingAmount: result.partner.monthlyEarnings,
+            paidAmount: result.partner.total_earnings - result.partner.monthlyEarnings,
+            transactions: result.partner.recentEarnings || []
+          })
+        }
+      } catch (error) {
+        console.error('Check affiliate status error:', error)
+      }
     }
-  }, [isAffiliate, affiliateId])
+    
+    checkAffiliateStatus()
+  }, [])
 
   const handleStartTrial = async (offerId: string) => {
-    const result = await TrialSystem.startTrial('user-123', offerId)
-    if (result.success && result.redirectUrl) {
-      window.open(result.redirectUrl, '_blank')
+    try {
+      // 调用真实的试用API
+      const response = await fetch('/api/trials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: 'user-123', // 实际应该从用户context获取
+          offerId,
+          affiliateId: new URLSearchParams(window.location.search).get('ref') || undefined
+        })
+      })
+
+      const result = await response.json()
+      
+      if (result.success && result.redirectUrl) {
+        // 显示成功消息
+        alert(result.message || '试用已开始，即将跳转到工具页面')
+        // 跳转到工具页面
+        window.open(result.redirectUrl, '_blank')
+      } else {
+        alert(result.error || '试用开始失败')
+      }
+    } catch (error) {
+      console.error('Start trial error:', error)
+      alert('试用开始失败，请稍后重试')
+    }
+  }
+
+  const handleJoinAffiliate = async () => {
+    if (isLoading) return
+    
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/affiliate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: 'user-123', // 实际应该从用户context获取
+          payoutMethod: 'alipay',
+          payoutDetails: {
+            account: 'user@example.com',
+            realName: '用户姓名'
+          }
+        })
+      })
+
+      const result = await response.json()
+      
+      if (result.success) {
+        setIsAffiliate(true)
+        setAffiliateId(result.partnerId)
+        alert(result.message || '成功加入分销计划')
+      } else {
+        alert(result.error || '加入分销计划失败')
+      }
+    } catch (error) {
+      console.error('Join affiliate error:', error)
+      alert('加入分销计划失败，请稍后重试')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const handleCopyAffiliateLink = (toolId: string) => {
+    if (!affiliateId) return
+    
     const link = AffiliateSystem.generateAffiliateLink(affiliateId, toolId)
     navigator.clipboard.writeText(link)
     setCopiedLink(toolId)
@@ -274,10 +356,11 @@ export default function ToolTrialAffiliate() {
                 </div>
 
                 <button 
-                  onClick={() => setIsAffiliate(true)}
-                  className="px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors"
+                  onClick={handleJoinAffiliate}
+                  disabled={isLoading}
+                  className="px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors disabled:opacity-50"
                 >
-                  立即加入分销计划
+                  {isLoading ? '处理中...' : '立即加入分销计划'}
                 </button>
               </div>
 

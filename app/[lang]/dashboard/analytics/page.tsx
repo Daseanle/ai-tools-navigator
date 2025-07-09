@@ -29,7 +29,7 @@ export default function AnalyticsPage({ params }: PageProps) {
 
         {/* 数据分析内容 */}
         <Suspense fallback={<LoadingSkeleton variant="card" count={6} className="grid grid-cols-1 lg:grid-cols-2 gap-6" />}>
-          <UserAnalytics />
+          <UserAnalytics userId="user-123" />
         </Suspense>
       </div>
     </div>

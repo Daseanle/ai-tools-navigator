@@ -29,7 +29,12 @@ export default function SettingsPage({ params }: PageProps) {
 
         {/* 设置内容 */}
         <Suspense fallback={<LoadingSkeleton variant="card" count={4} className="space-y-6" />}>
-          <UserSettings />
+          <UserSettings user={{
+            id: "user-123",
+            name: "用户",
+            email: "user@example.com",
+            avatar: "/avatars/default.png"
+          }} />
         </Suspense>
       </div>
     </div>
