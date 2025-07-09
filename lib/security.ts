@@ -127,6 +127,11 @@ export function validateCSRFToken(request: NextRequest): boolean {
     return true
   }
   
+  // Skip CSRF for automation APIs
+  if (request.nextUrl.pathname.includes('/api/automation/')) {
+    return true
+  }
+  
   const token = request.headers.get('x-csrf-token') || 
                 request.headers.get('x-xsrf-token')
   const cookie = request.cookies.get('csrf-token')?.value

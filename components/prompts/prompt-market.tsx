@@ -98,6 +98,17 @@ export default function PromptMarket() {
         <h1 className="text-4xl font-bold text-white mb-4">Prompt 市场</h1>
         <p className="text-xl text-neutral-400 mb-6">发现、购买、分享优质 AI Prompt</p>
         
+        {/* 创建按钮 */}
+        <div className="flex justify-center mb-6">
+          <Link
+            href="/prompts/create"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            <span className="text-xl">🤖</span>
+            AI 自动生成 Prompt
+          </Link>
+        </div>
+        
         {/* 统计信息 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-neutral-900 rounded-xl p-4">
@@ -322,9 +333,17 @@ export default function PromptMarket() {
             <div className="text-blue-100 text-sm">审核时间</div>
           </div>
         </div>
-        <button className="mt-6 px-8 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-colors">
-          立即加入创作者计划
-        </button>
+        <div className="flex justify-center space-x-4 mt-6">
+          <Link
+            href="/prompts/create"
+            className="px-8 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-colors"
+          >
+            🤖 AI 智能生成
+          </Link>
+          <button className="px-8 py-3 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-colors">
+            📝 手动创建
+          </button>
+        </div>
       </div>
     </div>
   )
