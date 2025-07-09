@@ -92,7 +92,15 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(npx vercel:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(vercel:*)",
+      "Bash(ls:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:ai-navigator-7w0umdo4y-daseanles-projects.vercel.app)",
+      "Bash(node:*)",
+      "Bash(VERCEL_URL=\"https://ai-navigator-5kj9hs7mk-daseanles-projects.vercel.app\" node scripts/test-automation.js)",
+      "Bash(VERCEL_URL=\"ai-navigator-5kj9hs7mk-daseanles-projects.vercel.app\" node scripts/test-automation.js)",
+      "Bash(npm install:*)"
     ],
     "deny": []
   }

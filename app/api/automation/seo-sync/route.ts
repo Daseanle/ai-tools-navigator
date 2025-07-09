@@ -2,7 +2,7 @@
  * SEO数据同步API端点 - Vercel Cron Job
  */
 import { NextRequest, NextResponse } from 'next/server'
-import { RealSEOManager } from '../../../lib/real-seo-manager'
+import { RealSEOManager } from '../../../../lib/real-seo-manager'
 
 export async function GET(request: NextRequest) {
   try {

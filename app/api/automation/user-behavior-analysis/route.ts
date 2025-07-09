@@ -2,7 +2,7 @@
  * 用户行为分析API端点 - Vercel Cron Job
  */
 import { NextRequest, NextResponse } from 'next/server'
-import { UserBehaviorAnalytics } from '../../../lib/user-behavior-analytics'
+import { UserBehaviorAnalytics } from '../../../../lib/user-behavior-analytics'
 
 export async function GET(request: NextRequest) {
   try {

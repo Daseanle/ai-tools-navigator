@@ -2,7 +2,7 @@
  * 竞品分析API端点 - Vercel Cron Job
  */
 import { NextRequest, NextResponse } from 'next/server'
-import { CompetitorAnalysisCrawler } from '../../../lib/competitor-crawler'
+import { CompetitorAnalysisCrawler } from '../../../../lib/competitor-crawler'
 
 export async function GET(request: NextRequest) {
   try {

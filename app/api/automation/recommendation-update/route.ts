@@ -2,7 +2,7 @@
  * 推荐系统更新API端点 - Vercel Cron Job
  */
 import { NextRequest, NextResponse } from 'next/server'
-import { IntelligentRecommendationEngine } from '../../../lib/intelligent-recommendation'
+import { IntelligentRecommendationEngine } from '../../../../lib/intelligent-recommendation'
 
 export async function GET(request: NextRequest) {
   try {
