@@ -6,89 +6,185 @@ import { Search, Filter, Star, Download, Heart, Eye, Tag, Crown, Zap } from "luc
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { promptCategories, samplePrompts, type PromptItem, PromptMarketService } from "@/lib/prompt-market"
+import PaymentModal from "@/components/payment/payment-modal"
+import { formatPrice } from "@/lib/payment"
+
+interface PromptItem {
+  id: string
+  title: string
+  description: string
+  category_id: string
+  author_id: string
+  author_name: string
+  author_avatar: string
+  author_verified: boolean
+  pricing_type: 'free' | 'paid' | 'premium'
+  price: number
+  original_price?: number
+  tags: string[]
+  featured: boolean
+  verified: boolean
+  views_count: number
+  downloads_count: number
+  favorites_count: number
+  rating_average: number
+  rating_count: number
+  created_at: string
+  prompt_categories: {
+    id: string
+    name: string
+    icon: string
+    color: string
+  }
+}
+
+interface PromptCategory {
+  id: string
+  name: string
+  icon: string
+  color: string
+  prompt_count: number
+}
 
 export default function PromptMarket() {
-  const [prompts, setPrompts] = useState<PromptItem[]>(samplePrompts)
+  const [prompts, setPrompts] = useState<PromptItem[]>([])
+  const [categories, setCategories] = useState<PromptCategory[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [selectedFilter, setSelectedFilter] = useState<string>("all")
   const [sortBy, setSortBy] = useState<string>("featured")
+  const [loading, setLoading] = useState(true)
+  const [paymentModal, setPaymentModal] = useState<{
+    isOpen: boolean
+    orderData?: any
+  }>({ isOpen: false })
   const params = useParams()
   const lang = params.lang as string || 'zh'
 
-  const filterPrompts = () => {
-    let filtered = samplePrompts
+  const fetchPrompts = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams({
+        category: selectedCategory,
+        pricing: selectedFilter,
+        search: searchQuery,
+        sort: sortBy,
+        limit: '12'
+      })
 
-    // 分类筛选
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(prompt => prompt.category.id === selectedCategory)
+      const response = await fetch(`/api/prompts?${params}`)
+      const result = await response.json()
+      
+      if (result.success) {
+        setPrompts(result.data)
+      }
+    } catch (error) {
+      console.error('Fetch prompts error:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
-    // 价格筛选
-    if (selectedFilter === "free") {
-      filtered = filtered.filter(prompt => prompt.pricing.type === "free")
-    } else if (selectedFilter === "paid") {
-      filtered = filtered.filter(prompt => prompt.pricing.type === "paid")
-    } else if (selectedFilter === "premium") {
-      filtered = filtered.filter(prompt => prompt.pricing.type === "premium")
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/prompts/categories')
+      const result = await response.json()
+      
+      if (result.success) {
+        setCategories(result.data)
+      }
+    } catch (error) {
+      console.error('Fetch categories error:', error)
     }
-
-    // 搜索筛选
-    if (searchQuery) {
-      filtered = filtered.filter(prompt => 
-        prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        prompt.tags.some(tag => tag.includes(searchQuery))
-      )
-    }
-
-    // 排序
-    switch (sortBy) {
-      case "popular":
-        filtered.sort((a, b) => b.stats.downloads - a.stats.downloads)
-        break
-      case "rating":
-        filtered.sort((a, b) => b.stats.averageRating - a.stats.averageRating)
-        break
-      case "newest":
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        break
-      case "price-low":
-        filtered.sort((a, b) => a.pricing.price - b.pricing.price)
-        break
-      case "price-high":
-        filtered.sort((a, b) => b.pricing.price - a.pricing.price)
-        break
-    }
-
-    setPrompts(filtered)
   }
 
   useEffect(() => {
-    filterPrompts()
+    fetchCategories()
+  }, [])
+
+  useEffect(() => {
+    fetchPrompts()
   }, [searchQuery, selectedCategory, selectedFilter, sortBy])
 
   const getPriceTag = (prompt: PromptItem) => {
-    if (prompt.pricing.type === "free") {
+    if (prompt.pricing_type === "free") {
       return <span className="text-green-400 font-semibold">免费</span>
-    } else if (prompt.pricing.type === "premium") {
+    } else if (prompt.pricing_type === "premium") {
       return (
         <div className="flex items-center space-x-1">
           <Crown className="w-4 h-4 text-yellow-400" />
-          <span className="text-yellow-400 font-semibold">¥{prompt.pricing.price}</span>
+          <span className="text-yellow-400 font-semibold">{formatPrice(prompt.price)}</span>
         </div>
       )
     } else {
       return (
         <div className="flex items-center space-x-2">
-          {prompt.pricing.originalPrice && (
-            <span className="text-neutral-500 line-through text-sm">¥{prompt.pricing.originalPrice}</span>
+          {prompt.original_price && (
+            <span className="text-neutral-500 line-through text-sm">{formatPrice(prompt.original_price)}</span>
           )}
-          <span className="text-blue-400 font-semibold">¥{prompt.pricing.price}</span>
+          <span className="text-blue-400 font-semibold">{formatPrice(prompt.price)}</span>
         </div>
       )
     }
+  }
+
+  const handlePurchase = (prompt: PromptItem) => {
+    if (prompt.pricing_type === 'free') {
+      // 免费直接下载
+      handleDownload(prompt.id)
+      return
+    }
+
+    // 付费需要支付
+    setPaymentModal({
+      isOpen: true,
+      orderData: {
+        productName: prompt.title,
+        amount: prompt.price,
+        currency: 'CNY',
+        productType: 'content',
+        productId: prompt.id,
+        userId: 'user_123', // 这里应该从用户状态获取
+        metadata: {
+          contentType: 'prompt',
+          authorId: prompt.author_id
+        }
+      }
+    })
+  }
+
+  const handleDownload = async (promptId: string) => {
+    try {
+      const response = await fetch(`/api/prompts/${promptId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': 'user_123' // 这里应该从用户状态获取
+        },
+        body: JSON.stringify({ action: 'download' })
+      })
+
+      const result = await response.json()
+      
+      if (result.success) {
+        // 显示下载成功
+        alert('下载成功！')
+        // 可以在这里处理下载的内容
+        console.log('Prompt content:', result.data.content)
+      } else {
+        alert(result.error || '下载失败')
+      }
+    } catch (error) {
+      console.error('Download error:', error)
+      alert('下载失败，请稍后再试')
+    }
+  }
+
+  const handlePaymentSuccess = (order: any) => {
+    // 支付成功后的处理
+    setPaymentModal({ isOpen: false })
+    alert('购买成功！')
+    // 可以在这里刷新数据或跳转到下载页面
   }
 
   return (
@@ -158,7 +254,7 @@ export default function PromptMarket() {
             >
               全部
             </button>
-            {promptCategories.map(category => (
+            {categories.map(category => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
@@ -168,7 +264,7 @@ export default function PromptMarket() {
                     : "bg-neutral-800 text-neutral-300 hover:text-white"
                 }`}
               >
-                {category.icon} {category.name} ({category.promptCount})
+                {category.icon} {category.name} ({category.prompt_count})
               </button>
             ))}
           </div>
@@ -206,107 +302,119 @@ export default function PromptMarket() {
       </div>
 
       {/* Prompt 卡片网格 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {prompts.map((prompt, index) => (
-          <motion.div
-            key={prompt.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-neutral-900 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-neutral-900/20 transition-all duration-300 group"
-          >
-            {/* 卡片头部 */}
-            <div className="p-6 border-b border-neutral-800">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-2">
-                    {prompt.featured && <Star className="w-4 h-4 text-yellow-400 fill-current" />}
-                    {prompt.verified && <Zap className="w-4 h-4 text-blue-400" />}
-                    <span className="text-xs bg-neutral-800 text-neutral-300 px-2 py-1 rounded-full">
-                      {prompt.category.icon} {prompt.category.name}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="bg-neutral-900 rounded-2xl p-6 animate-pulse">
+              <div className="h-4 bg-neutral-800 rounded mb-4"></div>
+              <div className="h-20 bg-neutral-800 rounded mb-4"></div>
+              <div className="h-4 bg-neutral-800 rounded"></div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {prompts.map((prompt, index) => (
+            <motion.div
+              key={prompt.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-neutral-900 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-neutral-900/20 transition-all duration-300 group"
+            >
+              {/* 卡片头部 */}
+              <div className="p-6 border-b border-neutral-800">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-2">
+                      {prompt.featured && <Star className="w-4 h-4 text-yellow-400 fill-current" />}
+                      {prompt.verified && <Zap className="w-4 h-4 text-blue-400" />}
+                      <span className="text-xs bg-neutral-800 text-neutral-300 px-2 py-1 rounded-full">
+                        {prompt.prompt_categories.icon} {prompt.prompt_categories.name}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                      {prompt.title}
+                    </h3>
+                    <p className="text-neutral-400 text-sm line-clamp-2">{prompt.description}</p>
+                  </div>
+                </div>
+
+                {/* 作者信息 */}
+                <div className="flex items-center space-x-3 mb-4">
+                  <Image
+                    src={prompt.author_avatar || "/placeholder.svg?height=32&width=32"}
+                    alt={prompt.author_name}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                  <div>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-white text-sm font-medium">{prompt.author_name}</span>
+                      {prompt.author_verified && <Zap className="w-3 h-3 text-blue-400" />}
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                      <span className="text-neutral-400 text-xs">{prompt.rating_average.toFixed(1)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 标签 */}
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {prompt.tags.slice(0, 3).map(tag => (
+                    <span key={tag} className="text-xs bg-neutral-800 text-neutral-400 px-2 py-1 rounded">
+                      #{tag}
                     </span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                    {prompt.title}
-                  </h3>
-                  <p className="text-neutral-400 text-sm line-clamp-2">{prompt.description}</p>
+                  ))}
                 </div>
               </div>
 
-              {/* 作者信息 */}
-              <div className="flex items-center space-x-3 mb-4">
-                <Image
-                  src={prompt.author.avatar || "/placeholder.svg?height=32&width=32"}
-                  alt={prompt.author.name}
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
-                <div>
-                  <div className="flex items-center space-x-1">
-                    <span className="text-white text-sm font-medium">{prompt.author.name}</span>
-                    {prompt.author.verified && <Zap className="w-3 h-3 text-blue-400" />}
+              {/* 卡片底部 */}
+              <div className="p-6">
+                {/* 统计信息 */}
+                <div className="flex items-center justify-between text-xs text-neutral-400 mb-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-1">
+                      <Download className="w-3 h-3" />
+                      <span>{prompt.downloads_count}</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Star className="w-3 h-3" />
+                      <span>{prompt.rating_average.toFixed(1)}</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Eye className="w-3 h-3" />
+                      <span>{prompt.views_count}</span>
+                    </div>
                   </div>
                   <div className="flex items-center space-x-1">
-                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                    <span className="text-neutral-400 text-xs">{prompt.author.rating}</span>
+                    <Heart className="w-3 h-3" />
+                    <span>{prompt.favorites_count}</span>
                   </div>
                 </div>
-              </div>
 
-              {/* 标签 */}
-              <div className="flex flex-wrap gap-1 mb-4">
-                {prompt.tags.slice(0, 3).map(tag => (
-                  <span key={tag} className="text-xs bg-neutral-800 text-neutral-400 px-2 py-1 rounded">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* 卡片底部 */}
-            <div className="p-6">
-              {/* 统计信息 */}
-              <div className="flex items-center justify-between text-xs text-neutral-400 mb-4">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-1">
-                    <Download className="w-3 h-3" />
-                    <span>{prompt.stats.downloads}</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-3 h-3" />
-                    <span>{prompt.stats.averageRating}</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Eye className="w-3 h-3" />
-                    <span>{prompt.stats.views}</span>
+                {/* 价格和操作 */}
+                <div className="flex items-center justify-between">
+                  <div>{getPriceTag(prompt)}</div>
+                  <div className="flex items-center space-x-2">
+                    <button className="p-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition-colors">
+                      <Heart className="w-4 h-4 text-neutral-400 hover:text-red-400 transition-colors" />
+                    </button>
+                    <button
+                      onClick={() => handlePurchase(prompt)}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                    >
+                      {prompt.pricing_type === 'free' ? '免费下载' : '立即购买'}
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Heart className="w-3 h-3" />
-                  <span>{prompt.stats.favorites}</span>
-                </div>
               </div>
-
-              {/* 价格和操作 */}
-              <div className="flex items-center justify-between">
-                <div>{getPriceTag(prompt)}</div>
-                <div className="flex items-center space-x-2">
-                  <button className="p-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition-colors">
-                    <Heart className="w-4 h-4 text-neutral-400 hover:text-red-400 transition-colors" />
-                  </button>
-                  <Link
-                    href={`/${lang}/prompts/${prompt.id}`}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
-                  >
-                    查看详情
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* 加载更多 */}
       <div className="text-center mt-8">
@@ -345,6 +453,14 @@ export default function PromptMarket() {
           </button>
         </div>
       </div>
+
+      {/* 支付模态框 */}
+      <PaymentModal
+        isOpen={paymentModal.isOpen}
+        onClose={() => setPaymentModal({ isOpen: false })}
+        orderData={paymentModal.orderData}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
     </div>
   )
 }
