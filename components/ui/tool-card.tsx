@@ -112,7 +112,26 @@ export default function ToolCard({ tool, className = "" }: ToolCardProps) {
             )}
           </div>
 
-          <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" />
+          <div className="flex items-center space-x-2">
+            {/* 直接访问工具网站按钮 */}
+            {tool.website_url && (
+              <a
+                href={tool.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                title="访问工具网站"
+              >
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            )}
+            
+            {/* 查看详情指示器 */}
+            <div className="text-gray-400 group-hover:text-blue-500 transition-colors text-sm">
+              查看详情
+            </div>
+          </div>
         </div>
       </Link>
     </motion.div>
