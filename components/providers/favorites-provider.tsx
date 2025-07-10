@@ -3,17 +3,17 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 
 interface FavoritesContextType {
-  favorites: number[]
-  addFavorite: (id: number) => void
-  removeFavorite: (id: number) => void
-  isFavorite: (id: number) => boolean
-  toggleFavorite: (id: number) => Promise<void>
+  favorites: string[]
+  addFavorite: (id: string) => void
+  removeFavorite: (id: string) => void
+  isFavorite: (id: string) => boolean
+  toggleFavorite: (id: string) => Promise<void>
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined)
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
-  const [favorites, setFavorites] = useState<number[]>([])
+  const [favorites, setFavorites] = useState<string[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
 
   // 从 localStorage 加载收藏
@@ -38,19 +38,19 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     }
   }, [favorites, isLoaded])
 
-  const addFavorite = (id: number) => {
+  const addFavorite = (id: string) => {
     setFavorites((prev) => [...prev.filter((fav) => fav !== id), id])
   }
 
-  const removeFavorite = (id: number) => {
+  const removeFavorite = (id: string) => {
     setFavorites((prev) => prev.filter((fav) => fav !== id))
   }
 
-  const isFavorite = (id: number) => {
+  const isFavorite = (id: string) => {
     return favorites.includes(id)
   }
 
-  const toggleFavorite = async (id: number) => {
+  const toggleFavorite = async (id: string) => {
     return new Promise<void>((resolve) => {
       setTimeout(() => {
         if (isFavorite(id)) {

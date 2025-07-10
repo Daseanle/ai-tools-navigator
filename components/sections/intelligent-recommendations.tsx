@@ -217,21 +217,35 @@ export function IntelligentRecommendations({
           // 使用示例工具数据
           const sampleTool = sampleTools[index % sampleTools.length]
           const tool = {
-            id: parseInt(rec.toolId) || index,
+            id: (parseInt(rec.toolId) || index).toString(),
             slug: sampleTool.name.toLowerCase().replace(/\s+/g, '-'),
             name: sampleTool.name,
             tagline: sampleTool.description,
             description: sampleTool.description,
             logo_url: sampleTool.image,
+            website_url: '#',
             rating: sampleTool.rating,
+            rating_count: 0,
+            visits: 0,
+            users_count: 0,
+            upvotes_count: 0,
             pricing_type: sampleTool.pricing as any,
+            featured: false,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            category_id: '1',
             category: {
-              id: 1,
+              id: '1',
               name: sampleTool.category,
-              slug: sampleTool.category.toLowerCase()
+              slug: sampleTool.category.toLowerCase(),
+              tools_count: 0,
+              featured: false,
+              is_active: true,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
             },
             tags: sampleTool.tags.map((tag, i) => ({
-              id: i,
+              id: i.toString(),
               name: tag,
               slug: tag.toLowerCase()
             }))

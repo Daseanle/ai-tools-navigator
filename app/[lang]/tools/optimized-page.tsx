@@ -312,7 +312,7 @@ export default async function ToolsPage({ params, searchParams }: ToolsPageProps
             'name': 'AI工具大全',
             'description': '最全面的AI工具集合',
             'numberOfItems': total,
-            'mainEntity': tools.slice(0, 10).map(tool => ({
+            'mainEntity': tools.slice(0, 10).map((tool: any) => ({
               '@type': 'SoftwareApplication',
               'name': tool.name,
               'description': tool.tagline,

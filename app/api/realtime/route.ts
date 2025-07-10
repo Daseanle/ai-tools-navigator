@@ -83,7 +83,7 @@ async function getRealtimeMetrics() {
       totalTools: tools.data?.length || 0,
       activeUsers: users.data?.length || 0,
       totalViews: tools.data?.reduce((sum, tool) => sum + (tool.visits || 0), 0) || 0,
-      avgRating: tools.data?.reduce((sum, tool) => sum + (tool.rating || 0), 0) / (tools.data?.length || 1) || 0,
+      avgRating: (tools.data?.reduce((sum, tool) => sum + (tool.rating || 0), 0) || 0) / (tools.data?.length || 1),
       dailyActivity: analytics.data?.length || 0
     }
 

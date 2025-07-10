@@ -1,133 +1,58 @@
-'use client'
-
 import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import React from 'react'
 
-// 懒加载重型组件
-const MonitoringDashboard = dynamic(
-  () => import('@/components/monitoring/monitoring-dashboard'),
-  {
-    loading: () => <LoadingSpinner />,
-    ssr: false
-  }
+// 基础加载组件
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center p-4">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+  </div>
 )
 
-const VirtualScroll = dynamic(
-  () => import('@/components/performance/virtual-scroll').then(mod => ({ default: mod.VirtualScroll })),
-  {
-    loading: () => <div className="animate-pulse bg-gray-200 h-64 rounded" />,
-    ssr: false
-  }
+// 占位组件
+const PlaceholderComponent = ({ name }: { name: string }) => (
+  <div className="p-8 text-center border-2 border-dashed border-gray-300 rounded-lg">
+    <h3 className="text-lg font-semibold text-gray-600 mb-2">{name}</h3>
+    <p className="text-gray-500">功能开发中...</p>
+  </div>
 )
 
-const ChartComponents = dynamic(
-  () => import('recharts').then(mod => ({
-    default: {
-      LineChart: mod.LineChart,
-      Line: mod.Line,
-      XAxis: mod.XAxis,
-      YAxis: mod.YAxis,
-      CartesianGrid: mod.CartesianGrid,
-      Tooltip: mod.Tooltip,
-      ResponsiveContainer: mod.ResponsiveContainer
-    }
-  })),
-  {
-    loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded" />,
-    ssr: false
-  }
-)
-
-const FramerMotionComponents = dynamic(
-  () => import('framer-motion').then(mod => ({
-    default: {
-      motion: mod.motion,
-      AnimatePresence: mod.AnimatePresence
-    }
-  })),
-  {
-    loading: () => <div />,
-    ssr: false
-  }
-)
-
-// 按功能分组的懒加载组件
+// 简化的懒加载组件集合
 export const LazyComponents = {
   // 监控相关
-  MonitoringDashboard,
+  SystemMonitor: dynamic(
+    () => Promise.resolve({ default: () => <PlaceholderComponent name="系统监控" /> }),
+    { loading: () => <LoadingSpinner />, ssr: false }
+  ),
   
-  // 性能相关
-  VirtualScroll,
-  
-  // 图表相关
-  Charts: ChartComponents,
-  
-  // 动画相关
-  Motion: FramerMotionComponents,
-  
-  // 管理面板 - 只有管理员才加载
+  // 管理面板
   AdminPanel: dynamic(
-    () => import('@/components/admin/admin-panel'),
-    {
-      loading: () => <LoadingSpinner />,
-      ssr: false
-    }
+    () => Promise.resolve({ default: () => <PlaceholderComponent name="管理面板" /> }),
+    { loading: () => <LoadingSpinner />, ssr: false }
   ),
   
-  // 工具编辑器 - 按需加载
+  // 工具编辑器
   ToolEditor: dynamic(
-    () => import('@/components/tools/tool-editor'),
-    {
-      loading: () => <LoadingSpinner />,
-      ssr: false
-    }
+    () => Promise.resolve({ default: () => <PlaceholderComponent name="工具编辑器" /> }),
+    { loading: () => <LoadingSpinner />, ssr: false }
   ),
   
-  // 高级搜索 - 按需加载
+  // 高级搜索
   AdvancedSearch: dynamic(
-    () => import('@/components/search/advanced-search'),
-    {
-      loading: () => <div className="h-32 bg-gray-100 animate-pulse rounded" />,
-      ssr: false
-    }
+    () => Promise.resolve({ default: () => <PlaceholderComponent name="高级搜索" /> }),
+    { loading: () => <LoadingSpinner />, ssr: false }
   ),
   
-  // 用户设置 - 按需加载
-  UserSettings: dynamic(
-    () => import('@/components/user/user-settings'),
-    {
-      loading: () => <LoadingSpinner />,
-      ssr: false
-    }
+  // 图表组件
+  Chart: dynamic(
+    () => Promise.resolve({ default: () => <PlaceholderComponent name="图表组件" /> }),
+    { loading: () => <LoadingSpinner />, ssr: false }
   ),
   
-  // 分析工具 - 按需加载
-  Analytics: dynamic(
-    () => import('@/components/analytics/analytics-dashboard'),
-    {
-      loading: () => <LoadingSpinner />,
-      ssr: false
-    }
-  ),
-  
-  // 社区功能 - 按需加载
-  Community: dynamic(
-    () => import('@/components/community/community-hub'),
-    {
-      loading: () => <LoadingSpinner />,
-      ssr: false
-    }
+  // 动画组件
+  Motion: dynamic(
+    () => Promise.resolve({ default: () => <PlaceholderComponent name="动画组件" /> }),
+    { loading: () => <LoadingSpinner />, ssr: false }
   )
 }
 
-// 创建加载状态组件
-export const ComponentLoader = ({ type }: { type: keyof typeof LazyComponents }) => {
-  const Component = LazyComponents[type]
-  
-  return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <Component />
-    </Suspense>
-  )
-}
+export default LazyComponents

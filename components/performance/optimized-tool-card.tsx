@@ -10,7 +10,7 @@ interface OptimizedToolCardProps {
   tool: Tool
   priority?: boolean
   viewMode?: 'compact' | 'full'
-  onFavorite?: (toolId: number) => void
+  onFavorite?: (toolId: string) => void
   isFavorite?: boolean
 }
 

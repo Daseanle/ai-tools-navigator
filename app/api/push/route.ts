@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Push notification API error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Push notification API error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
@@ -77,7 +77,7 @@ async function handleSubscribe(request: NextRequest) {
     // Send welcome notification
     try {
       await webpush.sendNotification(
-        subscription,
+        subscription as any,
         JSON.stringify({
           title: '欢迎使用 AI Tools Navigator',
           body: '您已成功启用推送通知！我们会及时为您推送最新的AI工具信息。',
@@ -98,7 +98,7 @@ async function handleSubscribe(request: NextRequest) {
       message: 'Subscription saved successfully',
       subscriptionId
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Subscribe error:', error)
     return NextResponse.json(
       { error: 'Failed to save subscription' },
@@ -125,7 +125,7 @@ async function handleUnsubscribe(request: NextRequest) {
       success: removed,
       message: removed ? 'Unsubscribed successfully' : 'Subscription not found'
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Unsubscribe error:', error)
     return NextResponse.json(
       { error: 'Failed to unsubscribe' },
@@ -187,9 +187,9 @@ async function handleSendNotification(request: NextRequest) {
       // Send to all subscriptions
       const sendPromises = Array.from(subscriptions.values()).map(async (subscription) => {
         try {
-          await webpush.sendNotification(subscription, notificationPayload)
+          await webpush.sendNotification(subscription as any, notificationPayload)
           sentCount++
-        } catch (error) {
+        } catch (error: any) {
           console.error('Failed to send notification:', error)
           failedCount++
           
@@ -205,9 +205,9 @@ async function handleSendNotification(request: NextRequest) {
     } else if (targetSubscription) {
       // Send to specific subscription
       try {
-        await webpush.sendNotification(targetSubscription, notificationPayload)
+        await webpush.sendNotification(targetSubscription as any, notificationPayload)
         sentCount = 1
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to send notification:', error)
         failedCount = 1
       }
@@ -224,7 +224,7 @@ async function handleSendNotification(request: NextRequest) {
       failedCount,
       totalSubscriptions: subscriptions.size
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Send notification error:', error)
     return NextResponse.json(
       { error: 'Failed to send notification' },
@@ -314,9 +314,9 @@ async function sendScheduledNotifications() {
     
     for (const subscription of subscriptions.values()) {
       try {
-        await webpush.sendNotification(subscription, payload)
+        await webpush.sendNotification(subscription as any, payload)
         sentCount++
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to send scheduled notification:', error)
       }
     }
@@ -324,7 +324,7 @@ async function sendScheduledNotifications() {
     console.log(`Sent weekly digest to ${sentCount} subscribers`)
     return sentCount
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to send scheduled notifications:', error)
     return 0
   }

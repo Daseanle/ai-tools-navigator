@@ -228,7 +228,7 @@ function APITester() {
         data,
         headers: Object.fromEntries(res.headers.entries())
       })
-    } catch (error) {
+    } catch (error: any) {
       setResponse({ error: error.message })
     } finally {
       setLoading(false)
@@ -296,7 +296,7 @@ function DatabaseTools() {
     // This would execute actual database queries
     const mockResult = { rows: [{ count: Math.floor(Math.random() * 1000) }] }
     const newQueries = [...queries]
-    newQueries[index].result = mockResult
+    newQueries[index].result = mockResult as any
     setQueries(newQueries)
   }
 

@@ -74,7 +74,7 @@ export default function UserFavorites({ userId }: UserFavoritesProps) {
     }
   }
 
-  const removeFavorite = async (toolId: number) => {
+  const removeFavorite = async (toolId: string) => {
     try {
       const { error } = await supabase
         .from('user_favorites')

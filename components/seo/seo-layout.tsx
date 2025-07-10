@@ -198,13 +198,10 @@ export function HomePageSEO() {
     ])
   ]
   
-  return (
-    <SEOLayout
-      title={metadata.title as string}
-      description={metadata.description!}
-      structuredData={structuredData}
-    />
-  )
+  return {
+    metadata,
+    structuredData
+  }
 }
 
 export function ToolPageSEO({ tool }: { tool: any }) {
@@ -221,16 +218,11 @@ export function ToolPageSEO({ tool }: { tool: any }) {
     { name: tool.name, url: `/tools/${tool.slug}` }
   ]
   
-  return (
-    <SEOLayout
-      title={metadata.title as string}
-      description={metadata.description!}
-      image={tool.logo_url}
-      canonicalUrl={`${seoConfig.siteUrl}/tools/${tool.slug}`}
-      structuredData={structuredData}
-      breadcrumbs={breadcrumbs}
-    />
-  )
+  return {
+    metadata,
+    structuredData,
+    breadcrumbs
+  }
 }
 
 export function CategoryPageSEO({ category, page = 1 }: { category: any, page?: number }) {
@@ -242,26 +234,18 @@ export function CategoryPageSEO({ category, page = 1 }: { category: any, page?: 
     { name: category.name, url: `/categories/${category.slug}` }
   ]
   
-  return (
-    <SEOLayout
-      title={metadata.title as string}
-      description={metadata.description!}
-      canonicalUrl={`${seoConfig.siteUrl}/categories/${category.slug}`}
-      breadcrumbs={breadcrumbs}
-    />
-  )
+  return {
+    metadata,
+    breadcrumbs
+  }
 }
 
 export function SearchPageSEO({ query, resultsCount }: { query: string, resultsCount: number }) {
   const metadata = MetadataGenerator.generateSearchMetadata(query, resultsCount)
   
-  return (
-    <SEOLayout
-      title={metadata.title as string}
-      description={metadata.description!}
-      noIndex={true}
-    />
-  )
+  return {
+    metadata
+  }
 }
 
 // ==================== SEO Hook ====================
@@ -279,13 +263,13 @@ export function useSEOTracker() {
         }
         
         // Baidu Analytics
-        if (window._hmt) {
-          window._hmt.push(['_trackPageview', url])
+        if ((window as any)._hmt) {
+          (window as any)._hmt.push(['_trackPageview', url])
         }
         
         // Microsoft Clarity
-        if (window.clarity) {
-          window.clarity('set', 'page', url)
+        if ((window as any).clarity) {
+          (window as any).clarity('set', 'page', url)
         }
       }
     },
