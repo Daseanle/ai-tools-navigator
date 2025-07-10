@@ -64,25 +64,43 @@ class RealTimeSyncManager extends EventEmitter {
 
       this.supabase = supabase
 
-      // Monitor connection status
-      (this.supabase.realtime as any).onOpen(() => {
-        this.connectionStatus = 'connected'
-        this.reconnectAttempts = 0
-        this.emit('connection:open')
-        console.log('Real-time connection established')
-      })
+      // Set up realtime subscriptions for different table changes
+      const channel = this.supabase.channel('realtime-changes')
+      
+      // Subscribe to tools table changes
+      channel.on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'tools' },
+        (payload) => this.handleTableChange('tools', payload)
+      )
+      
+      // Subscribe to categories table changes  
+      channel.on('postgres_changes',
+        { event: '*', schema: 'public', table: 'categories' },
+        (payload) => this.handleTableChange('categories', payload)
+      )
 
-      (this.supabase.realtime as any).onClose(() => {
-        this.connectionStatus = 'disconnected'
-        this.emit('connection:close')
-        console.log('Real-time connection closed')
-        this.handleReconnection()
-      })
+      // Subscribe to user_favorites table changes
+      channel.on('postgres_changes',
+        { event: '*', schema: 'public', table: 'user_favorites' },
+        (payload) => this.handleTableChange('user_favorites', payload)
+      )
 
-      (this.supabase.realtime as any).onError((error: any) => {
-        console.error('Real-time connection error:', error)
-        this.emit('connection:error', error)
-        this.handleReconnection()
+      channel.subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          this.connectionStatus = 'connected'
+          this.reconnectAttempts = 0
+          this.emit('connection:open')
+          console.log('Real-time connection established')
+        } else if (status === 'CHANNEL_ERROR') {
+          this.connectionStatus = 'disconnected'
+          this.emit('connection:error')
+          this.handleReconnection()
+        } else if (status === 'CLOSED') {
+          this.connectionStatus = 'disconnected'
+          this.emit('connection:close')
+          console.log('Real-time connection closed')
+          this.handleReconnection()
+        }
       })
 
     } catch (error) {
