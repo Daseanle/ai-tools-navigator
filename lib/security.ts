@@ -1,25 +1,125 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createHash, createHmac, randomBytes } from 'crypto'
 import { validateSearchParams, sanitizeString, sanitizeUrl } from './validation'
 
-// Security headers configuration
+// ==================== Enhanced Security Headers ====================
+
 export const securityHeaders = {
   'X-DNS-Prefetch-Control': 'on',
   'X-XSS-Protection': '1; mode=block',
-  'X-Frame-Options': 'SAMEORIGIN',
+  'X-Frame-Options': 'DENY',
   'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'origin-when-cross-origin',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Content-Security-Policy': [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-    "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https:",
-    "font-src 'self'",
-    "connect-src 'self' https:",
-    "frame-ancestors 'self'"
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "img-src 'self' data: https: blob:",
+    "font-src 'self' https://fonts.gstatic.com",
+    "connect-src 'self' https: wss:",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    "base-uri 'self'"
   ].join('; '),
 }
 
-// Rate limiting configuration
+// ==================== Advanced CSRF Protection ====================
+
+export class CSRFProtection {
+  private static readonly SECRET = process.env.CSRF_SECRET || 'default-csrf-secret'
+
+  static generateToken(): string {
+    const timestamp = Date.now().toString()
+    const random = randomBytes(16).toString('hex')
+    const payload = `${timestamp}:${random}`
+    const signature = createHmac('sha256', this.SECRET)
+      .update(payload)
+      .digest('hex')
+    
+    return Buffer.from(`${payload}:${signature}`).toString('base64')
+  }
+
+  static validateToken(token: string, maxAgeMs: number = 3600000): boolean {
+    try {
+      const decoded = Buffer.from(token, 'base64').toString('utf8')
+      const [timestamp, random, signature] = decoded.split(':')
+      
+      if (!timestamp || !random || !signature) return false
+      
+      const tokenAge = Date.now() - parseInt(timestamp)
+      if (tokenAge > maxAgeMs) return false
+      
+      const payload = `${timestamp}:${random}`
+      const expectedSignature = createHmac('sha256', this.SECRET)
+        .update(payload)
+        .digest('hex')
+      
+      return signature === expectedSignature
+    } catch {
+      return false
+    }
+  }
+}
+
+// ==================== Input Sanitization ====================
+
+export class InputSanitizer {
+  static sanitizeHtml(input: string): string {
+    return input
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;')
+  }
+
+  static sanitizeSql(input: string): string {
+    return input
+      .replace(/['";\\]/g, '')
+      .replace(/(--)|(\/\*)|(\*\/)/g, '')
+      .replace(/(union|select|insert|update|delete|drop|create|alter|exec|execute)/gi, '')
+  }
+
+  static isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email) && email.length <= 254
+  }
+
+  static isValidUrl(url: string): boolean {
+    try {
+      const parsed = new URL(url)
+      return ['http:', 'https:'].includes(parsed.protocol) && 
+             url.length <= 2048
+    } catch {
+      return false
+    }
+  }
+
+  static sanitizeObject(obj: any): any {
+    if (typeof obj === 'string') {
+      return this.sanitizeHtml(obj)
+    }
+    
+    if (Array.isArray(obj)) {
+      return obj.map(item => this.sanitizeObject(item))
+    }
+    
+    if (obj && typeof obj === 'object') {
+      const cleaned: any = {}
+      for (const [key, value] of Object.entries(obj)) {
+        const cleanKey = this.sanitizeHtml(key)
+        cleaned[cleanKey] = this.sanitizeObject(value)
+      }
+      return cleaned
+    }
+    
+    return obj
+  }
+}
+
+// ==================== Enhanced Rate Limiting ====================
+
 interface RateLimitConfig {
   windowMs: number
   maxRequests: number
@@ -27,47 +127,20 @@ interface RateLimitConfig {
   skipFailedRequests?: boolean
 }
 
-const rateLimitConfigs: Record<string, RateLimitConfig> = {
-  '/api/': { windowMs: 15 * 60 * 1000, maxRequests: 100 }, // 100 requests per 15 minutes
-  '/api/search': { windowMs: 60 * 1000, maxRequests: 60 }, // 60 requests per minute
-  '/api/auth/': { windowMs: 15 * 60 * 1000, maxRequests: 5 }, // 5 requests per 15 minutes
-  default: { windowMs: 15 * 60 * 1000, maxRequests: 300 }, // 300 requests per 15 minutes
+export const rateLimitConfigs: Record<string, RateLimitConfig> = {
+  '/api/auth/': { windowMs: 15 * 60 * 1000, maxRequests: 5 },
+  '/api/search': { windowMs: 60 * 1000, maxRequests: 60 },
+  '/api/tools': { windowMs: 60 * 1000, maxRequests: 100 },
+  '/api/upload': { windowMs: 60 * 60 * 1000, maxRequests: 10 },
+  '/api/': { windowMs: 15 * 60 * 1000, maxRequests: 100 },
+  default: { windowMs: 15 * 60 * 1000, maxRequests: 300 }
 }
 
-export { rateLimitConfigs }
-
-// IP extraction with proper validation
-export function getClientIp(request: NextRequest): string {
-  // Check for real IP behind proxies (in order of preference)
-  const xRealIp = request.headers.get('x-real-ip')
-  const xForwardedFor = request.headers.get('x-forwarded-for')
-  const xClientIp = request.headers.get('x-client-ip')
-  const cfConnectingIp = request.headers.get('cf-connecting-ip') // Cloudflare
-  
-  // Validate and return first valid IP
-  let clientIp = request.ip || 
-                 xRealIp || 
-                 cfConnectingIp ||
-                 xClientIp ||
-                 (xForwardedFor ? xForwardedFor.split(',')[0].trim() : null) ||
-                 '127.0.0.1'
-
-  // Basic IP validation
-  const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-  const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/
-  
-  if (!ipRegex.test(clientIp) && !ipv6Regex.test(clientIp)) {
-    clientIp = '127.0.0.1' // Fallback to localhost if invalid
-  }
-
-  return clientIp
-}
-
-// Enhanced rate limiting
 interface RateLimitData {
   count: number
   resetTime: number
   blocked?: boolean
+  firstRequest: number
 }
 
 const rateLimitStore = new Map<string, RateLimitData>()
@@ -82,8 +155,11 @@ export function checkRateLimit(
   const existing = rateLimitStore.get(identifier)
   
   if (!existing || now > existing.resetTime) {
-    // Reset window
-    const data: RateLimitData = { count: 1, resetTime }
+    const data: RateLimitData = { 
+      count: 1, 
+      resetTime, 
+      firstRequest: now 
+    }
     rateLimitStore.set(identifier, data)
     return { allowed: true, data }
   }
@@ -98,53 +174,103 @@ export function checkRateLimit(
   return { allowed: true, data: existing }
 }
 
-// Input sanitization middleware
-export function sanitizeRequestData(data: any): any {
-  if (typeof data === 'string') {
-    return sanitizeString(data)
-  }
+// ==================== Enhanced Client IP Detection ====================
+
+export function getClientIp(request: NextRequest): string {
+  const xRealIp = request.headers.get('x-real-ip')
+  const xForwardedFor = request.headers.get('x-forwarded-for')
+  const xClientIp = request.headers.get('x-client-ip')
+  const cfConnectingIp = request.headers.get('cf-connecting-ip')
   
-  if (Array.isArray(data)) {
-    return data.map(item => sanitizeRequestData(item))
-  }
+  let clientIp = request.ip || 
+                 cfConnectingIp ||
+                 xRealIp || 
+                 xClientIp ||
+                 (xForwardedFor ? xForwardedFor.split(',')[0].trim() : null) ||
+                 '127.0.0.1'
+
+  const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+  const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::1$|^::$/
   
-  if (data && typeof data === 'object') {
-    const sanitized: any = {}
-    for (const [key, value] of Object.entries(data)) {
-      const cleanKey = sanitizeString(key)
-      sanitized[cleanKey] = sanitizeRequestData(value)
-    }
-    return sanitized
+  if (!ipv4Regex.test(clientIp) && !ipv6Regex.test(clientIp)) {
+    clientIp = '127.0.0.1'
   }
-  
-  return data
+
+  return clientIp
 }
 
-// CSRF protection
+// ==================== Advanced Bot Detection ====================
+
+export function detectBot(request: NextRequest): { isBot: boolean; type?: string } {
+  const userAgent = request.headers.get('user-agent') || ''
+  
+  const legitimateBots = [
+    /googlebot/i,
+    /bingbot/i,
+    /slurp/i,
+    /duckduckbot/i,
+    /baiduspider/i,
+    /yandexbot/i,
+    /facebookexternalhit/i,
+    /twitterbot/i,
+    /linkedinbot/i,
+    /whatsapp/i,
+    /telegrambot/i
+  ]
+
+  const maliciousBots = [
+    /scrapy/i,
+    /selenium/i,
+    /phantomjs/i,
+    /headless/i,
+    /curl/i,
+    /wget/i,
+    /python-requests/i,
+    /node-fetch/i,
+    /axios/i,
+    /postman/i,
+    /insomnia/i
+  ]
+
+  if (legitimateBots.some(pattern => pattern.test(userAgent))) {
+    return { isBot: true, type: 'legitimate' }
+  }
+
+  if (maliciousBots.some(pattern => pattern.test(userAgent))) {
+    return { isBot: true, type: 'suspicious' }
+  }
+
+  if (!userAgent || userAgent.length < 10) {
+    return { isBot: true, type: 'suspicious' }
+  }
+
+  return { isBot: false }
+}
+
+// ==================== Enhanced CSRF Validation ====================
+
 export function validateCSRFToken(request: NextRequest): boolean {
-  // Skip CSRF for GET requests and safe methods
   if (['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
     return true
   }
   
-  // Skip CSRF for automation APIs
   if (request.nextUrl.pathname.includes('/api/automation/')) {
-    return true
+    const authHeader = request.headers.get('authorization')
+    return authHeader?.startsWith('Bearer ') || false
   }
   
   const token = request.headers.get('x-csrf-token') || 
                 request.headers.get('x-xsrf-token')
-  const cookie = request.cookies.get('csrf-token')?.value
   
-  if (!token || !cookie) {
+  if (!token) {
     return false
   }
   
-  // Simple token validation (in production, use crypto.timingSafeEqual)
-  return token === cookie
+  return CSRFProtection.validateToken(token)
 }
 
-// Content type validation
+// ==================== Content Security Validation ====================
+
 export function validateContentType(request: NextRequest): boolean {
   if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
     const contentType = request.headers.get('content-type')
@@ -153,11 +279,11 @@ export function validateContentType(request: NextRequest): boolean {
       return false
     }
     
-    // Allow JSON and form data
     const allowedTypes = [
       'application/json',
       'application/x-www-form-urlencoded',
-      'multipart/form-data'
+      'multipart/form-data',
+      'text/plain'
     ]
     
     return allowedTypes.some(type => contentType.includes(type))
@@ -166,40 +292,8 @@ export function validateContentType(request: NextRequest): boolean {
   return true
 }
 
-// Geolocation-based blocking (example)
-const blockedCountries = ['CN', 'RU'] // Example blocked countries
-const suspiciousRegions = ['TOR', 'VPN'] // Example suspicious regions
+// ==================== Request Size Validation ====================
 
-export function checkGeolocation(request: NextRequest): boolean {
-  const country = request.headers.get('cf-ipcountry') || 
-                  request.headers.get('x-country-code')
-  
-  if (country && blockedCountries.includes(country.toUpperCase())) {
-    return false
-  }
-  
-  return true
-}
-
-// Bot detection
-export function detectBot(request: NextRequest): boolean {
-  const userAgent = request.headers.get('user-agent') || ''
-  
-  const botPatterns = [
-    /bot/i,
-    /crawler/i,
-    /spider/i,
-    /scraper/i,
-    /curl/i,
-    /wget/i,
-    /python/i,
-    /php/i,
-  ]
-  
-  return botPatterns.some(pattern => pattern.test(userAgent))
-}
-
-// Request size validation
 export function validateRequestSize(request: NextRequest): boolean {
   const contentLength = request.headers.get('content-length')
   
@@ -207,58 +301,81 @@ export function validateRequestSize(request: NextRequest): boolean {
     const size = parseInt(contentLength, 10)
     const maxSize = 10 * 1024 * 1024 // 10MB
     
-    return size <= maxSize
+    return !isNaN(size) && size <= maxSize
   }
   
   return true
 }
 
-// Main security middleware
-export function applySecurityHeaders(response: NextResponse): NextResponse {
-  // Apply security headers
-  Object.entries(securityHeaders).forEach(([key, value]) => {
-    response.headers.set(key, value)
-  })
+// ==================== Geolocation Security ====================
+
+const blockedCountries = process.env.BLOCKED_COUNTRIES?.split(',') || []
+const allowedCountries = process.env.ALLOWED_COUNTRIES?.split(',') || []
+
+export function checkGeolocation(request: NextRequest): boolean {
+  const country = request.headers.get('cf-ipcountry') || 
+                  request.headers.get('x-country-code')
   
-  return response
+  if (!country) return true
+  
+  const countryCode = country.toUpperCase()
+  
+  if (allowedCountries.length > 0) {
+    return allowedCountries.includes(countryCode)
+  }
+  
+  return !blockedCountries.includes(countryCode)
 }
 
-// Comprehensive security check
+// ==================== Enhanced Security Checks ====================
+
 export function performSecurityChecks(request: NextRequest): {
   allowed: boolean
   reason?: string
   status?: number
+  riskScore?: number
 } {
-  // Check request size
+  let riskScore = 0
+  
   if (!validateRequestSize(request)) {
-    return { allowed: false, reason: 'Request too large', status: 413 }
+    return { allowed: false, reason: 'Request too large', status: 413, riskScore: 100 }
   }
   
-  // Check content type
   if (!validateContentType(request)) {
-    return { allowed: false, reason: 'Invalid content type', status: 415 }
+    return { allowed: false, reason: 'Invalid content type', status: 415, riskScore: 80 }
   }
   
-  // Check geolocation
   if (!checkGeolocation(request)) {
-    return { allowed: false, reason: 'Blocked region', status: 403 }
+    return { allowed: false, reason: 'Blocked region', status: 403, riskScore: 90 }
   }
   
-  // Bot detection (might want to handle differently)
-  if (detectBot(request)) {
-    // Log but don't block - might be legitimate
-    console.log('Bot detected:', request.headers.get('user-agent'))
+  const botCheck = detectBot(request)
+  if (botCheck.isBot) {
+    if (botCheck.type === 'suspicious') {
+      riskScore += 70
+    } else if (botCheck.type === 'legitimate') {
+      riskScore += 10
+    }
   }
   
-  // CSRF validation
   if (!validateCSRFToken(request)) {
-    return { allowed: false, reason: 'Invalid CSRF token', status: 403 }
+    return { allowed: false, reason: 'Invalid CSRF token', status: 403, riskScore: 95 }
   }
   
-  return { allowed: true }
+  const userAgent = request.headers.get('user-agent') || ''
+  if (userAgent.includes('script') || userAgent.includes('injection')) {
+    riskScore += 50
+  }
+  
+  if (riskScore >= 80) {
+    return { allowed: false, reason: 'High risk score', status: 403, riskScore }
+  }
+  
+  return { allowed: true, riskScore }
 }
 
-// Audit logging
+// ==================== Security Event Logging ====================
+
 export function logSecurityEvent(
   event: string,
   request: NextRequest,
@@ -271,15 +388,38 @@ export function logSecurityEvent(
     userAgent: request.headers.get('user-agent'),
     url: request.url,
     method: request.method,
+    referer: request.headers.get('referer'),
     details,
   }
   
-  // In production, send to logging service
   if (process.env.NODE_ENV === 'production') {
     console.log('SECURITY_EVENT:', JSON.stringify(logData))
   } else {
     console.warn('Security Event:', logData)
   }
+}
+
+// ==================== Security Headers Application ====================
+
+export function applySecurityHeaders(response: NextResponse): NextResponse {
+  Object.entries(securityHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value)
+  })
+  
+  if (process.env.NODE_ENV === 'production') {
+    response.headers.set(
+      'Strict-Transport-Security',
+      'max-age=31536000; includeSubDomains; preload'
+    )
+  }
+  
+  return response
+}
+
+// ==================== Enhanced Sanitization ====================
+
+export function sanitizeRequestData(data: any): any {
+  return InputSanitizer.sanitizeObject(data)
 }
 
 // Clean up rate limit store periodically

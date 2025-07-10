@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { User, Mail, Lock, Globe, Bell, Shield, Trash2, Save } from "lucide-react"
+import { User as UserIcon, Mail, Lock, Globe, Bell, Shield, Trash2, Save } from "lucide-react"
 import { supabase } from "@/lib/supabase"
-import type { User as SupabaseUser } from "@supabase/supabase-js"
+import type { User } from "@/types"
 
 interface UserSettingsProps {
-  user: SupabaseUser
+  user: User
 }
 
 interface UserProfile {
@@ -28,8 +28,8 @@ interface NotificationSettings {
 
 export default function UserSettings({ user }: UserSettingsProps) {
   const [profile, setProfile] = useState<UserProfile>({
-    full_name: user.user_metadata?.full_name || '',
-    avatar_url: user.user_metadata?.avatar_url || '',
+    full_name: (user as any).user_metadata?.full_name || user.name || '',
+    avatar_url: (user as any).user_metadata?.avatar_url || user.avatar_url || '',
     bio: '',
     website: '',
     location: '',
@@ -101,7 +101,7 @@ export default function UserSettings({ user }: UserSettingsProps) {
   }
 
   const tabs = [
-    { id: 'profile', label: '个人资料', icon: User },
+    { id: 'profile', label: '个人资料', icon: UserIcon },
     { id: 'account', label: '账户安全', icon: Shield },
     { id: 'notifications', label: '通知设置', icon: Bell },
     { id: 'privacy', label: '隐私设置', icon: Lock },

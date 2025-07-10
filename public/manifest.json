@@ -1,92 +1,43 @@
 {
-  "name": "AI Navigator Pro - 智能AI工具导航平台",
-  "short_name": "AI Navigator",
-  "description": "发现、评测、精通最新AI工具，提升工作效率的智能导航平台",
+  "name": "AI Tools Navigator",
+  "short_name": "AI Tools",
+  "description": "发现最佳AI工具和应用的专业导航平台",
   "start_url": "/",
-  "scope": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#1e40af",
-  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "categories": ["productivity", "utilities", "education"],
   "icons": [
-    {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png"
-    },
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable any"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/maskable-icon-512x512.png",
-      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "maskable any"
     }
   ],
   "shortcuts": [
     {
-      "name": "搜索AI工具",
+      "name": "搜索工具",
       "short_name": "搜索",
       "description": "快速搜索AI工具",
-      "url": "/search",
-      "icons": [{ "src": "/icons/search-96x96.png", "sizes": "96x96" }]
+      "url": "/search"
     },
     {
       "name": "工具分类",
       "short_name": "分类",
       "description": "浏览工具分类",
-      "url": "/categories",
-      "icons": [{ "src": "/icons/categories-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "我的收藏",
-      "short_name": "收藏",
-      "description": "查看收藏的工具",
-      "url": "/dashboard/favorites",
-      "icons": [{ "src": "/icons/favorites-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "热门工具",
-      "short_name": "热门",
-      "description": "查看热门AI工具",
-      "url": "/tools?sort=trending",
-      "icons": [{ "src": "/icons/trending-96x96.png", "sizes": "96x96" }]
+      "url": "/categories"
     }
-  ],
-  "categories": ["productivity", "ai", "tools", "technology"],
-  "lang": "zh-CN",
-  "dir": "ltr"
+  ]
 }
+EOF < /dev/null

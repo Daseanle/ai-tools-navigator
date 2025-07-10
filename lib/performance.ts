@@ -115,7 +115,9 @@ export function useComputationCache<T>(
     // Cleanup old entries (simple LRU)
     if (computationCache.size > 100) {
       const firstKey = computationCache.keys().next().value
-      computationCache.delete(firstKey)
+      if (firstKey) {
+        computationCache.delete(firstKey)
+      }
     }
     
     return result

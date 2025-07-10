@@ -1,6 +1,7 @@
 import { supabase } from "./supabase"
 import type { Database } from "./database.types"
-import { validateTool, sanitizeString, sanitizeUrl, type Tool } from "./validation"
+import { validateTool, sanitizeString, sanitizeUrl } from "./validation"
+import type { Tool } from "@/types"
 
 /* -------------------------------------------------------------
    0. 运行环境检测
@@ -906,7 +907,8 @@ function normalizeTool(raw: any): Tool | null {
     }
 
     // 验证数据
-    return validateTool(toolData)
+    const isValid = validateTool(toolData)
+    return isValid ? toolData : null
   } catch (error) {
     console.error('Error normalizing tool:', error, raw)
     return null

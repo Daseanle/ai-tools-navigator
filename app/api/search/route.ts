@@ -17,7 +17,12 @@ export async function GET(request: NextRequest) {
       }, { status: 400 })
     }
 
-    const results = {
+    const results: {
+      tools: any[]
+      prompts: any[]
+      articles: any[]
+      total: number
+    } = {
       tools: [],
       prompts: [],
       articles: [],
@@ -87,7 +92,7 @@ export async function GET(request: NextRequest) {
         .sort((a, b) => (b.rating || 0) - (a.rating || 0))
         .slice(offset, offset + limit)
     } else {
-      allResults = results[type as keyof typeof results] || []
+      allResults = (results[type as keyof typeof results] as any[]) || []
     }
 
     return NextResponse.json({

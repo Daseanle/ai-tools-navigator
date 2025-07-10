@@ -374,7 +374,7 @@ export class FullyAutomatedContentSystem {
             n: 1
           })
           
-          if (response.data[0].url) {
+          if (response.data && response.data[0] && response.data[0].url) {
             images.push(response.data[0].url)
           }
         } catch (error) {
@@ -839,7 +839,7 @@ export class FullyAutomatedContentSystem {
         }
       } catch (error) {
         console.error('微博发布失败:', error)
-        results.push({ platform: 'weibo', success: false, error: error.message })
+        results.push({ platform: 'weibo', success: false, error: error instanceof Error ? error.message : String(error) })
       }
     }
     
@@ -867,7 +867,7 @@ export class FullyAutomatedContentSystem {
         }
       } catch (error) {
         console.error('Twitter发布失败:', error)
-        results.push({ platform: 'twitter', success: false, error: error.message })
+        results.push({ platform: 'twitter', success: false, error: error instanceof Error ? error.message : String(error) })
       }
     }
     
@@ -906,7 +906,7 @@ export class FullyAutomatedContentSystem {
         }
       } catch (error) {
         console.error('LinkedIn发布失败:', error)
-        results.push({ platform: 'linkedin', success: false, error: error.message })
+        results.push({ platform: 'linkedin', success: false, error: error instanceof Error ? error.message : String(error) })
       }
     }
     

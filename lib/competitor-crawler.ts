@@ -522,10 +522,10 @@ export class CompetitorAnalysisCrawler {
   
   private async generateCompetitorReport(): Promise<void> {
     try {
-      const report = {
+      const report: any = {
         generatedAt: new Date().toISOString(),
         summary: await this.generateSummary(),
-        competitors: [],
+        competitors: [] as any[],
         insights: await this.generateInsights(),
         recommendations: await this.generateRecommendations()
       }

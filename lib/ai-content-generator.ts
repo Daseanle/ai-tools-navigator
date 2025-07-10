@@ -224,7 +224,7 @@ export class AIContentGenerator {
       ]
     }
     
-    const titleOptions = prompts[request.type] || prompts['blog']
+    const titleOptions = (prompts as any)[request.type] || prompts['blog']
     return titleOptions[Math.floor(Math.random() * titleOptions.length)]
   }
 
@@ -265,7 +265,7 @@ export class AIContentGenerator {
       ]
     }
     
-    const templates = contentLibrary[section.type] || ['此部分内容正在生成中...']
+    const templates = (contentLibrary as any)[section.type] || ['此部分内容正在生成中...']
     let sectionText = templates[Math.floor(Math.random() * templates.length)]
     
     // 根据字数要求扩展内容
@@ -354,7 +354,7 @@ export class AIContentGenerator {
       '生产力': ['Notion AI', 'Clickup', 'Monday.com', 'Asana']
     }
     
-    return toolsDatabase[topic] || ['ChatGPT', 'Claude', 'Bard']
+    return (toolsDatabase as any)[topic] || ['ChatGPT', 'Claude', 'Bard']
   }
 
   private async shouldAutoPublish(request: any): Promise<boolean> {
@@ -383,7 +383,7 @@ export class AIContentGenerator {
       '生产力': ['AI工具', '生产力工具', '办公软件']
     }
     
-    return categoryMap[topic] || ['AI工具', '技术分享']
+    return (categoryMap as any)[topic] || ['AI工具', '技术分享']
   }
 
   private async suggestTags(topic: string, keywords: string[]): Promise<string[]> {

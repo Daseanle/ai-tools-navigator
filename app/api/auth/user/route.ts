@@ -23,9 +23,9 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error('Get user error:', error)
       return NextResponse.json({
-        success: true,
-        user: getMockUser(userId)
-      })
+        success: false,
+        error: '用户不存在'
+      }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -129,30 +129,5 @@ export async function POST(request: NextRequest) {
       success: false, 
       error: '服务器错误' 
     }, { status: 500 })
-  }
-}
-
-// 模拟用户数据
-function getMockUser(userId: string) {
-  return {
-    id: userId,
-    name: '测试用户',
-    email: 'test@example.com',
-    avatar: '/avatars/default.png',
-    bio: '这是一个测试用户账号',
-    preferences: {
-      theme: 'dark',
-      language: 'zh-CN',
-      notifications: {
-        email: true,
-        push: false
-      }
-    },
-    membership: {
-      type: 'free',
-      expires_at: null
-    },
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-15T00:00:00Z'
   }
 }

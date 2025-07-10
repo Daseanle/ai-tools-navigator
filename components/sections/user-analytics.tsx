@@ -53,12 +53,12 @@ export default function UserAnalytics({ userId }: UserAnalyticsProps) {
       // 处理数据
       const totalFavorites = favoritesData?.length || 0
       const totalRatings = ratingsData?.length || 0
-      const avgRating = ratingsData?.reduce((sum, r) => sum + r.rating, 0) / totalRatings || 0
+      const avgRating = ratingsData && ratingsData.length > 0 ? ratingsData.reduce((sum, r) => sum + r.rating, 0) / totalRatings : 0
 
       // 收藏分类统计
       const categoryStats: Record<string, number> = {}
       favoritesData?.forEach(fav => {
-        const categoryName = fav.tools?.tool_categories?.[0]?.category?.name || '其他'
+        const categoryName = (fav.tools as any)?.category?.name || '其他'
         categoryStats[categoryName] = (categoryStats[categoryName] || 0) + 1
       })
 
@@ -72,14 +72,14 @@ export default function UserAnalytics({ userId }: UserAnalyticsProps) {
         .slice(0, 5)
 
       // 月度活动统计
-      const monthlyActivity = generateMonthlyActivity(favoritesData, ratingsData)
+      const monthlyActivity = generateMonthlyActivity(favoritesData || [], ratingsData || [])
 
       // 顶级工具
       const topTools = (ratingsData || [])
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 5)
         .map(r => ({
-          name: r.tools?.name || '未知',
+          name: (r.tools as any)?.name || '未知',
           category: '工具',
           rating: r.rating
         }))
@@ -88,12 +88,12 @@ export default function UserAnalytics({ userId }: UserAnalyticsProps) {
       const recentActivity = [
         ...(favoritesData || []).map(f => ({
           type: 'favorite',
-          tool: f.tools?.name || '未知工具',
+          tool: (f.tools as any)?.name || '未知工具',
           date: f.created_at
         })),
         ...(ratingsData || []).map(r => ({
           type: 'rating',
-          tool: r.tools?.name || '未知工具',
+          tool: (r.tools as any)?.name || '未知工具',
           date: r.created_at
         }))
       ]

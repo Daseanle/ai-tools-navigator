@@ -104,7 +104,12 @@
       "Bash(find:*)",
       "Bash(npm run type-check:*)",
       "Bash(mv:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(npm run perf:audit)",
+      "Bash(npm run perf:bundle:*)",
+      "Bash(npm run:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)"
     ],
     "deny": []
   }

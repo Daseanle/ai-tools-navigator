@@ -57,24 +57,10 @@ export async function POST(request: NextRequest) {
       })
 
     } else {
-      // 模拟登录（开发环境）
-      const mockUser = {
-        id: 'user-123',
-        email: email || 'test@example.com',
-        name: '测试用户',
-        avatar: '/avatars/default.png',
-        provider: provider || 'email'
-      }
-
-      return NextResponse.json({
-        success: true,
-        user: mockUser,
-        session: {
-          access_token: 'mock-token',
-          expires_at: Date.now() + 3600000 // 1小时后过期
-        },
-        message: '登录成功（开发模式）'
-      })
+      return NextResponse.json({ 
+        success: false, 
+        error: '不支持的登录方式' 
+      }, { status: 400 })
     }
 
   } catch (error) {

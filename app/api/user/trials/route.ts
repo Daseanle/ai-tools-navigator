@@ -61,8 +61,7 @@ export async function GET(request: NextRequest) {
           .from('user_trials')
           .update({ status: 'expired' })
           .eq('id', trial.id)
-          .then(() => {})
-          .catch(error => console.error('Error updating expired trial:', error))
+          .then(() => {}, (error: any) => console.error('Error updating expired trial:', error))
       }
 
       return {

@@ -145,7 +145,7 @@ function useToast() {
     ({ title, description, variant = "default", duration = 3000 }: Omit<ToasterToast, "id">) => {
       const id = genId()
 
-      const newToast: ToasterToast = { id, title, description, variant, duration, open: true }
+      const newToast: ToasterToast = { id, title, description, variant, duration }
 
       setToasts((prev) => [...prev, newToast])
 

@@ -323,7 +323,8 @@ export const mockCommunityPosts: CommunityPost[] = [
       viewCount: 8920,
       purchaseCount: 0,
       tipCount: 45,
-      tipAmount: 567
+      tipAmount: 567,
+      currency: 'CNY'
     },
     engagement: {
       views: 8920,

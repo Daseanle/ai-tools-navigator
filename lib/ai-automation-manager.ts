@@ -101,13 +101,13 @@ export class AIAutomationManager {
   private behaviorAnalytics: UserBehaviorAnalytics
   
   private isRunning: boolean = false
-  private metrics: AutomationMetrics
-  private goals: AutomationGoals
+  private metrics: AutomationMetrics = {} as AutomationMetrics
+  private goals: AutomationGoals = {} as AutomationGoals
   private strategies: Map<string, AutomationStrategy> = new Map()
   private activeStrategies: Set<string> = new Set()
   
   private learningHistory: Map<string, any[]> = new Map()
-  private performanceBaseline: AutomationMetrics
+  private performanceBaseline: AutomationMetrics = {} as AutomationMetrics
   private optimizationCycles: number = 0
 
   constructor() {
@@ -411,7 +411,7 @@ export class AIAutomationManager {
         },
         userBehavior: {
           activeUsers: behaviorMetrics.activeUsers,
-          conversionRate: behaviorMetrics.conversionRate,
+          conversionRate: (behaviorMetrics as any).conversionRate || 0,
           sessionDuration: behaviorMetrics.avgSessionDuration,
           bounceRate: behaviorMetrics.bounceRate
         },

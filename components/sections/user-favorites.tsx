@@ -221,7 +221,7 @@ export default function UserFavorites({ userId }: UserFavoritesProps) {
 
               {/* 收藏时间 */}
               <div className="absolute bottom-3 left-3 px-2 py-1 bg-black/50 rounded text-xs text-neutral-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                收藏于 {new Date(tool.favorited_at).toLocaleDateString()}
+                收藏于 {new Date((tool as any).favorited_at || tool.created_at || Date.now()).toLocaleDateString()}
               </div>
             </motion.div>
           ))}

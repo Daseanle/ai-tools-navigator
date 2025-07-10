@@ -221,7 +221,7 @@ export default function FullAutomationDashboard() {
             <span class="font-semibold">网络请求失败</span>
           </div>
           <div class="text-sm">
-            ${error.message || '请检查网络连接'}
+            ${(error as Error).message || '请检查网络连接'}
           </div>
           <div class="text-xs mt-2">
             可能原因: API配置错误或网络问题

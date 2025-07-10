@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     tool.name,
     tool.tagline,
     tool.category?.name,
-    ...(tool.tags?.map(tag => typeof tag === 'string' ? tag : tag.name) || [])
+    ...(tool.tags?.map((tag: any) => typeof tag === 'string' ? tag : tag.name) || [])
   ].filter((keyword): keyword is string => Boolean(keyword))
 
   return generatePageMetadata({

@@ -18,6 +18,7 @@ import {
   Calendar,
   Download,
   Share2,
+  CheckCircle,
   Filter
 } from "lucide-react"
 import { AnalyticsManager, analytics } from "@/lib/analytics"

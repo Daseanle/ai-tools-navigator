@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import type { AnalyticsUpdate } from '@/types/automation'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -93,7 +94,7 @@ async function updateSessionData(
 
     if (existingSession) {
       // 更新现有会话
-      const updates: any = {
+      const updates: AnalyticsUpdate = {
         end_time: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }

@@ -67,8 +67,8 @@ export async function GET(request: NextRequest) {
         generatedContent: publishedContent.length,
         optimizedPages: optimizedPages.length,
         totalActions: generatedContent.length,
-        newContent: publishedContent.map(c => ({ title: c.title, keyword: c.keyword })),
-        optimizations: optimizedPages.map(o => ({ page: o.page, type: o.optimizationType }))
+        newContent: publishedContent.filter(c => 'title' in c).map(c => ({ title: c.title, keyword: c.keyword })),
+        optimizations: optimizedPages.filter(o => 'page' in o).map(o => ({ page: o.page, type: o.optimizationType }))
       }
     }
     

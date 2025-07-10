@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
         performance_metrics: {
           avg_seo_score: result.content.reduce((sum, c) => sum + c.seoScore, 0) / result.content.length,
           avg_reading_time: result.content.reduce((sum, c) => sum + c.readingTime, 0) / result.content.length,
-          total_keywords: result.content.reduce((sum, c) => sum + c.keywords?.length || 0, 0)
+          total_keywords: result.content.reduce((sum, c) => sum + ((c as any).keywords?.length || 0), 0)
         }
       }
     }

@@ -215,7 +215,27 @@ export function IntelligentRecommendations({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
         {recommendations.slice(0, 8).map((rec, index) => {
           // 使用示例工具数据
-          const tool = sampleTools[index % sampleTools.length]
+          const sampleTool = sampleTools[index % sampleTools.length]
+          const tool = {
+            id: parseInt(rec.toolId) || index,
+            slug: sampleTool.name.toLowerCase().replace(/\s+/g, '-'),
+            name: sampleTool.name,
+            tagline: sampleTool.description,
+            description: sampleTool.description,
+            logo_url: sampleTool.image,
+            rating: sampleTool.rating,
+            pricing_type: sampleTool.pricing as any,
+            category: {
+              id: 1,
+              name: sampleTool.category,
+              slug: sampleTool.category.toLowerCase()
+            },
+            tags: sampleTool.tags.map((tag, i) => ({
+              id: i,
+              name: tag,
+              slug: tag.toLowerCase()
+            }))
+          }
           const Icon = getRecommendationIcon(rec.category)
           
           return (

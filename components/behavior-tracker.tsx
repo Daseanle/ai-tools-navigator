@@ -258,9 +258,9 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
       const timeSpent = Date.now() - window.performance.timing.navigationStart
       
       // 收集当前页面的热力图数据
-      const clickData = [] // 这里可以收集页面上的点击数据
-      const scrollData = [] // 这里可以收集滚动数据
-      const hoverData = [] // 这里可以收集悬停数据
+      const clickData: any[] = [] // 这里可以收集页面上的点击数据
+      const scrollData: any[] = [] // 这里可以收集滚动数据
+      const hoverData: any[] = [] // 这里可以收集悬停数据
       
       // 使用 sendBeacon 确保数据发送
       const exitData = {
@@ -294,7 +294,7 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
     analyticsRef.current.trackEvent({
       userId: userId || 'anonymous',
       sessionId: currentSessionRef.current,
-      eventType: isVisible ? 'page_focus' : 'page_blur',
+      eventType: isVisible ? 'page_view' : 'page_view',
       eventData: {
         element: 'page',
         value: isVisible ? 'visible' : 'hidden'
@@ -420,7 +420,7 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
     // 发送性能数据
     setTimeout(() => {
       analyticsRef.current?.sendPerformanceData(window.location.href, {
-        loadTime: navigation?.loadEventEnd - navigation?.navigationStart,
+        loadTime: navigation?.loadEventEnd - navigation?.fetchStart,
         firstContentfulPaint: fcp,
         largestContentfulPaint: lcp,
         firstInputDelay: 0, // 需要通过事件监听器获取

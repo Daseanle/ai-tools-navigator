@@ -3,6 +3,8 @@
  * 集成Google Search Console、关键词追踪、竞品分析等功能
  */
 
+import type { ApiKeys, GoogleSearchResult, MetricsData } from '@/types/automation'
+
 interface SEOMetrics {
   keywords: {
     keyword: string
@@ -73,18 +75,12 @@ interface SEOInsight {
 }
 
 export class RealSEOManager {
-  private apiKeys: {
-    googleSearchConsole?: string
-    semrush?: string
-    ahrefs?: string
-    moz?: string
-    serpApi?: string
-  }
+  private apiKeys: ApiKeys
   
   private domain: string
   private competitors: string[]
   
-  constructor(domain: string, apiKeys: any = {}) {
+  constructor(domain: string, apiKeys: ApiKeys = {}) {
     this.domain = domain
     this.apiKeys = apiKeys
     this.competitors = []
@@ -134,10 +130,10 @@ export class RealSEOManager {
       return {
         queries: queryResponse.data.rows || [],
         pages: pageResponse.data.rows || [],
-        totalClicks: queryResponse.data.rows?.reduce((sum, row) => sum + row.clicks, 0) || 0,
-        totalImpressions: queryResponse.data.rows?.reduce((sum, row) => sum + row.impressions, 0) || 0,
-        averageCTR: queryResponse.data.rows?.reduce((sum, row) => sum + row.ctr, 0) / (queryResponse.data.rows?.length || 1) || 0,
-        averagePosition: queryResponse.data.rows?.reduce((sum, row) => sum + row.position, 0) / (queryResponse.data.rows?.length || 1) || 0
+        totalClicks: queryResponse.data.rows?.reduce((sum: number, row: any) => sum + row.clicks, 0) || 0,
+        totalImpressions: queryResponse.data.rows?.reduce((sum: number, row: any) => sum + row.impressions, 0) || 0,
+        averageCTR: queryResponse.data.rows?.reduce((sum: number, row: any) => sum + row.ctr, 0) / (queryResponse.data.rows?.length || 1) || 0,
+        averagePosition: queryResponse.data.rows?.reduce((sum: number, row: any) => sum + row.position, 0) / (queryResponse.data.rows?.length || 1) || 0
       }
     } catch (error) {
       console.error('Error fetching Search Console data:', error)

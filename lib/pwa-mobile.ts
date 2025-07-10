@@ -680,8 +680,8 @@ export class PWAManager {
   // 追踪安装事件
   private trackInstallEvent(): void {
     // 发送安装事件到分析系统
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'pwa_install', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'pwa_install', {
         event_category: 'PWA',
         event_label: 'App Installed'
       })

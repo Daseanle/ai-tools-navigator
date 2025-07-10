@@ -33,7 +33,9 @@ export default function SettingsPage({ params }: PageProps) {
             id: "user-123",
             name: "用户",
             email: "user@example.com",
-            avatar: "/avatars/default.png"
+            avatar_url: "/avatars/default.png",
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
           }} />
         </Suspense>
       </div>
