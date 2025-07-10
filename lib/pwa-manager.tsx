@@ -566,5 +566,4 @@ export function usePWA() {
   }
 }
 
-export { PWAManager }
 export default PWAManager
