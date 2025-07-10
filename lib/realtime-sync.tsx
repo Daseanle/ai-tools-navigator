@@ -207,7 +207,7 @@ class RealTimeSyncManager extends EventEmitter {
       const channel = this.supabase
         .channel(config.channel)
         .on(
-          'postgres_changes',
+          'postgres_changes' as any,
           {
             event: config.events?.join('|') || '*',
             schema: 'public',
