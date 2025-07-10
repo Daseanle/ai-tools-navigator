@@ -325,7 +325,7 @@ export function ViewportPreloader({
   const ref = useViewportPreload(url)
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref as any} className={className}>
       {children}
     </div>
   )
