@@ -59,7 +59,7 @@ async function initializeRedis(): Promise<RedisClient> {
     try {
       // Dynamic import to avoid issues when Redis is not available
       const { Redis } = await import('ioredis')
-      redisClient = new Redis(process.env.REDIS_URL)
+      redisClient = new Redis(process.env.REDIS_URL) as any
       console.log('Redis connected successfully')
     } catch (error) {
       console.warn('Redis connection failed, falling back to mock:', error)
