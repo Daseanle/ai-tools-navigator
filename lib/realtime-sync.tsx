@@ -214,12 +214,12 @@ class RealTimeSyncManager extends EventEmitter {
             table: config.table,
             filter: config.filter
           },
-          (payload) => {
+          (payload: any) => {
             const syncEvent: SyncEvent = {
-              type: payload.eventType as 'INSERT' | 'UPDATE' | 'DELETE',
+              type: (payload.eventType || payload.event_type || 'UPDATE') as 'INSERT' | 'UPDATE' | 'DELETE',
               table: config.table,
-              record: payload.new,
-              old_record: payload.old,
+              record: payload.new || payload.record,
+              old_record: payload.old || payload.old_record,
               timestamp: Date.now(),
               eventId: `${config.table}_${Date.now()}_${Math.random()}`
             }
