@@ -1,7 +1,7 @@
 import { supabase } from "./supabase"
 import type { Database } from "./database.types"
 import { validateTool, sanitizeString, sanitizeUrl } from "./validation"
-import type { Tool } from "@/types"
+import type { Tool, Category } from "@/types"
 
 /* -------------------------------------------------------------
    0. 运行环境检测
@@ -286,18 +286,18 @@ const mockTools = [
 
 // 智能分类系统 - 根据工具内容自动匹配最佳分类
 const mockCategories = [
-  { id: 1, name: "对话AI", slug: "chat-ai", icon: "🤖", tools_count: 0, description: "智能对话与问答助手" },
-  { id: 2, name: "图像生成", slug: "image-generation", icon: "🎨", tools_count: 0, description: "AI图像创作与编辑" },
-  { id: 3, name: "编程助手", slug: "coding", icon: "💻", tools_count: 0, description: "代码生成与开发工具" },
-  { id: 4, name: "生产力", slug: "productivity", icon: "📈", tools_count: 0, description: "效率提升与办公工具" },
-  { id: 5, name: "视频生成", slug: "video-generation", icon: "🎬", tools_count: 0, description: "视频制作与编辑" },
-  { id: 6, name: "写作助手", slug: "writing", icon: "✍️", tools_count: 0, description: "内容创作与文案生成" },
-  { id: 7, name: "数据分析", slug: "data-analysis", icon: "📊", tools_count: 0, description: "数据洞察与分析" },
-  { id: 8, name: "设计工具", slug: "design", icon: "🎯", tools_count: 0, description: "UI/UX设计与创意" },
-  { id: 9, name: "音频处理", slug: "audio", icon: "🎵", tools_count: 0, description: "音频生成与处理" },
-  { id: 10, name: "搜索引擎", slug: "search", icon: "🔍", tools_count: 0, description: "智能搜索与信息检索" },
-  { id: 11, name: "开发平台", slug: "platform", icon: "🛠️", tools_count: 0, description: "AI模型部署与开发" },
-  { id: 12, name: "创意工具", slug: "creative", icon: "✨", tools_count: 0, description: "创意生成与艺术创作" }
+  { id: "1", name: "对话AI", slug: "chat-ai", icon: "🤖", tools_count: 0, description: "智能对话与问答助手", featured: true, sort_order: 1, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "2", name: "图像生成", slug: "image-generation", icon: "🎨", tools_count: 0, description: "AI图像创作与编辑", featured: true, sort_order: 2, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "3", name: "编程助手", slug: "coding", icon: "💻", tools_count: 0, description: "代码生成与开发工具", featured: true, sort_order: 3, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "4", name: "生产力", slug: "productivity", icon: "📈", tools_count: 0, description: "效率提升与办公工具", featured: false, sort_order: 4, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "5", name: "视频生成", slug: "video-generation", icon: "🎬", tools_count: 0, description: "视频制作与编辑", featured: true, sort_order: 5, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "6", name: "写作助手", slug: "writing", icon: "✍️", tools_count: 0, description: "内容创作与文案生成", featured: false, sort_order: 6, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "7", name: "数据分析", slug: "data-analysis", icon: "📊", tools_count: 0, description: "数据洞察与分析", featured: false, sort_order: 7, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "8", name: "设计工具", slug: "design", icon: "🎯", tools_count: 0, description: "UI/UX设计与创意", featured: false, sort_order: 8, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "9", name: "音频处理", slug: "audio", icon: "🎵", tools_count: 0, description: "音频生成与处理", featured: false, sort_order: 9, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "10", name: "搜索引擎", slug: "search", icon: "🔍", tools_count: 0, description: "智能搜索与信息检索", featured: false, sort_order: 10, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "11", name: "开发平台", slug: "platform", icon: "🛠️", tools_count: 0, description: "AI模型部署与开发", featured: false, sort_order: 11, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "12", name: "创意工具", slug: "creative", icon: "✨", tools_count: 0, description: "创意生成与艺术创作", featured: false, sort_order: 12, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
 ] as any[]
 
 /* -------------------------------------------------------------
@@ -306,10 +306,6 @@ const mockCategories = [
 type SupabaseTool = Database["public"]["Tables"]["tools"]["Row"] & {
   category?: Database["public"]["Tables"]["categories"]["Row"]
   tags?: Database["public"]["Tables"]["tags"]["Row"][]
-}
-
-type Category = Database["public"]["Tables"]["categories"]["Row"] & {
-  tools_count?: number
 }
 
 /* -------------------------------------------------------------
