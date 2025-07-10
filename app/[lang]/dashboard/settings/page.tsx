@@ -35,7 +35,56 @@ export default function SettingsPage({ params }: PageProps) {
             email: "user@example.com",
             avatar_url: "/avatars/default.png",
             created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
+            membership: {
+              type: 'free',
+              is_active: true,
+              features: ['basic_search', 'favorites'],
+              limits: {
+                favorites: 10,
+                searches_per_day: 50,
+                api_calls_per_month: 100,
+                trial_tools: 3
+              }
+            },
+            settings: {
+              language: 'zh',
+              theme: 'dark',
+              notifications: {
+                email: true,
+                browser: true,
+                new_tools: true,
+                updates: false,
+                marketing: false
+              },
+              privacy: {
+                profile_public: false,
+                usage_analytics: true,
+                data_sharing: false
+              },
+              display: {
+                grid_size: 'medium',
+                show_ratings: true,
+                show_pricing: true,
+                auto_play_videos: false
+              },
+              search: {
+                safe_search: true,
+                include_beta: false,
+                preferred_categories: []
+              },
+              ai: {
+                enable_recommendations: true,
+                enable_auto_tagging: true,
+                enable_content_generation: false
+              },
+              accessibility: {
+                high_contrast: false,
+                reduced_motion: false,
+                large_text: false,
+                screen_reader: false
+              }
+            }
           }} />
         </Suspense>
       </div>
