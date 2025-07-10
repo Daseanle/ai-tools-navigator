@@ -148,6 +148,29 @@ class RealTimeSyncManager extends EventEmitter {
     })
   }
 
+  private handleTableChange(table: string, payload: any) {
+    const event: SyncEvent = {
+      id: `${table}_${Date.now()}_${Math.random()}`,
+      table,
+      type: payload.eventType || 'unknown',
+      payload: payload.new || payload.old || payload,
+      timestamp: Date.now(),
+      eventId: payload.id || `${Date.now()}`
+    }
+
+    // Add to batch queue
+    this.eventQueue.push(event)
+
+    // Emit individual event
+    this.emit('table:change', event)
+    this.emit(`${table}:change`, event)
+
+    // If it's a realtime update, also emit specific type
+    if (event.type) {
+      this.emit(`${table}:${event.type}`, event)
+    }
+  }
+
   private handleReconnection() {
     if (
       this.connectionStatus === 'reconnecting' ||
