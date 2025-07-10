@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { EventEmitter } from 'events'
+import type { Database } from '@/lib/database.types'
 
 // ==================== Real-time Sync Manager ====================
 
@@ -30,7 +31,7 @@ export interface SyncEvent {
 
 class RealTimeSyncManager extends EventEmitter {
   private static instance: RealTimeSyncManager
-  private supabase: SupabaseClient | null = null
+  private supabase: SupabaseClient<Database> | null = null
   private subscriptions: Map<string, any> = new Map()
   private connectionStatus: 'connected' | 'disconnected' | 'reconnecting' = 'disconnected'
   private reconnectAttempts = 0
