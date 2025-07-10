@@ -353,8 +353,8 @@ export function usePagePreload() {
         preload(url, { 
           strategy: 'idle',
           conditions: [
-            () => navigator.connection ? navigator.connection.effectiveType === '4g' : true,
-            () => !navigator.connection?.saveData
+            () => (navigator as any).connection ? (navigator as any).connection.effectiveType === '4g' : true,
+            () => !(navigator as any).connection?.saveData
           ]
         })
       })
