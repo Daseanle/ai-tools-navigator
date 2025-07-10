@@ -73,21 +73,21 @@ class RealTimeSyncManager extends EventEmitter {
       )
 
       // Monitor connection status
-      this.supabase.realtime.onOpen(() => {
+      (this.supabase.realtime as any).onOpen(() => {
         this.connectionStatus = 'connected'
         this.reconnectAttempts = 0
         this.emit('connection:open')
         console.log('Real-time connection established')
       })
 
-      this.supabase.realtime.onClose(() => {
+      (this.supabase.realtime as any).onClose(() => {
         this.connectionStatus = 'disconnected'
         this.emit('connection:close')
         console.log('Real-time connection closed')
         this.handleReconnection()
       })
 
-      this.supabase.realtime.onError((error) => {
+      (this.supabase.realtime as any).onError((error: any) => {
         console.error('Real-time connection error:', error)
         this.emit('connection:error', error)
         this.handleReconnection()
