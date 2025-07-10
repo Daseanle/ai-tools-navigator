@@ -153,4 +153,3 @@ vercel rollback [deployment-url]
 - [ ] API endpoints 已验证
 
 部署完成后，访问您的应用并测试所有功能！🎉
-EOF < /dev/null
