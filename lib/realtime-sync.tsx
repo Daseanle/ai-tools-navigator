@@ -154,12 +154,12 @@ class RealTimeSyncManager extends EventEmitter {
 
   private handleTableChange(table: string, payload: any) {
     const event: SyncEvent = {
-      id: `${table}_${Date.now()}_${Math.random()}`,
       table,
-      type: payload.eventType || 'unknown',
-      payload: payload.new || payload.old || payload,
+      type: payload.eventType || 'UPDATE',
+      record: payload.new || payload.record || payload,
+      old_record: payload.old,
       timestamp: Date.now(),
-      eventId: payload.id || `${Date.now()}`
+      eventId: payload.id || `${Date.now()}_${Math.random()}`
     }
 
     // Add to batch queue
