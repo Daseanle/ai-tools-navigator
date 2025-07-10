@@ -2,7 +2,8 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { SupabaseClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 import { EventEmitter } from 'events'
 
 // ==================== Real-time Sync Manager ====================
@@ -60,17 +61,7 @@ class RealTimeSyncManager extends EventEmitter {
         throw new Error('Supabase credentials not found')
       }
 
-      this.supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        {
-          realtime: {
-            params: {
-              eventsPerSecond: 10
-            }
-          }
-        }
-      )
+      this.supabase = supabase
 
       // Monitor connection status
       (this.supabase.realtime as any).onOpen(() => {
