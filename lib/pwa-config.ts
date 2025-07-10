@@ -441,5 +441,4 @@ export class PWAMetrics {
   }
 }
 
-export { pwaConfig }
 export default PWAUtils
