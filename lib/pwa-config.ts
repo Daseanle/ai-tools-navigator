@@ -187,7 +187,7 @@ export class PWAUtils {
     return false
   }
 
-  private static detectPlatform(): string {
+  public static detectPlatform(): string {
     const userAgent = navigator.userAgent.toLowerCase()
     
     if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
