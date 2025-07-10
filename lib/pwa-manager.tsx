@@ -113,7 +113,7 @@ export class PWAManager {
     // Register background sync for offline actions
     if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
       navigator.serviceWorker.ready.then((registration) => {
-        registration.sync.register('background-sync').catch(console.error)
+        (registration as any).sync.register('background-sync').catch(console.error)
       })
     }
   }
@@ -167,7 +167,7 @@ export class PWAManager {
     // Sync any offline data when coming back online
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready.then((registration) => {
-        registration.sync.register('sync-offline-data')
+        (registration as any).sync.register('sync-offline-data')
       })
     }
   }
