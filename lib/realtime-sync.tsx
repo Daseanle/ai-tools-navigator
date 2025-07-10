@@ -112,11 +112,15 @@ class RealTimeSyncManager extends EventEmitter {
   private setupHeartbeat() {
     this.heartbeatInterval = setInterval(() => {
       if (this.connectionStatus === 'connected' && this.supabase) {
-        // Send heartbeat to maintain connection
-        this.supabase.realtime.send({
-          type: 'heartbeat',
-          timestamp: Date.now()
-        })
+        // Send heartbeat to maintain connection - using modern Supabase API
+        try {
+          (this.supabase.realtime as any).send({
+            type: 'heartbeat',
+            timestamp: Date.now()
+          })
+        } catch (error) {
+          console.warn('Heartbeat failed:', error)
+        }
       }
     }, 30000) // Every 30 seconds
   }
