@@ -55,6 +55,13 @@ const nextConfig = {
   
   // 构建优化
   webpack: (config, { isServer, webpack }) => {
+    // 修复 self 未定义的问题
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'typeof self': isServer ? "'undefined'" : "'object'",
+      })
+    )
+    
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
