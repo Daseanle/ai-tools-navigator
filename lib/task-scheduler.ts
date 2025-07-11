@@ -241,10 +241,10 @@ export class TaskScheduler {
         for (const userId of users) {
           try {
             // 更新用户画像
-            await this.recommendationEngine.updateUserProfile(userId, {})
+            await this.recommendationEngine.updateUserProfile(userId, { type: 'view', data: {} })
             
             // 生成个性化推荐
-            await this.recommendationEngine.generateRecommendations(userId, 10)
+            await this.recommendationEngine.generateRecommendations(userId, { userId } as any)
             
             updatedProfiles++
           } catch (error) {

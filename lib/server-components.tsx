@@ -2,7 +2,7 @@
 import { Suspense } from 'react'
 import { unstable_cache } from 'next/cache'
 import { ErrorBoundary } from '@/components/error-boundary'
-import { ToolCardSkeleton } from '@/components/skeletons/tool-card-skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 // ==================== Server Component Factory ====================
 
@@ -134,7 +134,7 @@ export async function ToolListServer({
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tools?.map((tool) => (
-          <Suspense key={tool.id} fallback={<ToolCardSkeleton />}>
+          <Suspense key={tool.id} fallback={<Skeleton className="h-48 w-full" />}>
             <ToolCardServer tool={tool} />
           </Suspense>
         ))}

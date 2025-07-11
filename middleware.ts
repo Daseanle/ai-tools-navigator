@@ -11,7 +11,7 @@ import {
   CSRFProtection
 } from './lib/security'
 import { monitoring } from './lib/monitoring'
-import { CacheMiddleware, CacheUtils } from './lib/cache-config'
+import { CacheUtils } from './lib/cache-config'
 
 // ==================== Enhanced Middleware Chain ====================
 
@@ -51,7 +51,7 @@ class MiddlewareChain {
 
       try {
         const middlewareStart = performance.now()
-        const result = await fn(request, response)
+        const result = await fn(request, response || undefined)
         const middlewareEnd = performance.now()
 
         monitoring.record(`middleware.${config.name}.duration`, middlewareEnd - middlewareStart)

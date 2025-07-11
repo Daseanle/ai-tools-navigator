@@ -257,7 +257,7 @@ export class SEOManager {
 
   // 生成sitemap
   static generateSitemap(tools: Tool[], categories: Category[]): string {
-    const urls = []
+    const urls: string[] = []
 
     // 主要页面
     const mainPages = [

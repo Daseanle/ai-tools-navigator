@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHash, createHmac, randomBytes } from 'crypto'
-import { validateSearchParams, sanitizeString, sanitizeUrl } from './validation'
+import { sanitizeString, sanitizeUrl } from './validation'
 
 // ==================== Enhanced Security Headers ====================
 

@@ -1,6 +1,7 @@
-import { beforeAll, afterEach } from 'vitest'
+import { beforeAll, afterEach, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import React from 'react'
 
 // Extend vitest's expect with jest-dom matchers
 import * as matchers from '@testing-library/jest-dom/matchers'
@@ -17,11 +18,15 @@ afterEach(() => {
 beforeAll(() => {
   // Mock IntersectionObserver
   global.IntersectionObserver = class IntersectionObserver {
+    root = null
+    rootMargin = ''
+    thresholds = []
     constructor() {}
     observe() {}
     unobserve() {}
     disconnect() {}
-  }
+    takeRecords() { return [] }
+  } as any
 
   // Mock ResizeObserver
   global.ResizeObserver = class ResizeObserver {
@@ -54,10 +59,10 @@ beforeAll(() => {
 
   // Mock localStorage
   const localStorageMock = {
-    getItem: vitest.fn(),
-    setItem: vitest.fn(),
-    removeItem: vitest.fn(),
-    clear: vitest.fn(),
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
   }
   Object.defineProperty(window, 'localStorage', {
     value: localStorageMock
@@ -65,27 +70,27 @@ beforeAll(() => {
 
   // Mock sessionStorage
   const sessionStorageMock = {
-    getItem: vitest.fn(),
-    setItem: vitest.fn(),
-    removeItem: vitest.fn(),
-    clear: vitest.fn(),
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
   }
   Object.defineProperty(window, 'sessionStorage', {
     value: sessionStorageMock
   })
 
   // Mock fetch
-  global.fetch = vitest.fn()
+  global.fetch = vi.fn()
 
   // Mock next/navigation
-  vitest.mock('next/navigation', () => ({
+  vi.mock('next/navigation', () => ({
     useRouter: () => ({
-      push: vitest.fn(),
-      replace: vitest.fn(),
-      back: vitest.fn(),
-      forward: vitest.fn(),
-      refresh: vitest.fn(),
-      prefetch: vitest.fn(),
+      push: vi.fn(),
+      replace: vi.fn(),
+      back: vi.fn(),
+      forward: vi.fn(),
+      refresh: vi.fn(),
+      prefetch: vi.fn(),
     }),
     useSearchParams: () => new URLSearchParams(),
     usePathname: () => '/',
@@ -93,16 +98,18 @@ beforeAll(() => {
   }))
 
   // Mock next/image
-  vitest.mock('next/image', () => ({
+  vi.mock('next/image', () => ({
     default: ({ src, alt, ...props }: any) => {
-      return <img src={src} alt={alt} {...props} />
+      return React.createElement('img', { src, alt, ...props })
     },
   }))
 
   // Mock environment variables
-  process.env.NODE_ENV = 'test'
-  process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+  Object.assign(process.env, {
+    NODE_ENV: 'test',
+    NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key'
+  })
 })
 
 // Global error handler for unhandled promise rejections

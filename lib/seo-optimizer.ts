@@ -95,7 +95,6 @@ class MetadataGenerator {
       description,
       keywords: keywords.join(', '),
       robots: noIndex ? 'noindex,nofollow' : 'index,follow',
-      canonical: canonicalUrl,
       
       // Open Graph
       openGraph: {
@@ -128,9 +127,9 @@ class MetadataGenerator {
       verification: {
         google: seoConfig.verificationCodes?.google,
         other: {
-          'msvalidate.01': seoConfig.verificationCodes?.bing,
-          'yandex-verification': seoConfig.verificationCodes?.yandex,
-          'baidu-site-verification': seoConfig.verificationCodes?.baidu
+          'msvalidate.01': seoConfig.verificationCodes?.bing || '',
+          'yandex-verification': seoConfig.verificationCodes?.yandex || '',
+          'baidu-site-verification': seoConfig.verificationCodes?.baidu || ''
         }
       },
 

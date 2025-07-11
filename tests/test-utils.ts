@@ -1,7 +1,7 @@
-import { expect, test, describe, beforeEach, afterEach } from 'vitest'
+import { expect, test, describe, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { jest } from '@jest/globals'
 import '@testing-library/jest-dom'
+import React from 'react'
 
 // ==================== Test Configuration ====================
 
@@ -146,8 +146,8 @@ export class MockDataFactory {
 
 export class MockAPI {
   static setupFetchMock() {
-    global.fetch = jest.fn()
-    return global.fetch as jest.MockedFunction<typeof fetch>
+    global.fetch = vi.fn()
+    return global.fetch as any
   }
 
   static mockSuccessResponse(data: any) {
@@ -226,14 +226,14 @@ export class StoreTestHelpers {
   static createMockStore(initialState = {}) {
     return {
       getState: () => initialState,
-      setState: jest.fn(),
-      subscribe: jest.fn(),
-      destroy: jest.fn(),
+      setState: vi.fn(),
+      subscribe: vi.fn(),
+      destroy: vi.fn(),
       ...initialState
     }
   }
 
-  static expectStateUpdate(mockSetState: jest.MockedFunction<any>, expectedState: any) {
+  static expectStateUpdate(mockSetState: any, expectedState: any) {
     expect(mockSetState).toHaveBeenCalledWith(
       expect.objectContaining(expectedState)
     )
@@ -259,7 +259,7 @@ export class APITestHelpers {
   }
 
   static expectFetchCalled(
-    mockFetch: jest.MockedFunction<typeof fetch>,
+    mockFetch: any,
     url: string,
     options?: RequestInit
   ) {
@@ -267,7 +267,7 @@ export class APITestHelpers {
   }
 
   static expectFetchCalledTimes(
-    mockFetch: jest.MockedFunction<typeof fetch>,
+    mockFetch: any,
     times: number
   ) {
     expect(mockFetch).toHaveBeenCalledTimes(times)
@@ -358,15 +358,15 @@ export class AccessibilityTestHelpers {
 
 export class TestCleanupHelpers {
   static clearAllMocks() {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   }
 
   static resetAllMocks() {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   }
 
   static restoreAllMocks() {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   }
 
   static cleanupDOM() {
@@ -397,16 +397,16 @@ export const TestSuiteTemplates = {
       })
 
       test('renders without crashing', () => {
-        expect(() => render(<Component />)).not.toThrow()
+        expect(() => render(React.createElement(Component))).not.toThrow()
       })
 
       test('has correct accessibility attributes', () => {
-        render(<Component />)
+        render(React.createElement(Component))
         // Add specific accessibility tests
       })
 
       test('handles user interactions correctly', async () => {
-        render(<Component />)
+        render(React.createElement(Component))
         // Add interaction tests
       })
     })
@@ -415,7 +415,7 @@ export const TestSuiteTemplates = {
   // API test template
   api: (apiName: string, apiFunction: any) => {
     describe(`${apiName} API`, () => {
-      let mockFetch: jest.MockedFunction<typeof fetch>
+      let mockFetch: any
 
       beforeEach(() => {
         mockFetch = MockAPI.setupFetchMock()
@@ -456,8 +456,8 @@ export const TestSuiteTemplates = {
     describe(`${storeName} Store`, () => {
       beforeEach(() => {
         // Reset store state
-        store.getState = jest.fn()
-        store.setState = jest.fn()
+        store.getState = vi.fn()
+        store.setState = vi.fn()
       })
 
       test('has correct initial state', () => {
@@ -522,7 +522,7 @@ expect.extend({
 
 // Extend Jest matcher types
 declare global {
-  namespace jest {
+  namespace vi {
     interface Matchers<R> {
       toBeValidUrl(): R
       toBeValidEmail(): R

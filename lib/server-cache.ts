@@ -61,11 +61,10 @@ export class ServerCache {
     if (process.env.REDIS_URL) {
       try {
         this.redis = new Redis(process.env.REDIS_URL, {
-          retryDelayOnFailover: 100,
           maxRetriesPerRequest: 3,
           lazyConnect: true,
           enableOfflineQueue: false
-        })
+        } as any)
 
         await this.redis.ping()
         console.log('Redis connection established')

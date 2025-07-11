@@ -3,7 +3,7 @@
  * 自动搜索、分析和收录新的AI工具
  */
 
-import { WebSearch } from '@/lib/web-search'
+// import { WebSearch } from '@/lib/web-search'
 
 export interface ToolSource {
   id: string
