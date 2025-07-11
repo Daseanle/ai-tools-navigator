@@ -2,12 +2,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import webpush from 'web-push'
 
-// Configure web-push
-webpush.setVapidDetails(
-  'mailto:your-email@example.com',
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-)
+// Configure web-push only if VAPID keys are available
+if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  try {
+    webpush.setVapidDetails(
+      'mailto:your-email@example.com',
+      process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+      process.env.VAPID_PRIVATE_KEY
+    )
+  } catch (error) {
+    console.warn('VAPID details configuration failed:', error)
+  }
+} else {
+  console.warn('VAPID keys not configured - push notifications will not work')
+}
 
 // In-memory storage for subscriptions (use database in production)
 const subscriptions = new Map<string, PushSubscription>()

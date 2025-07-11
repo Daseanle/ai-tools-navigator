@@ -11,7 +11,35 @@ import {
   CSRFProtection
 } from './lib/security'
 import { monitoring } from './lib/monitoring'
-import { CacheUtils } from './lib/cache-config'
+
+// Cache utilities - simplified for middleware compatibility
+const CacheUtils = {
+  shouldBypassCache: (req: NextRequest): boolean => {
+    const url = new URL(req.url)
+    const bypassHeader = req.headers.get('cache-control')
+    
+    return (
+      bypassHeader?.includes('no-cache') ||
+      url.searchParams.has('no-cache') ||
+      url.pathname.includes('/admin/') ||
+      url.pathname.includes('/api/auth/')
+    )
+  },
+  getCacheTTL: (path: string): number => {
+    if (path.startsWith('/api/')) return 10 * 60 * 1000 // 10 minutes
+    if (path.startsWith('/tools/')) return 30 * 60 * 1000 // 30 minutes
+    if (path.startsWith('/categories/')) return 60 * 60 * 1000 // 1 hour
+    return 15 * 60 * 1000 // 15 minutes default
+  },
+  getCacheTags: (path: string): string[] => {
+    const tags = ['pages']
+    if (path.includes('/tools')) tags.push('tools')
+    if (path.includes('/categories')) tags.push('categories')
+    if (path.includes('/search')) tags.push('search')
+    if (path.includes('/user')) tags.push('users')
+    return tags
+  }
+}
 
 // ==================== Enhanced Middleware Chain ====================
 

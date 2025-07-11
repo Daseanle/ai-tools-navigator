@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
+
+// Load global polyfill immediately
+require('./global-polyfill.js');
+
 const nextConfig = {
   // 基本配置
   reactStrictMode: true,
@@ -28,7 +32,7 @@ const nextConfig = {
 
   // 实验性功能
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true,
     optimizePackageImports: [
       'lucide-react', 
       '@radix-ui/react-icons',
@@ -45,8 +49,8 @@ const nextConfig = {
       'framer-motion',
       'recharts'
     ],
-    webpackBuildWorker: true,
-    serverComponentsExternalPackages: ['sharp'],
+    // webpackBuildWorker: true,
+    serverComponentsExternalPackages: ['sharp', 'ioredis'],
   },
 
   // 性能优化
@@ -55,19 +59,31 @@ const nextConfig = {
   
   // 构建优化
   webpack: (config, { isServer, webpack }) => {
-    // 修复 self 未定义的问题
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'typeof self': isServer ? "'undefined'" : "'object'",
-      })
-    )
-    
-    if (!isServer) {
+    // 基本的 self polyfill
+    if (isServer) {
+      config.plugins.push(
+        new webpack.ProvidePlugin({
+          self: 'global',
+          global: 'global',
+        })
+      )
+    } else {
+      config.plugins.push(
+        new webpack.ProvidePlugin({
+          Buffer: ['buffer', 'Buffer'],
+          process: 'process/browser',
+          global: 'global/window',
+        })
+      )
+      
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         net: false,
         tls: false,
+        crypto: false,
+        process: require.resolve('process/browser'),
+        buffer: require.resolve('buffer'),
       }
     }
 
@@ -83,30 +99,30 @@ const nextConfig = {
       )
     }
 
-    // 优化chunk分割
-    config.optimization.splitChunks = {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          priority: 10,
-          reuseExistingChunk: true,
-        },
-        ui: {
-          test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-          name: 'ui',
-          priority: 20,
-          reuseExistingChunk: true,
-        },
-        framer: {
-          test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
-          name: 'framer',
-          priority: 20,
-          reuseExistingChunk: true,
-        },
-      },
-    }
+    // 优化chunk分割 - 暂时简化以避免webpack错误
+    // config.optimization.splitChunks = {
+    //   chunks: 'all',
+    //   cacheGroups: {
+    //     vendor: {
+    //       test: /[\\/]node_modules[\\/]/,
+    //       name: 'vendors',
+    //       priority: 10,
+    //       reuseExistingChunk: true,
+    //     },
+    //     ui: {
+    //       test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+    //       name: 'ui',
+    //       priority: 20,
+    //       reuseExistingChunk: true,
+    //     },
+    //     framer: {
+    //       test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
+    //       name: 'framer',
+    //       priority: 20,
+    //       reuseExistingChunk: true,
+    //     },
+    //   },
+    // }
 
     return config
   },

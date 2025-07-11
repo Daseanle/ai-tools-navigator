@@ -6,6 +6,7 @@ import { getPopularTools, getLatestTools, categories as realCategories } from "@
 import HeroSection from "@/components/sections/hero-section"
 import HomePageSkeleton from "@/components/skeletons/home-page-skeleton"
 import { generateMetadata as generatePageMetadata } from "@/lib/metadata"
+import DatabaseCheck from "@/components/database-check"
 
 // 动态导入重组件以优化首屏加载
 const CategorySection = dynamic(() => import("@/components/sections/category-section"), {
@@ -68,42 +69,44 @@ export default async function HomePage({ params }: PageProps) {
   }
 
   return (
-    <Suspense fallback={<HomePageSkeleton />}>
-      <main className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Hero Section - 关键内容，立即渲染 */}
-          <HeroSection toolsCount={statsData.toolsCount} categoriesCount={statsData.categoriesCount} />
+    <DatabaseCheck>
+      <Suspense fallback={<HomePageSkeleton />}>
+        <main className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Hero Section - 关键内容，立即渲染 */}
+            <HeroSection toolsCount={statsData.toolsCount} categoriesCount={statsData.categoriesCount} />
 
-          {/* Stats Section - 展示网站统计 */}
-          <StatsSection 
-            toolsCount={statsData.toolsCount} 
-            categoriesCount={statsData.categoriesCount}
-            usersCount={statsData.usersCount}
-            reviewsCount={statsData.reviewsCount}
-          />
-
-          {/* Category Section - 分类导航 */}
-          <CategorySection categories={categoriesData} />
-
-          {/* Intelligent Recommendations - 智能推荐 */}
-          <section className="py-12">
-            <IntelligentRecommendations 
-              currentPage={`/${params.lang}`}
-              className="mb-12"
+            {/* Stats Section - 展示网站统计 */}
+            <StatsSection 
+              toolsCount={statsData.toolsCount} 
+              categoriesCount={statsData.categoriesCount}
+              usersCount={statsData.usersCount}
+              reviewsCount={statsData.reviewsCount}
             />
-          </section>
 
-          {/* Hot Tools Section - 热门工具 */}
-          <HotToolsSection tools={hotToolsData} />
+            {/* Category Section - 分类导航 */}
+            <CategorySection categories={categoriesData} />
 
-          {/* Features Section - 特性介绍 */}
-          <FeaturesSection />
+            {/* Intelligent Recommendations - 智能推荐 */}
+            <section className="py-12">
+              <IntelligentRecommendations 
+                currentPage={`/${params.lang}`}
+                className="mb-12"
+              />
+            </section>
 
-          {/* CTA Section - 行动号召 */}
-          <CTASection />
-        </div>
-      </main>
-    </Suspense>
+            {/* Hot Tools Section - 热门工具 */}
+            <HotToolsSection tools={hotToolsData} />
+
+            {/* Features Section - 特性介绍 */}
+            <FeaturesSection />
+
+            {/* CTA Section - 行动号召 */}
+            <CTASection />
+          </div>
+        </main>
+      </Suspense>
+    </DatabaseCheck>
   )
 }
 

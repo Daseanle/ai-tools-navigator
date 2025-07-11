@@ -1,6 +1,8 @@
 // Advanced Database Connection Pool and Query Optimization
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
-import { Redis } from 'ioredis'
+
+// Type definition for Redis (imported dynamically)
+type Redis = any
 
 // ==================== Connection Pool Manager ====================
 
@@ -125,8 +127,13 @@ class QueryOptimizer {
   private static dbPool = DatabasePool.getInstance()
 
   static async initialize() {
-    if (process.env.REDIS_URL) {
-      this.redis = new Redis(process.env.REDIS_URL)
+    if (typeof process !== 'undefined' && process.env.REDIS_URL) {
+      try {
+        const { Redis } = await import('ioredis')
+        this.redis = new Redis(process.env.REDIS_URL)
+      } catch (error) {
+        console.warn('Redis initialization failed, continuing without cache:', error)
+      }
     }
   }
 
@@ -543,10 +550,12 @@ class QueryOptimizer {
 // Initialize on module load
 QueryOptimizer.initialize().catch(console.error)
 
-// Cleanup on process exit
-process.on('SIGTERM', async () => {
-  const dbPool = DatabasePool.getInstance()
-  await dbPool.cleanup()
-})
+// Cleanup on process exit (only in Node.js runtime)
+if (typeof process !== 'undefined' && process.on && process.versions && process.versions.node) {
+  process.on('SIGTERM', async () => {
+    const dbPool = DatabasePool.getInstance()
+    await dbPool.cleanup()
+  })
+}
 
 export { DatabasePool, QueryOptimizer }

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import '@/lib/polyfills' // Import polyfills first
 import { ErrorBoundary } from '@/components/error-boundary'
 import { FavoritesProvider } from '@/components/providers/favorites-provider'
 import PWAInstaller from '@/components/pwa-installer'

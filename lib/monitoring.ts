@@ -283,8 +283,14 @@ export class HealthChecker {
     const anyUnhealthy = results.some(r => !r.success)
 
     // Get system metrics
-    const memoryUsage = process.memoryUsage()
-    const uptime = process.uptime()
+    const isNodeRuntime = typeof process !== 'undefined' && process.versions && process.versions.node
+    let memoryUsage: any = { heapUsed: 0, heapTotal: 100 * 1024 * 1024 }
+    let uptime: number = 0
+    
+    if (isNodeRuntime) {
+      memoryUsage = process.memoryUsage()
+      uptime = process.uptime()
+    }
 
     // Calculate API metrics
     const apiStats = metricsCollector.getStats('api.request_duration', 300000) || {}

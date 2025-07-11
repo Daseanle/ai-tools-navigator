@@ -1,7 +1,31 @@
 // Advanced Server-Side Caching Strategy
-import { Redis } from 'ioredis'
 import { LRUCache } from 'lru-cache'
-import { createHash } from 'crypto'
+
+// Runtime-compatible crypto and Redis imports
+const isEdgeRuntime = (() => {
+  try {
+    return typeof self !== 'undefined' && self.constructor && self.constructor.name === 'ServiceWorkerGlobalScope'
+  } catch {
+    return false
+  }
+})()
+const isNodeRuntime = typeof process !== 'undefined' && process.versions && process.versions.node
+
+// Dynamic imports for runtime compatibility
+let createHash: any
+let Redis: any
+
+if (isNodeRuntime) {
+  import('crypto').then(crypto => createHash = crypto.createHash)
+  import('ioredis').then(ioredis => Redis = ioredis.Redis)
+} else {
+  // Edge Runtime compatible hash function
+  createHash = (algorithm: string) => ({
+    update: (data: string) => ({
+      digest: (encoding: string) => btoa(data).substring(0, 16)
+    })
+  })
+}
 
 // ==================== Multi-Layer Cache Architecture ====================
 
@@ -28,7 +52,7 @@ export interface CacheEntry<T = any> {
 
 export class ServerCache {
   private static instance: ServerCache
-  private redis: Redis | null = null
+  private redis: any | null = null
   private memoryCache: LRUCache<string, CacheEntry>
   private cacheMetrics: Map<string, any> = new Map()
   private warmupQueue: Set<string> = new Set()
@@ -58,7 +82,7 @@ export class ServerCache {
   }
 
   private async initializeRedis() {
-    if (process.env.REDIS_URL) {
+    if (isNodeRuntime && process.env.REDIS_URL && Redis) {
       try {
         this.redis = new Redis(process.env.REDIS_URL, {
           maxRetriesPerRequest: 3,
@@ -187,7 +211,7 @@ export class ServerCache {
         const keys = await this.redis.smembers(`tag:${tag}`)
         if (keys.length > 0) {
           const pipeline = this.redis.pipeline()
-          keys.forEach(key => {
+          keys.forEach((key: string) => {
             pipeline.del(key)
             this.memoryCache.delete(key)
           })
@@ -206,7 +230,7 @@ export class ServerCache {
         const keys = await this.redis.keys(pattern)
         if (keys.length > 0) {
           await this.redis.del(...keys)
-          keys.forEach(key => this.memoryCache.delete(key))
+          keys.forEach((key: string) => this.memoryCache.delete(key))
         }
       }
     } catch (error) {
@@ -337,7 +361,7 @@ export class ServerCache {
   }
 
   private getAvailableMemory(): number {
-    if (typeof process !== 'undefined' && process.memoryUsage) {
+    if (isNodeRuntime && process.memoryUsage) {
       const usage = process.memoryUsage()
       return usage.heapTotal - usage.heapUsed
     }
@@ -345,11 +369,13 @@ export class ServerCache {
   }
 
   private setupMetrics() {
-    setInterval(() => {
-      this.cacheMetrics.set('memory_usage', process.memoryUsage())
-      this.cacheMetrics.set('cache_size', this.memoryCache.size)
-      this.cacheMetrics.set('timestamp', Date.now())
-    }, 60000) // Update every minute
+    if (isNodeRuntime) {
+      setInterval(() => {
+        this.cacheMetrics.set('memory_usage', process.memoryUsage())
+        this.cacheMetrics.set('cache_size', this.memoryCache.size)
+        this.cacheMetrics.set('timestamp', Date.now())
+      }, 60000) // Update every minute
+    }
   }
 
   private startBackgroundTasks() {

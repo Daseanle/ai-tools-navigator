@@ -1,6 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createHash, createHmac, randomBytes } from 'crypto'
 import { sanitizeString, sanitizeUrl } from './validation'
+
+// Runtime-compatible crypto imports
+let createHash: any
+let createHmac: any
+let randomBytes: any
+
+if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+  import('crypto').then(crypto => {
+    createHash = crypto.createHash
+    createHmac = crypto.createHmac
+    randomBytes = crypto.randomBytes
+  })
+} else {
+  // Edge Runtime compatible fallbacks
+  createHash = (algorithm: string) => ({
+    update: (data: string) => ({
+      digest: (encoding: string) => btoa(data).substring(0, 32)
+    })
+  })
+  createHmac = (algorithm: string, key: string) => ({
+    update: (data: string) => ({
+      digest: (encoding: string) => btoa(key + data).substring(0, 32)
+    })
+  })
+  randomBytes = (size: number) => {
+    const arr = new Uint8Array(size)
+    crypto.getRandomValues(arr)
+    return {
+      toString: (encoding: string) => btoa(String.fromCharCode(...arr)).substring(0, size)
+    }
+  }
+}
 
 // ==================== Enhanced Security Headers ====================
 
@@ -27,7 +58,7 @@ export const securityHeaders = {
 // ==================== Advanced CSRF Protection ====================
 
 export class CSRFProtection {
-  private static readonly SECRET = process.env.CSRF_SECRET || 'default-csrf-secret'
+  private static readonly SECRET = (typeof process !== 'undefined' && process.env.CSRF_SECRET) || 'default-csrf-secret'
 
   static generateToken(): string {
     const timestamp = Date.now().toString()

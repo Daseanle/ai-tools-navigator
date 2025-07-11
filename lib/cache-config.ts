@@ -332,8 +332,20 @@ class CacheEventHandler {
   }
 }
 
-// Initialize cache on module load
-const cache = ServerCache.getInstance()
+// Cache configuration - lazy initialization
+let cache: any = null
+
+function getCache() {
+  if (!cache) {
+    try {
+      cache = ServerCache.getInstance()
+    } catch (error) {
+      console.debug('Cache initialization failed:', error)
+      return null
+    }
+  }
+  return cache
+}
 
 export { 
   ServerCache, 
@@ -343,5 +355,5 @@ export {
   CacheHealthMonitor, 
   CacheUtils, 
   CacheEventHandler,
-  cache 
+  getCache as cache 
 }

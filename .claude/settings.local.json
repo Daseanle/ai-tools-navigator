@@ -110,7 +110,8 @@
       "Bash(npm run:*)",
       "Bash(mkdir:*)",
       "Bash(touch:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": []
   }
