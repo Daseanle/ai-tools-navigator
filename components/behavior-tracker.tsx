@@ -278,12 +278,14 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
         navigator.sendBeacon('/api/analytics/page-exit', JSON.stringify(exitData))
         
         // 发送热力图数据
-        analyticsRef.current.sendHeatmapData(
-          window.location.href,
-          clickData,
-          scrollData,
-          hoverData
-        )
+        if (analyticsRef.current) {
+          analyticsRef.current.sendHeatmapData(
+            window.location.href,
+            clickData,
+            scrollData,
+            hoverData
+          )
+        }
       } catch (error) {
         console.error('Error sending unload data:', error)
       }
