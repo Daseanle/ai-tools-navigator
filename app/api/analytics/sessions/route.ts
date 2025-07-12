@@ -79,6 +79,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabaseServerClient()
     const { searchParams } = new URL(request.url)
     const session_id = searchParams.get('session_id')
     const user_id = searchParams.get('user_id')
