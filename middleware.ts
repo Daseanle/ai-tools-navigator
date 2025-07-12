@@ -336,10 +336,10 @@ middlewareChain.add(cacheMiddleware, {
 })
 
 middlewareChain.add(csrfMiddleware, {
-  enabled: false, // Temporarily disabled to debug CSRF issues
+  enabled: true,
   priority: 120,
   onlyPaths: ['/api/'],
-  skipPaths: ['/api/monitoring/', '/api/error-report', '/api/auth/csrf'],
+  skipPaths: ['/api/monitoring/', '/api/error-report', '/api/auth/csrf', '/api/auth/user', '/api/debug/', '/api/analytics/'],
   name: 'csrf_protection'
 })
 

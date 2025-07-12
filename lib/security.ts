@@ -313,9 +313,23 @@ export function validateCSRFToken(request: NextRequest): boolean {
     return true
   }
   
+  // Skip CSRF for automation endpoints with valid auth
   if (request.nextUrl.pathname.includes('/api/automation/')) {
     const authHeader = request.headers.get('authorization')
     return authHeader?.startsWith('Bearer ') || false
+  }
+  
+  // Skip CSRF for certain endpoints
+  const exemptPaths = [
+    '/api/auth/',
+    '/api/debug/',
+    '/api/analytics/',
+    '/api/monitoring/health',
+    '/api/error-report'
+  ]
+  
+  if (exemptPaths.some(path => request.nextUrl.pathname.startsWith(path))) {
+    return true
   }
   
   const token = request.headers.get('x-csrf-token') || 
