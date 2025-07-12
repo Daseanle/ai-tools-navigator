@@ -119,6 +119,12 @@ export class PWAManager {
   }
 
   private async setupPushNotifications() {
+    // Only setup push notifications if VAPID keys are configured
+    if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
+      console.log('Push notifications disabled: VAPID keys not configured')
+      return
+    }
+    
     if ('Notification' in window && 'serviceWorker' in navigator) {
       const permission = await Notification.requestPermission()
       if (permission === 'granted') {
@@ -129,6 +135,12 @@ export class PWAManager {
 
   private async subscribeToNotifications() {
     if (!this.registration) return
+    
+    // Double-check VAPID key before subscription
+    if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
+      console.error('Cannot subscribe to push notifications: VAPID public key not configured')
+      return
+    }
 
     try {
       const subscription = await this.registration.pushManager.subscribe({

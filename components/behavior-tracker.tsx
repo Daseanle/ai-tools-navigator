@@ -252,6 +252,10 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
   }
 
   const handlePageUnload = () => {
+    // Disable page unload tracking temporarily to avoid potential API errors
+    // TODO: Re-enable after fixing API endpoint issues
+    return
+    
     // 发送页面停留时间数据
     if (analyticsRef.current) {
       // 计算页面停留时间

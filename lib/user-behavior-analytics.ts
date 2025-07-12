@@ -837,6 +837,10 @@ export class UserBehaviorAnalytics {
 
   // 将事件加入发送队列
   private queueEventForSending(event: UserBehaviorEvent): void {
+    // Temporarily disable analytics API calls to avoid errors
+    console.log('Analytics queue disabled temporarily:', event.eventType)
+    return
+    
     this.eventQueue.push(event)
     
     // 如果队列达到批处理大小，立即发送
