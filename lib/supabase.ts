@@ -48,6 +48,20 @@ export const createServerClient = () => {
   return createClient<Database>(finalUrl, serviceKey)
 }
 
+// Server-side client with proper error handling
+export function getSupabaseServerClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  
+  if (!url || !serviceKey) {
+    // Return a non-functional client that won't crash the app
+    console.warn('Supabase server client not properly configured')
+    return createClient('https://demo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbW8iLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MDk5NTIwMCwiZXhwIjoxOTU2NTcxMjAwfQ.demo')
+  }
+  
+  return createClient<Database>(url, serviceKey)
+}
+
 // 认证相关工具函数
 export const auth = {
   // 注册新用户
