@@ -14,6 +14,13 @@ export default function DatabaseCheck({ children }: DatabaseCheckProps) {
   useEffect(() => {
     // Check if environment variables are available
     const checkConfig = () => {
+      console.log('🔍 Environment check:', {
+        hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        hasKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        url: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 20) + '...',
+        key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 20) + '...'
+      })
+      
       const hasUrl = !!process.env.NEXT_PUBLIC_SUPABASE_URL
       const hasKey = !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
       
@@ -25,6 +32,12 @@ export default function DatabaseCheck({ children }: DatabaseCheckProps) {
       const keyValid = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && 
                       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== 'your_supabase_anon_key' &&
                       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.startsWith('eyJ')
+      
+      console.log('🔍 Validation results:', {
+        urlValid,
+        keyValid,
+        finalResult: !!(urlValid && keyValid)
+      })
       
       setIsConfigured(!!(urlValid && keyValid))
       setIsLoading(false)
