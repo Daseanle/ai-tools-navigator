@@ -59,13 +59,7 @@ async function getTools(searchParams: ToolsPageProps['searchParams']) {
     const limit = 24
     const offset = (parseInt(page) - 1) * limit
 
-    // 构建查询参数
-    const params = new URLSearchParams()
-    if (category) params.append('category', category)
-    if (search) params.append('search', search)
-    params.append('sort', sort)
-    params.append('limit', limit.toString())
-    params.append('offset', offset.toString())
+    console.log('Fetching tools with params:', { category, search, sort, page, limit, offset })
 
     // 直接从数据库查询而不是通过API
     const { supabase } = await import('@/lib/supabase')
@@ -74,8 +68,9 @@ async function getTools(searchParams: ToolsPageProps['searchParams']) {
       .from('tools')
       .select(`
         *,
-        categories!inner(name, slug, icon)
-      `)
+        categories(name, slug, icon)
+      `, { count: 'exact' })
+      .eq('status', 'active') // 只获取活跃状态的工具
 
     // 分类过滤
     if (category) {
@@ -84,18 +79,21 @@ async function getTools(searchParams: ToolsPageProps['searchParams']) {
 
     // 搜索过滤
     if (search) {
-      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,tags.cs.{${search}}`)
+      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,tagline.ilike.%${search}%`)
     }
 
     // 排序
     const validSortFields = ['created_at', 'updated_at', 'name', 'rating', 'visits']
-    const sortField = validSortFields.includes(sort) ? sort : 'created_at'
-    query = query.order(sortField, { ascending: sort === 'asc' })
+    const sortField = validSortFields.includes(sort) ? sort : 'rating'
+    const sortOrder = sort === 'name' ? 'asc' : 'desc'
+    query = query.order(sortField, { ascending: sortOrder === 'asc' })
 
     // 分页
     query = query.range(offset, offset + limit - 1)
 
     const { data: tools, error, count } = await query
+
+    console.log('Tools query result:', { tools: tools?.length, error, count })
 
     if (error) {
       console.error('Get tools error:', error)
@@ -119,6 +117,8 @@ async function getTools(searchParams: ToolsPageProps['searchParams']) {
 // 获取分类数据
 async function getCategories() {
   try {
+    console.log('Fetching categories...')
+    
     // 直接从数据库查询而不是通过API
     const { supabase } = await import('@/lib/supabase')
     
@@ -129,6 +129,8 @@ async function getCategories() {
       .order('sort_order', { ascending: true })
 
     const { data: categories, error } = await query
+
+    console.log('Categories query result:', { categories: categories?.length, error })
 
     if (error) {
       console.error('Get categories error:', error)
@@ -155,6 +157,8 @@ async function getCategories() {
       ...category,
       toolCount: countMap.get(category.id) || 0
     }))
+
+    console.log('Processed categories:', processedCategories.length)
 
     return processedCategories
   } catch (error) {
