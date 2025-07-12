@@ -1,9 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
+import { getSupabaseServerClient } from './supabase'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Use the centralized server client with proper fallback handling
+const supabase = getSupabaseServerClient()
 
 async function initializeBehaviorAnalytics() {
   try {

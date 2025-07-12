@@ -4,7 +4,7 @@
  */
 
 import { OpenAI } from 'openai'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseServerClient } from './supabase'
 
 export interface PromptGenerationRequest {
   category: string        // 分类：writing, coding, marketing, business, education, creativity
@@ -52,10 +52,7 @@ export class PromptGeneratorService {
       }
     })
     
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    this.supabase = getSupabaseServerClient()
   }
 
   /**

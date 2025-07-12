@@ -67,21 +67,49 @@ async function getTools(searchParams: ToolsPageProps['searchParams']) {
     params.append('limit', limit.toString())
     params.append('offset', offset.toString())
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/tools?${params}`,
-      {
-        next: { 
-          revalidate: 300, // 5分钟ISR
-          tags: ['tools', category ? `category-${category}` : '', search ? `search-${search}` : ''].filter(Boolean)
-        }
-      }
-    )
+    // 直接从数据库查询而不是通过API
+    const { supabase } = await import('@/lib/supabase')
+    
+    let query = supabase
+      .from('tools')
+      .select(`
+        *,
+        categories!inner(name, slug, icon)
+      `)
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch tools')
+    // 分类过滤
+    if (category) {
+      query = query.eq('categories.slug', category)
     }
 
-    return response.json()
+    // 搜索过滤
+    if (search) {
+      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,tags.cs.{${search}}`)
+    }
+
+    // 排序
+    const validSortFields = ['created_at', 'updated_at', 'name', 'rating', 'visits']
+    const sortField = validSortFields.includes(sort) ? sort : 'created_at'
+    query = query.order(sortField, { ascending: sort === 'asc' })
+
+    // 分页
+    query = query.range(offset, offset + limit - 1)
+
+    const { data: tools, error, count } = await query
+
+    if (error) {
+      console.error('Get tools error:', error)
+      return { tools: [], total: 0, page: parseInt(page), totalPages: 1 }
+    }
+
+    const totalPages = Math.ceil((count || 0) / limit)
+
+    return {
+      tools: tools || [],
+      total: count || 0,
+      page: parseInt(page),
+      totalPages
+    }
   } catch (error) {
     console.error('Error fetching tools:', error)
     return { tools: [], total: 0, page: 1, totalPages: 1 }
@@ -91,18 +119,44 @@ async function getTools(searchParams: ToolsPageProps['searchParams']) {
 // 获取分类数据
 async function getCategories() {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/categories`,
-      {
-        next: { revalidate: 3600 } // 1小时缓存
-      }
-    )
+    // 直接从数据库查询而不是通过API
+    const { supabase } = await import('@/lib/supabase')
+    
+    let query = supabase
+      .from('categories')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
 
-    if (!response.ok) {
+    const { data: categories, error } = await query
+
+    if (error) {
+      console.error('Get categories error:', error)
       return []
     }
 
-    return response.json()
+    // 获取工具数量
+    const { data: toolCounts, error: countError } = await supabase
+      .from('tools')
+      .select('category_id')
+      .eq('status', 'active')
+
+    if (countError) {
+      console.error('Tool count query error:', countError)
+    }
+
+    const countMap = new Map()
+    toolCounts?.forEach((item: any) => {
+      const count = countMap.get(item.category_id) || 0
+      countMap.set(item.category_id, count + 1)
+    })
+
+    const processedCategories = (categories || []).map(category => ({
+      ...category,
+      toolCount: countMap.get(category.id) || 0
+    }))
+
+    return processedCategories
   } catch (error) {
     console.error('Error fetching categories:', error)
     return []

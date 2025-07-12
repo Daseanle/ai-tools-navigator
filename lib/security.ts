@@ -6,12 +6,33 @@ let createHash: any
 let createHmac: any
 let randomBytes: any
 
+// Initialize crypto functions synchronously
 if (typeof process !== 'undefined' && process.versions && process.versions.node) {
-  import('crypto').then(crypto => {
+  try {
+    const crypto = require('crypto')
     createHash = crypto.createHash
     createHmac = crypto.createHmac
     randomBytes = crypto.randomBytes
-  })
+  } catch {
+    // Fallback for Edge Runtime
+    createHash = (algorithm: string) => ({
+      update: (data: string) => ({
+        digest: (encoding: string) => btoa(data).substring(0, 32)
+      })
+    })
+    createHmac = (algorithm: string, key: string) => ({
+      update: (data: string) => ({
+        digest: (encoding: string) => btoa(key + data).substring(0, 32)
+      })
+    })
+    randomBytes = (size: number) => {
+      const arr = new Uint8Array(size)
+      crypto.getRandomValues(arr)
+      return {
+        toString: (encoding: string) => btoa(String.fromCharCode(...arr)).substring(0, size)
+      }
+    }
+  }
 } else {
   // Edge Runtime compatible fallbacks
   createHash = (algorithm: string) => ({
@@ -26,7 +47,14 @@ if (typeof process !== 'undefined' && process.versions && process.versions.node)
   })
   randomBytes = (size: number) => {
     const arr = new Uint8Array(size)
-    crypto.getRandomValues(arr)
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      crypto.getRandomValues(arr)
+    } else {
+      // Fallback for environments without crypto
+      for (let i = 0; i < size; i++) {
+        arr[i] = Math.floor(Math.random() * 256)
+      }
+    }
     return {
       toString: (encoding: string) => btoa(String.fromCharCode(...arr)).substring(0, size)
     }

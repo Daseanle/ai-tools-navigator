@@ -4,7 +4,7 @@
  */
 
 import { OpenAI } from 'openai'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseServerClient } from './supabase'
 
 interface ContentGenerationConfig {
   maxArticlesPerDay: number
@@ -47,10 +47,7 @@ export class FullyAutomatedContentSystem {
       }
     })
     
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    this.supabase = getSupabaseServerClient()
     
     this.config = config
   }

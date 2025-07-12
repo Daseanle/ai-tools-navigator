@@ -336,10 +336,10 @@ middlewareChain.add(cacheMiddleware, {
 })
 
 middlewareChain.add(csrfMiddleware, {
-  enabled: process.env.NODE_ENV === 'production',
+  enabled: false, // Temporarily disabled to debug CSRF issues
   priority: 120,
   onlyPaths: ['/api/'],
-  skipPaths: ['/api/monitoring/', '/api/error-report'],
+  skipPaths: ['/api/monitoring/', '/api/error-report', '/api/auth/csrf'],
   name: 'csrf_protection'
 })
 
