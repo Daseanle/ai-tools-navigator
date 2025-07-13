@@ -1,0 +1,48 @@
+User-agent: *
+Allow: /
+
+# Allow search engines to crawl all pages
+Allow: /tools
+Allow: /categories
+Allow: /api/tools
+Allow: /api/categories
+Allow: /api/search
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/auth/
+Disallow: /api/automation/
+Disallow: /_next/
+Disallow: /private/
+
+# Crawl delay to be respectful
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://ai-tools-navigator.vercel.app/sitemap.xml
+
+# Rules for specific bots
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Block problematic bots
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Navigator 自动化功能测试工具</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+        }
+        .test-section h2 {
+            color: #2563eb;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 10px;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #6b7280;
+        }
+        .test-item.success {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        .test-item.error {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        .test-item.warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.success { background: #10b981; color: white; }
+        .status.error { background: #ef4444; color: white; }
+        .status.warning { background: #f59e0b; color: white; }
+        .status.pending { background: #6b7280; color: white; }
+        
+        .test-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .test-button:hover {
+            background: #1d4ed8;
+        }
+        .test-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f3f4f6;
+            border-radius: 6px;
+        }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .quick-link {
+            display: block;
+            padding: 15px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        .quick-link:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Navigator 自动化功能测试工具</h1>
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+            <button class="test-button" onclick="runAllTests()">🚀 开始全面测试</button>
+            <button class="test-button" onclick="testPages()">📱 测试前端页面</button>
+            <button class="test-button" onclick="testAPIs()">🔌 测试API接口</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📱 前端管理页面</h2>
+            <div id="pages-results">
+                <div class="test-item" data-test="admin">
+                    <span>管理后台主页</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="content">
+                    <span>内容管理页面</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="crawling">
+                    <span>工具爬取管理</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="status">
+                    <span>系统状态监控</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="automation">
+                    <span>自动化总览</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="full-automation">
+                    <span>完全自动化面板</span>
+                    <span class="status pending">待测试</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔌 API接口</h2>
+            <div id="apis-results">
+                <div class="test-item" data-test="health">
+                    <span>系统健康检查</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="automation-status">
+                    <span>自动化状态API</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="database">
+                    <span>数据库调试API</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="content-generation">
+                    <span>内容生成API</span>
+                    <span class="status pending">待测试</span>
+                </div>
+                <div class="test-item" data-test="seo-sync">
+                    <span>SEO同步API</span>
+                    <span class="status pending">待测试</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="results" id="test-results" style="display: none;">
+            <h3>📊 测试结果</h3>
+            <div id="results-summary"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔗 快速访问链接</h2>
+            <div class="quick-links">
+                <a href="https://ai-navigator-pro.vercel.app/zh/admin" target="_blank" class="quick-link">
+                    🏠 管理后台主页
+                </a>
+                <a href="https://ai-navigator-pro.vercel.app/zh/admin/content" target="_blank" class="quick-link">
+                    📝 内容管理
+                </a>
+                <a href="https://ai-navigator-pro.vercel.app/zh/admin/crawling" target="_blank" class="quick-link">
+                    🕷️ 工具爬取
+                </a>
+                <a href="https://ai-navigator-pro.vercel.app/zh/admin/status" target="_blank" class="quick-link">
+                    📊 系统状态
+                </a>
+                <a href="https://ai-navigator-pro.vercel.app/automation" target="_blank" class="quick-link">
+                    🤖 自动化总览
+                </a>
+                <a href="https://ai-navigator-pro.vercel.app/automation/full-automation" target="_blank" class="quick-link">
+                    🚀 完全自动化
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://ai-navigator-pro.vercel.app';
+        
+        const testConfigs = {
+            // 前端页面测试
+            admin: { url: `${BASE_URL}/zh/admin`, expect: '管理' },
+            content: { url: `${BASE_URL}/zh/admin/content`, expect: '内容' },
+            crawling: { url: `${BASE_URL}/zh/admin/crawling`, expect: '爬取' },
+            status: { url: `${BASE_URL}/zh/admin/status`, expect: '状态' },
+            automation: { url: `${BASE_URL}/automation`, expect: '自动化' },
+            'full-automation': { url: `${BASE_URL}/automation/full-automation`, expect: '自动化' },
+            
+            // API测试
+            health: { url: `${BASE_URL}/api/monitoring/health`, expect: 'status' },
+            'automation-status': { url: `${BASE_URL}/api/automation/status`, expect: 'status' },
+            database: { url: `${BASE_URL}/api/debug/database`, expect: 'success' },
+            'content-generation': { url: `${BASE_URL}/api/automation/content-generation`, expect: 'automation' },
+            'seo-sync': { url: `${BASE_URL}/api/automation/seo-sync`, expect: 'seo' }
+        };
+
+        async function testUrl(testKey) {
+            const config = testConfigs[testKey];
+            const testItem = document.querySelector(`[data-test="${testKey}"]`);
+            const statusElement = testItem.querySelector('.status');
+            
+            statusElement.textContent = '测试中...';
+            statusElement.className = 'status warning';
+            
+            try {
+                const response = await fetch(config.url, {
+                    method: 'GET',
+                    headers: {
+                        'User-Agent': 'AI-Navigator-Test/1.0'
+                    }
+                });
+                
+                if (response.ok) {
+                    const text = await response.text();
+                    if (text.toLowerCase().includes(config.expect.toLowerCase())) {
+                        statusElement.textContent = '✅ 正常';
+                        statusElement.className = 'status success';
+                        testItem.className = 'test-item success';
+                        return true;
+                    } else {
+                        statusElement.textContent = '⚠️ 内容异常';
+                        statusElement.className = 'status warning';
+                        testItem.className = 'test-item warning';
+                        return false;
+                    }
+                } else {
+                    statusElement.textContent = `❌ HTTP ${response.status}`;
+                    statusElement.className = 'status error';
+                    testItem.className = 'test-item error';
+                    return false;
+                }
+            } catch (error) {
+                statusElement.textContent = `❌ ${error.message}`;
+                statusElement.className = 'status error';
+                testItem.className = 'test-item error';
+                return false;
+            }
+        }
+
+        async function testPages() {
+            const pageTests = ['admin', 'content', 'crawling', 'status', 'automation', 'full-automation'];
+            
+            for (const test of pageTests) {
+                await testUrl(test);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 延迟1秒
+            }
+        }
+
+        async function testAPIs() {
+            const apiTests = ['health', 'automation-status', 'database', 'content-generation', 'seo-sync'];
+            
+            for (const test of apiTests) {
+                await testUrl(test);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 延迟1秒
+            }
+        }
+
+        async function runAllTests() {
+            const allTests = Object.keys(testConfigs);
+            let passedTests = 0;
+            
+            for (const test of allTests) {
+                const result = await testUrl(test);
+                if (result) passedTests++;
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 延迟1秒
+            }
+            
+            // 显示结果
+            const resultsDiv = document.getElementById('test-results');
+            const summaryDiv = document.getElementById('results-summary');
+            
+            const successRate = ((passedTests / allTests.length) * 100).toFixed(1);
+            
+            summaryDiv.innerHTML = `
+                <p><strong>测试完成！</strong></p>
+                <p>通过: ${passedTests}/${allTests.length} (${successRate}%)</p>
+                <p>状态: ${successRate >= 80 ? '🎉 优秀' : successRate >= 60 ? '⚠️ 良好' : '❌ 需要修复'}</p>
+            `;
+            
+            resultsDiv.style.display = 'block';
+        }
+
+        // 页面加载完成后的提示
+        window.onload = function() {
+            console.log('🤖 AI Navigator 自动化功能测试工具已加载');
+            console.log('💡 点击按钮开始测试，或者手动点击快速访问链接');
+        };
+    </script>
+</body>
+</html>

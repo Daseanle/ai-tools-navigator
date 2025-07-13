@@ -112,7 +112,10 @@
       "Bash(touch:*)",
       "Bash(sed:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(./deploy-check.sh:*)"
+      "Bash(./deploy-check.sh:*)",
+      "Bash(./test-automation-features.sh:*)",
+      "Bash(./fix-typescript-errors.sh)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

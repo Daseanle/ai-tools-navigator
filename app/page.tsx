@@ -23,19 +23,39 @@ const CTASection = dynamic(() => import("@/components/sections/cta-section"), {
 })
 
 export const metadata: Metadata = {
-  title: "AI Navigator - 发现最佳AI工具",
-  description: "探索、评测、精通。为你找到解决问题的最佳AI工具。发现ChatGPT、Midjourney等热门AI工具。",
-  keywords: ["AI工具", "ChatGPT", "Midjourney", "AI导航", "人工智能", "AI应用"],
+  title: "AI Tools Navigator - Discover the Best AI Tools",
+  description: "Discover, compare, and find the perfect AI tools for your projects. Browse our comprehensive directory of artificial intelligence applications, machine learning platforms, and automation tools.",
+  keywords: [
+    "AI tools", "artificial intelligence", "machine learning", "ChatGPT", "Midjourney",
+    "AI applications", "automation tools", "productivity tools", "content generation",
+    "data analysis", "computer vision", "NLP tools", "AI directory"
+  ],
   openGraph: {
-    title: "AI Navigator - 发现最佳AI工具",
-    description: "探索、评测、精通。为你找到解决问题的最佳AI工具。",
+    title: "AI Tools Navigator - Discover the Best AI Tools",
+    description: "Discover, compare, and find the perfect AI tools for your projects. Browse our comprehensive directory of AI applications.",
     type: "website",
-    locale: "zh_CN",
+    locale: "en_US",
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+    siteName: "AI Tools Navigator",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "AI Tools Navigator - Discover the Best AI Tools",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Navigator - 发现最佳AI工具",
-    description: "探索、评测、精通。为你找到解决问题的最佳AI工具。",
+    title: "AI Tools Navigator - Discover the Best AI Tools",
+    description: "Discover, compare, and find the perfect AI tools for your projects.",
+    images: ["/og-image.jpg"],
+    creator: "@aitools_nav",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   alternates: {
     canonical: "/",
