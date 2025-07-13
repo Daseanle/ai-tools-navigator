@@ -51,7 +51,7 @@ class AIAutomationIntegrationTest {
       // 测试预测分析功能
       const result = await analyzer.runComprehensivePrediction()
       
-      if (result && result.trafficPrediction && result.conversionForecast) {
+      if (result && result.predictions && result.trends) {
         this.results.push({
           system: 'AdvancedPredictiveAnalyzer',
           status: 'passed',
@@ -67,11 +67,11 @@ class AIAutomationIntegrationTest {
           duration: Date.now() - startTime
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
       this.results.push({
         system: 'AdvancedPredictiveAnalyzer',
         status: 'error',
-        message: `系统错误: ${error.message}`,
+        message: `系统错误: ${error instanceof Error ? error.message : String(error)}`,
         duration: Date.now() - startTime
       })
     }
@@ -101,11 +101,11 @@ class AIAutomationIntegrationTest {
           duration: Date.now() - startTime
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
       this.results.push({
         system: 'SelfLearningOptimizer',
         status: 'error',
-        message: `系统错误: ${error.message}`,
+        message: `系统错误: ${error instanceof Error ? error.message : String(error)}`,
         duration: Date.now() - startTime
       })
     }
@@ -165,11 +165,11 @@ class AIAutomationIntegrationTest {
           duration: Date.now() - startTime
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
       this.results.push({
         system: 'MultimodalCreativeEngine',
         status: 'error',
-        message: `系统错误: ${error.message}`,
+        message: `系统错误: ${error instanceof Error ? error.message : String(error)}`,
         duration: Date.now() - startTime
       })
     }
@@ -202,11 +202,11 @@ class AIAutomationIntegrationTest {
           duration: Date.now() - startTime
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
       this.results.push({
         system: 'RealTimeMarketIntelligence',
         status: 'error',
-        message: `系统错误: ${error.message}`,
+        message: `系统错误: ${error instanceof Error ? error.message : String(error)}`,
         duration: Date.now() - startTime
       })
     }
@@ -253,11 +253,11 @@ class AIAutomationIntegrationTest {
           duration: Date.now() - startTime
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
       this.results.push({
         system: 'AdvancedUserIntentPredictor',
         status: 'error',
-        message: `系统错误: ${error.message}`,
+        message: `系统错误: ${error instanceof Error ? error.message : String(error)}`,
         duration: Date.now() - startTime
       })
     }
@@ -290,11 +290,11 @@ class AIAutomationIntegrationTest {
           duration: Date.now() - startTime
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
       this.results.push({
         system: 'AutomatedRevenueOptimizer',
         status: 'error',
-        message: `系统错误: ${error.message}`,
+        message: `系统错误: ${error instanceof Error ? error.message : String(error)}`,
         duration: Date.now() - startTime
       })
     }
@@ -327,11 +327,11 @@ class AIAutomationIntegrationTest {
           duration: Date.now() - startTime
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
       this.results.push({
         system: 'GrowthHackerMarketingAutomation',
         status: 'error',
-        message: `系统错误: ${error.message}`,
+        message: `系统错误: ${error instanceof Error ? error.message : String(error)}`,
         duration: Date.now() - startTime
       })
     }
@@ -364,11 +364,11 @@ class AIAutomationIntegrationTest {
           duration: Date.now() - startTime
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
       this.results.push({
         system: 'IntelligentSecuritySystem',
         status: 'error',
-        message: `系统错误: ${error.message}`,
+        message: `系统错误: ${error instanceof Error ? error.message : String(error)}`,
         duration: Date.now() - startTime
       })
     }

@@ -5,51 +5,21 @@ import { supabase } from '@/lib/supabase'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const category = searchParams.get('category')
-    const featured = searchParams.get('featured')
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
-    const search = searchParams.get('search')
-    const sortBy = searchParams.get('sort') || 'created_at'
-    const order = searchParams.get('order') || 'desc'
 
-    let query = supabase
+    const { data: tools, error, count } = await supabase
       .from('tools')
-      .select(`
-        *,
-        categories!inner(name, slug, icon)
-      `)
-
-    // 分类过滤
-    if (category) {
-      query = query.eq('categories.slug', category)
-    }
-
-    // 特色工具过滤
-    if (featured === 'true') {
-      query = query.eq('featured', true)
-    }
-
-    // 搜索过滤
-    if (search) {
-      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,tags.cs.{${search}}`)
-    }
-
-    // 排序
-    const validSortFields = ['created_at', 'updated_at', 'name', 'rating', 'visits']
-    const sortField = validSortFields.includes(sortBy) ? sortBy : 'created_at'
-    query = query.order(sortField, { ascending: order === 'asc' })
-
-    // 分页
-    query = query.range(offset, offset + limit - 1)
-
-    const { data: tools, error, count } = await query
+      .select('*', { count: 'exact' })
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1)
 
     if (error) {
-      console.error('Get tools error:', error)
+      console.error('Tools API error:', error)
       return NextResponse.json({
         success: false,
-        error: '获取工具列表失败'
+        error: '获取工具列表失败: ' + error.message
       }, { status: 500 })
     }
 
@@ -65,10 +35,10 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Get tools error:', error)
+    console.error('Tools API error:', error)
     return NextResponse.json({ 
       success: false, 
-      error: '获取工具列表失败' 
+      error: '获取工具列表失败: ' + (error instanceof Error ? error.message : String(error))
     }, { status: 500 })
   }
 }

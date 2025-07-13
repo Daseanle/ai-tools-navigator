@@ -115,7 +115,8 @@
       "Bash(./deploy-check.sh:*)",
       "Bash(./test-automation-features.sh:*)",
       "Bash(./fix-typescript-errors.sh)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(npm audit:*)"
     ],
     "deny": []
   }

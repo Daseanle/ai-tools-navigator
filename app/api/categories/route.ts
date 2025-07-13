@@ -1,61 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { createApiResponse, handleApiError } from '@/lib/auth-middleware'
 
 // 获取分类列表
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const includeCount = searchParams.get('includeCount') === 'true'
-    const featured = searchParams.get('featured')
-
-    let query = supabase
+    const { data: categories, error } = await supabase
       .from('categories')
       .select('*')
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
 
-    if (featured === 'true') {
-      query = query.eq('featured', true)
-    }
-
-    const { data: categories, error } = await query
-
     if (error) {
-      return handleApiError(error, '获取分类失败')
+      console.error('Categories API error:', error)
+      return NextResponse.json({
+        success: false,
+        error: '获取分类失败: ' + error.message,
+        timestamp: new Date().toISOString()
+      }, { status: 500 })
     }
 
-    let processedCategories = categories || []
-
-    // 如果需要包含工具数量，使用优化的查询
-    if (includeCount) {
-      // 使用物化视图优化查询
-      const { data: toolCounts, error: countError } = await supabase
-        .from('tool_statistics')
-        .select('category_id, count')
-        .eq('status', 'active')
-
-      if (countError) {
-        console.error('Tool count query error:', countError)
-      }
-
-      const countMap = new Map()
-      toolCounts?.forEach((item: any) => {
-        countMap.set(item.category_id, item.count)
-      })
-
-      processedCategories = processedCategories.map(category => ({
-        ...category,
-        toolCount: countMap.get(category.id) || 0
-      }))
-    }
-
-    return createApiResponse({
-      categories: processedCategories
+    return NextResponse.json({
+      success: true,
+      data: { categories: categories || [] },
+      timestamp: new Date().toISOString()
     })
 
   } catch (error) {
-    return handleApiError(error, '获取分类失败')
+    console.error('Categories API error:', error)
+    return NextResponse.json({
+      success: false,
+      error: '获取分类失败: ' + (error instanceof Error ? error.message : String(error)),
+      timestamp: new Date().toISOString()
+    }, { status: 500 })
   }
 }
 
