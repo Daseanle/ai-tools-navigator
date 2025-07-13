@@ -245,7 +245,7 @@ export default function ToolsGrid({ category, search, sort = 'popular', page = 1
         {tools.map((tool) => (
           <div
             key={tool.id}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 overflow-hidden group"
+            className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 overflow-hidden group relative"
           >
             <div className="p-6">
               {/* Header */}
@@ -324,7 +324,11 @@ export default function ToolsGrid({ category, search, sort = 'popular', page = 1
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+              <p className="text-gray-600 text-sm mb-4 overflow-hidden" style={{
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical'
+              }}>
                 {tool.description}
               </p>
 
