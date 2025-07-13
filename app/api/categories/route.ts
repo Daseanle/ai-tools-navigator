@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { ErrorHandler } from '@/lib/error-handler'
 
 // 获取分类列表
 export async function GET(request: NextRequest) {
@@ -55,13 +56,18 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      return handleApiError(error, '创建分类失败')
+      return ErrorHandler.handleApiError(error, '创建分类失败')
     }
 
-    return createApiResponse(newCategory, true, '分类创建成功')
+    return NextResponse.json({
+      success: true,
+      data: newCategory,
+      message: '分类创建成功',
+      timestamp: new Date().toISOString()
+    })
 
   } catch (error) {
-    return handleApiError(error, '创建分类失败')
+    return ErrorHandler.handleApiError(error, '创建分类失败')
   }
 }
 
