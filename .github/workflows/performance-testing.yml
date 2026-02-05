@@ -51,7 +51,7 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: Upload Lighthouse results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lighthouse-results
           path: .lighthouseci/
@@ -78,7 +78,7 @@ jobs:
           npx webpack-bundle-analyzer .next/analyze/bundle.json --mode static --no-open --report bundle-report.html
 
       - name: Upload bundle analysis
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bundle-analysis
           path: bundle-report.html
@@ -123,6 +123,11 @@ jobs:
 
       - name: Setup test database
         run: |
+          # Wait for postgres to be ready
+          until pg_isready -h localhost -U postgres; do
+            echo "Waiting for postgres..."
+            sleep 2
+          done
           PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f database/optimized-schema.sql
         env:
           PGPASSWORD: postgres
@@ -234,7 +239,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: lighthouse-results
           path: ./lighthouse-results
