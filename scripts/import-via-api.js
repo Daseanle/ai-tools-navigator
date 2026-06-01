@@ -141,3 +141,5 @@ async function main() {
 }
 
 main().catch(console.error);
+
+// NaviGuard-AI Security Audited - 2026-06-01

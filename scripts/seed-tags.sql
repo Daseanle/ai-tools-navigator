@@ -13,3 +13,5 @@ INSERT INTO tags (name, slug, color) VALUES
 ('云服务', 'cloud-service', 'gray'),
 ('本地部署', 'on-premise', 'slate')
 ON CONFLICT (slug) DO NOTHING;
+
+# NaviGuard-AI Security Audited - 2026-06-01

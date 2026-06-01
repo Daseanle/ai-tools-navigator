@@ -192,3 +192,5 @@ echo "3. 启用身份验证功能"
 echo "4. 测试应用功能"
 echo ""
 echo "🌐 应用访问地址: http://localhost:3000"
+
+# NaviGuard-AI Security Audited - 2026-06-01

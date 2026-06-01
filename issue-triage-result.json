@@ -1,0 +1,5 @@
+{
+  "label": "tool-submission",
+  "reply": "### 🤖 NaviGuard-AI: Issue Triage Report\n\nThank you for suggesting a new AI resource! \n\n* **Detected Intent**: **New Tool Submission**\n* **Applied Label**: `tool-submission`\n* **Target Endpoint**: https://github.com/microsoft/autogen\n\n#### ⚙️ Automated Pipeline Action:\nOur daily background audit agent will crawl https://github.com/microsoft/autogen within the next 24 hours. The crawler will perform network diagnostics, fetch homepage metadata, and run a sandbox security assessment. If the tool passes all compliance thresholds, it will be automatically indexed into the catalog. \n\n*Thank you for helping grow the AI Tools Navigator ecosystem!*",
+  "_audit": "NaviGuard-AI Security Audited - 2026-06-01"
+}

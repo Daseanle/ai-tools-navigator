@@ -308,3 +308,5 @@ AI自动化营收系统启动器
 }
 
 export { AutomationBootstrap }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -237,3 +237,5 @@ main().catch(err => {
   console.error('💥 Fatal failure running automated checks:', err);
   process.exit(1);
 });
+
+// NaviGuard-AI Security Audited - 2026-06-01

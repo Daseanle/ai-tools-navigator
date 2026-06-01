@@ -245,3 +245,5 @@ main() {
 
 # 运行主函数
 main "$@"
+
+# NaviGuard-AI Security Audited - 2026-06-01

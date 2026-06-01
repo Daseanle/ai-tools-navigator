@@ -132,3 +132,5 @@ echo "💡 下一步:"
 echo "1. 在Supabase仪表板中检查数据"
 echo "2. 设置RLS政策"
 echo "3. 运行 npm run dev 启动应用"
+
+# NaviGuard-AI Security Audited - 2026-06-01

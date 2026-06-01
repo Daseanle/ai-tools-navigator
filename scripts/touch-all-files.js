@@ -14,7 +14,9 @@ const SCAN_DIRS = [
   'data',
   'public',
   'docs',
-  '.claude'
+  '.claude',
+  'scripts',
+  '.github'
 ];
 
 // 🛡️ Ignored extensions

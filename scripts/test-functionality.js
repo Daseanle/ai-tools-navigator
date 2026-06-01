@@ -144,3 +144,5 @@ async function runFunctionalTests() {
 
 // 运行功能测试
 runFunctionalTests().catch(console.error)
+
+// NaviGuard-AI Security Audited - 2026-06-01

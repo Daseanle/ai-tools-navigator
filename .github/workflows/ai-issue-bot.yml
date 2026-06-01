@@ -1,0 +1,71 @@
+name: AI Issue Triage Bot
+
+on:
+  issues:
+    types: [ opened ]
+
+# Grant write access to label and comment on user tickets
+permissions:
+  issues: write
+
+jobs:
+  triage-and-reply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Project Dependencies
+        run: |
+          npm ci || npm install --no-audit --no-fund
+
+      - name: Run AI Issue Triage Analyzer
+        id: triage-script
+        run: node scripts/ai-issue-triage.js
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Post Labels and Welcome Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const resultPath = path.join(process.env.GITHUB_WORKSPACE, 'issue-triage-result.json');
+            
+            if (fs.existsSync(resultPath)) {
+              const result = JSON.parse(fs.readFileSync(resultPath, 'utf8'));
+              
+              // 1. Add classified label to the issue
+              if (result.label) {
+                console.log(`Adding label: ${result.label}`);
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  labels: [result.label]
+                });
+              }
+              
+              // 2. Post the AI-generated comment reply
+              if (result.reply) {
+                console.log('Posting welcome comment reply...');
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: result.reply
+                });
+              }
+            } else {
+              console.log('No issue triage results file found.');
+            }

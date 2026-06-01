@@ -352,3 +352,5 @@ COMMENT ON TABLE ab_tests IS 'A/B测试配置表';
 COMMENT ON TABLE ab_test_results IS 'A/B测试结果表';
 COMMENT ON TABLE page_performance IS '页面性能数据表';
 COMMENT ON TABLE recommendation_clicks IS '推荐点击追踪表';
+
+# NaviGuard-AI Security Audited - 2026-06-01

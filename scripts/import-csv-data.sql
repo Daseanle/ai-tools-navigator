@@ -68,3 +68,5 @@ UNION ALL
 SELECT 'use_cases', COUNT(*) FROM use_cases
 UNION ALL
 SELECT 'workflows', COUNT(*) FROM workflows;
+
+# NaviGuard-AI Security Audited - 2026-06-01

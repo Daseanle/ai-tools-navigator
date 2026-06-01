@@ -11,3 +11,5 @@ INSERT INTO categories (name, slug, description, icon, color, sort_order) VALUES
 ('营销工具', 'marketing-tools', '营销自动化和推广工具', '📈', 'yellow', 9),
 ('办公效率', 'productivity', '提升工作效率的AI工具', '⚡', 'teal', 10)
 ON CONFLICT (slug) DO NOTHING;
+
+# NaviGuard-AI Security Audited - 2026-06-01

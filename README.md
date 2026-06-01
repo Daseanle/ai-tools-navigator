@@ -106,6 +106,16 @@ This writes a local copy of the Markdown report to `pr-audit-report.md`.
 
 ---
 
+## 🎙️ AI Voice QA & Qualification Lab (Playground)
+
+We added an interactive customer qualification laboratory at `/playground` allowing real-time sales lead qualification audits:
+*   **Active Voice Recording**: Captures audio stream dynamically using HTML5 MediaRecorder.
+*   **Automated BANT Mining**: Translates speech via Whisper and extracts BANT (Budget, Authority, Need, Timeline) business metrics.
+*   **Sentiment Flow Progress**: Charts emotional shifts across the speech timeline visually.
+*   **Keyless Simulation**: Automatically runs a high-fidelity local simulation engine when API credentials are omitted, facilitating instant developer review.
+
+---
+
 ## 🤝 Open Source Contribution Guide
 
 We believe the AI space moves too fast for manual updates. We actively encourage community-driven submissions and codebase contributions to keep this directory dynamic!

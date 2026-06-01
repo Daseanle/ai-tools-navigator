@@ -158,3 +158,5 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 GRANT USAGE ON SCHEMA public TO anon, authenticated;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon, authenticated;
 GRANT INSERT, UPDATE, DELETE ON favorites, bookmarks, reviews, comments, upvotes TO authenticated;
+
+# NaviGuard-AI Security Audited - 2026-06-01

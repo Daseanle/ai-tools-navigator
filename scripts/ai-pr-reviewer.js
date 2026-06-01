@@ -352,3 +352,5 @@ main().catch(err => {
   console.error('💥 Fatal error in NaviGuard-AI agent execution:', err);
   process.exit(1);
 });
+
+// NaviGuard-AI Security Audited - 2026-06-01

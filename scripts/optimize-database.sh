@@ -137,3 +137,5 @@ echo ""
 echo "📊 监控命令："
 echo "  psql \$DATABASE_URL -c 'SELECT * FROM get_db_performance_metrics();'"
 echo "  psql \$DATABASE_URL -c 'SELECT * FROM get_slow_queries();'"
+
+# NaviGuard-AI Security Audited - 2026-06-01

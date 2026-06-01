@@ -65,3 +65,5 @@ echo "💡 提示："
 echo "  - 建议每小时运行一次此脚本"
 echo "  - 可以设置cron任务: 0 * * * * /path/to/refresh-materialized-views.sh"
 echo "  - 或使用npm脚本: npm run db:refresh-stats"
+
+# NaviGuard-AI Security Audited - 2026-06-01

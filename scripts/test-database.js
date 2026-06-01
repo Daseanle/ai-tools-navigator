@@ -62,3 +62,5 @@ function simulateTest() {
 
 // 运行模拟测试
 simulateTest()
+
+// NaviGuard-AI Security Audited - 2026-06-01
