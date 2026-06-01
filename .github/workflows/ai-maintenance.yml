@@ -1,0 +1,64 @@
+name: AI Tools Automated Maintenance
+
+on:
+  schedule:
+    # 每天凌晨 0 点运行 (UTC 时间)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允许在 GitHub Actions 页面手动触发
+  pull_request: # 当有 PR 提交时运行
+    branches: [ "main", "master" ]
+
+jobs:
+  check-links-and-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 如果你使用了 pnpm 或 yarn，请在这里替换为相应的命令
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Run Dead Link & Security Check
+        id: link-checker
+        run: node scripts/check-links.js
+        # 如果脚本失败(exit 1)，我们需要捕获它，以便后续可以创建 issue
+        continue-on-error: true
+
+      - name: Report failure and Create Issue
+        if: steps.link-checker.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueTitle = '🚨 [Automated Audit] Invalid AI Tool Links or Security Risks Detected';
+            const issueBody = `
+            Our automated maintenance bot has detected broken links, suspicious redirects, or security risks in the tools directory.
+            
+            Please review the recent GitHub Actions run logs for more details.
+            
+            **Action Required:**
+            1. Check the [Workflow Run](https://github.com/\${context.repo.owner}/\${context.repo.repo}/actions/runs/\${context.runId}) logs.
+            2. Update or remove the problematic URLs in the data file.
+            3. Close this issue once resolved.
+            
+            _This issue was generated automatically by the AI Maintenance workflow._
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['bug', 'automated-audit']
+            });
+
+      - name: Fail workflow if checks failed
+        if: steps.link-checker.outcome == 'failure'
+        run: exit 1
