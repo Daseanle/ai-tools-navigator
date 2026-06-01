@@ -1,166 +1,83 @@
-# AI Navigator Pro - Your AI Decision Center
+# AI Tools Navigator Pro
 
-探索、评测、精通。为你找到解决问题的最佳AI工具。
+An open-source, highly curated AI tools discovery engine and productivity navigator tailored for developers and independent creators.
 
-## 2026 战略定位：AI 决策枢纽
-不同于传统的工具目录（如 Futurepedia），AI Navigator Pro 专注于 **“决策支持”**。在 AI 工具泛滥的 2026 年，用户需要的不是更多的列表，而是更深度的对比、真实场景的评测以及 AGI 时代的提效指南。
+## 🚀 Features
 
-## 功能特性
-- 🔍 **智能搜索 (Smart Search)** - 基于用户意图的精准匹配。
-- 📊 **多维对比 (Side-by-Side Comparison)** - 价格、性能、API 支持一目了然。
-- ⭐ **深度评测 (Expert Reviews)** - 结合真实业务场景的工具打分。
-- 💾 **个人收藏 (My AI Stack)** - 构建属于你自己的 AI 工作流工具箱。
-- 🌐 **全球视野 (Global Multilingual)** - 实时同步全球 AI 市场动态。
+- **Automated Tool Categorization**: Smartly categorizes new AI tools using LLMs to keep the directory organized without manual effort.
+- **AI-Driven Code Security Audit**: Automatically audits open-source tools for potential security vulnerabilities and risky code patterns.
+- **Fully Automated Dead Link Detection**: A self-maintaining system that periodically checks all tool URLs for 404s, 500s, or suspicious redirects to ensure the directory is always up-to-date.
+- **Modern Tech Stack**: Built with Next.js App Router, React, Tailwind CSS, and optimized for Vercel deployment.
+- **Developer-Focused**: Tailored for developers and independent creators to discover APIs, SDKs, and productivity tools.
 
-## 技术栈
+## 🛠 Tech Stack
 
-- **框架**: Next.js 14 (App Router)
-- **样式**: Tailwind CSS
-- **动画**: Framer Motion
-- **数据库**: Supabase
-- **图标**: Lucide React
-- **部署**: Vercel
+- **Framework**: [Next.js 14+](https://nextjs.org/)
+- **UI Library**: [React](https://reactjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Deployment**: [Vercel](https://vercel.com/)
+- **Database**: Supabase / PostgreSQL
 
-## 快速开始
+## 📦 Quick Start
 
-### 1. 克隆项目
+### 1. Clone the repository
 
-\`\`\`bash
+```bash
 git clone https://github.com/your-username/ai-tools-navigator.git
 cd ai-tools-navigator
-\`\`\`
+```
 
-### 2. 安装依赖
+### 2. Install dependencies
 
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
-### 3. 环境配置
+### 3. Configure environment variables
 
-复制 `.env.example` 到 `.env.local` 并填入你的配置：
+Copy `.env.example` to `.env.local` and add your specific configurations:
 
-\`\`\`bash
+```bash
 cp .env.example .env.local
-\`\`\`
+```
 
-### 4. 启动开发服务器
+### 4. Run the development server
 
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 
-访问 [http://localhost:3000](http://localhost:3000) 查看应用。
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 部署到 Vercel
+## 🤝 Open Source Contribution Guide
 
-### 1. 推送到 GitHub
+We actively welcome open-source contributions! Whether it's submitting a new AI tool, fixing bugs, or adding new features, your help makes this project better.
 
-\`\`\`bash
-git add .
-git commit -m "Initial commit"
-git push origin main
-\`\`\`
+### How to Contribute
 
-### 2. 连接 Vercel
+1. **Fork the repository** to your own GitHub account.
+2. **Create a new branch** for your feature or bug fix:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. **Make your changes** and ensure everything runs locally. If you are adding a new AI tool, please ensure the URL is valid.
+4. **Commit your changes** with descriptive commit messages:
+   ```bash
+   git commit -m "feat: add new AI tool XYZ"
+   ```
+5. **Push to your fork**:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+6. **Open a Pull Request (PR)** against our `main` branch. 
+   - Please provide a clear description of the changes.
+   - Our automated GitHub Actions will run checks (including dead link detection) on your PR.
 
-1. 访问 [Vercel Dashboard](https://vercel.com/dashboard)
-2. 点击 "New Project"
-3. 导入你的 GitHub 仓库
-4. 配置环境变量
+### Contribution Rules
+- All new tools must be relevant to developers or independent creators.
+- Do not submit tools with malicious redirects or paywalls masquerading as free tools.
+- Please follow the existing code style and structure.
 
-### 3. 环境变量配置
+## 📜 License
 
-在 Vercel 项目设置中添加以下环境变量：
-
-\`\`\`
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-\`\`\`
-
-### 4. 部署
-
-Vercel 会自动构建和部署你的应用。
-
-## Supabase 设置
-
-### 1. 创建项目
-
-1. 访问 [Supabase](https://supabase.com)
-2. 创建新项目
-3. 获取项目 URL 和 API 密钥
-
-### 2. 创建数据库表
-
-在 Supabase SQL Editor 中运行 `scripts/` 目录下的 SQL 文件：
-
-1. `create-tables.sql` - 创建数据库表
-2. `seed-categories.sql` - 插入分类数据
-3. `seed-tags.sql` - 插入标签数据
-
-### 3. 配置 RLS
-
-\`\`\`sql
--- 启用行级安全
-ALTER TABLE tools ENABLE ROW LEVEL SECURITY;
-ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
-
--- 创建策略
-CREATE POLICY "Tools are viewable by everyone" ON tools
-  FOR SELECT USING (is_active = true);
-
-CREATE POLICY "Categories are viewable by everyone" ON categories
-  FOR SELECT USING (is_active = true);
-\`\`\`
-
-## 项目结构
-
-\`\`\`
-├── app/                    # Next.js App Router
-│   ├── [lang]/            # 多语言路由
-│   │   ├── page.tsx       # 首页
-│   │   ├── tools/         # 工具相关页面
-│   │   ├── categories/    # 分类页面
-│   │   └── search/        # 搜索页面
-│   └── globals.css        # 全局样式
-├── components/            # React 组件
-│   ├── ui/               # UI 组件
-│   ├── sections/         # 页面区块
-│   └── providers/        # Context 提供者
-├── lib/                  # 工具函数
-│   ├── api.ts           # API 函数
-│   ├── supabase.ts      # Supabase 客户端
-│   └── utils.ts         # 工具函数
-├── scripts/             # 数据库脚本
-├── public/              # 静态资源
-└── types/               # TypeScript 类型定义
-\`\`\`
-
-## 贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-## 许可证
-
-MIT License
-\`\`\`
-
-现在你有了一个完整的AI工具导航网站！包含：
-
-✅ **完整的页面结构**：首页、工具列表、分类、搜索、工具详情、关于页面  
-✅ **响应式设计**：完美适配桌面和移动端  
-✅ **Supabase 集成**：数据库连接和 API  
-✅ **SEO 优化**：元数据和结构化数据  
-✅ **PWA 支持**：可安装到桌面  
-✅ **性能优化**：代码分割和懒加载  
-✅ **部署就绪**：可直接部署到 Vercel  
-
-**部署步骤**：
-1. 推送代码到 GitHub
-2. 在 Vercel 导入项目
-3. 配置 Supabase 环境变量
-4. 运行数据库脚本创建表结构
-5. 导入你的 2000 个工具数据
-
-需要我帮你创建数据导入脚本吗？
+This project is licensed under the MIT License - see the LICENSE file for details.
