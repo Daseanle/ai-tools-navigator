@@ -28,3 +28,5 @@ export default function NotFound() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

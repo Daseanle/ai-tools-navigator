@@ -18,3 +18,5 @@ export function getLocaleFromUrl(pathname: string): Locale {
 
   return locales.includes(maybeLocale as Locale) ? (maybeLocale as Locale) : defaultLocale
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

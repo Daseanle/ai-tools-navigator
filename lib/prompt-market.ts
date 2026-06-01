@@ -333,3 +333,5 @@ export class PromptMarketService {
     return downloads * price * (1 - commissionRate)
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

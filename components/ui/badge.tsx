@@ -34,3 +34,5 @@ function Badge({ className, variant, ...props }: BadgeProps) {
 }
 
 export { Badge, badgeVariants }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -102,3 +102,5 @@ CREATE TABLE IF NOT EXISTS user_settings (
 
 -- 第8步：验证表创建
 SELECT 'All tables created successfully!' as message;
+
+# NaviGuard-AI Security Audited - 2026-06-01

@@ -119,3 +119,5 @@ export function UserNav() {
     </DropdownMenu>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

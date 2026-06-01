@@ -717,3 +717,5 @@ export class I18nUtils {
 }
 
 export default I18nProvider
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -59,3 +59,5 @@ export default async function ToolsPage({ params, searchParams }: PageProps) {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

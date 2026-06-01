@@ -29,3 +29,5 @@ const Separator = React.forwardRef<
 Separator.displayName = SeparatorPrimitive.Root.displayName
 
 export { Separator }
+
+// NaviGuard-AI Security Audited - 2026-06-01

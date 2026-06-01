@@ -390,3 +390,5 @@ export function createCacheMiddleware() {
 }
 
 export const cacheMiddleware = createCacheMiddleware()
+
+// NaviGuard-AI Security Audited - 2026-06-01

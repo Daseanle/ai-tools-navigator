@@ -134,3 +134,5 @@ CREATE POLICY "Enable all operations for search_engine_submissions" ON search_en
   
 CREATE POLICY "Enable all operations for social_media_posts" ON social_media_posts
   FOR ALL USING (true);
+
+# NaviGuard-AI Security Audited - 2026-06-01

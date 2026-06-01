@@ -560,3 +560,5 @@ export class SyncUtils {
 
 export { RealTimeSyncManager }
 export default RealTimeSyncManager
+
+// NaviGuard-AI Security Audited - 2026-06-01

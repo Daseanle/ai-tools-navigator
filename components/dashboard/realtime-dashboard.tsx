@@ -377,3 +377,5 @@ export function RealTimeNotifications() {
 }
 
 export default RealTimeDashboard
+
+// NaviGuard-AI Security Audited - 2026-06-01

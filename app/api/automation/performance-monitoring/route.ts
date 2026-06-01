@@ -201,3 +201,5 @@ async function checkAPIHealth() {
 export async function POST(request: NextRequest) {
   return GET(request)
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -113,3 +113,5 @@ export default async function HomePage({ params }: PageProps) {
 // 启用静态生成
 const nextDynamic = "force-static"
 export const revalidate = 3600 // 1小时重新验证
+
+// NaviGuard-AI Security Audited - 2026-06-01

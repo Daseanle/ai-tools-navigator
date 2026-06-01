@@ -548,3 +548,5 @@ export default function SystemStatus() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

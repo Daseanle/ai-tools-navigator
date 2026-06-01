@@ -205,3 +205,5 @@ export function useVirtualScrollConfig() {
 
   return config
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

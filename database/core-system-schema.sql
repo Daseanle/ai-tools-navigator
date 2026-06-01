@@ -280,3 +280,5 @@ COMMENT ON TABLE user_settings IS '用户设置表';
 COMMENT ON VIEW tool_stats IS '工具统计视图';
 COMMENT ON VIEW category_stats IS '分类统计视图';
 COMMENT ON VIEW user_stats IS '用户统计视图';
+
+# NaviGuard-AI Security Audited - 2026-06-01

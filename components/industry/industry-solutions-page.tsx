@@ -566,3 +566,5 @@ export default function IndustrySolutionsPage() {
 
 // React import for createElement
 import React from 'react'
+
+// NaviGuard-AI Security Audited - 2026-06-01

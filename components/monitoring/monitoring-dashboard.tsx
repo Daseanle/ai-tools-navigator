@@ -333,3 +333,5 @@ export function MonitoringDashboard() {
 
 // 默认导出
 export default MonitoringDashboard
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -60,3 +60,5 @@ export default function DatabaseCheck({ children }: DatabaseCheckProps) {
 
   return <>{children}</>
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

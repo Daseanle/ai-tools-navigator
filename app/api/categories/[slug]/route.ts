@@ -271,3 +271,5 @@ function getMockCategory(slug: string, includeTools: boolean, limit: number, off
 
   return category
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

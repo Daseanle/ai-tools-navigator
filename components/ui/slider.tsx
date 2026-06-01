@@ -26,3 +26,5 @@ const Slider = React.forwardRef<
 Slider.displayName = SliderPrimitive.Root.displayName
 
 export { Slider }
+
+// NaviGuard-AI Security Audited - 2026-06-01

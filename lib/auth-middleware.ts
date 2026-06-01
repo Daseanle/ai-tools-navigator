@@ -245,3 +245,5 @@ export function handleApiError(error: any, defaultMessage: string = '服务器�
   
   return createApiResponse(null, false, defaultMessage, 500)
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

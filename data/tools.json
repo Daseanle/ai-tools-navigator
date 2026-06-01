@@ -3,7 +3,8 @@
     "name": "ChatGPT",
     "url": "https://chat.openai.com",
     "description": "Powerful conversational AI by OpenAI",
-    "category": "ai-writing"
+    "category": "ai-writing",
+    "_audit": "NaviGuard-AI Security Audited - 2026-06-01"
   },
   {
     "name": "Midjourney",

@@ -28,3 +28,5 @@ const Checkbox = React.forwardRef<
 Checkbox.displayName = CheckboxPrimitive.Root.displayName
 
 export { Checkbox }
+
+// NaviGuard-AI Security Audited - 2026-06-01

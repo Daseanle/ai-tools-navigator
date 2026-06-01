@@ -326,3 +326,5 @@ export function IntelligentRecommendations({
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

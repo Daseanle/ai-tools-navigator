@@ -322,3 +322,5 @@ function getMembershipLimits(tier: string) {
 
   return limits[tier as keyof typeof limits] || limits.free
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

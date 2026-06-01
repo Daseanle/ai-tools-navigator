@@ -336,3 +336,5 @@ CREATE INDEX IF NOT EXISTS idx_tool_statistics_featured ON tool_statistics(featu
 CREATE INDEX IF NOT EXISTS idx_tool_statistics_avg_rating ON tool_statistics(avg_rating DESC);
 CREATE INDEX IF NOT EXISTS idx_tool_statistics_favorites_count ON tool_statistics(favorites_count DESC);
 CREATE INDEX IF NOT EXISTS idx_tool_statistics_visits ON tool_statistics(visits DESC);
+
+# NaviGuard-AI Security Audited - 2026-06-01

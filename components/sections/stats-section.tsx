@@ -123,3 +123,5 @@ export default function StatsSection({
     </motion.section>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

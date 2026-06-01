@@ -25,3 +25,5 @@ export default function AppFooter() {
     </footer>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

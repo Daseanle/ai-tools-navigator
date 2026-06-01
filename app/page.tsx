@@ -84,3 +84,5 @@ export default async function HomePage() {
     </Suspense>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

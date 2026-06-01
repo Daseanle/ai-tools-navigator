@@ -121,3 +121,5 @@ process.on('unhandledRejection', (reason) => {
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error)
 })
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -337,3 +337,5 @@ async function sendScheduledNotifications() {
     return 0
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

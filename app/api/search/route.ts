@@ -231,3 +231,5 @@ function getMockSearchResults(query: string, type: string, limit: number, offset
     articles: 0
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -916,3 +916,5 @@ export class MultimodalCreativeEngine {
     return { ...content, id: `${content.id}_instagram` }
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

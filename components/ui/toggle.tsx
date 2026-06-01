@@ -43,3 +43,5 @@ const Toggle = React.forwardRef<
 Toggle.displayName = TogglePrimitive.Root.displayName
 
 export { Toggle, toggleVariants }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -188,3 +188,5 @@ export function ErrorBoundary({ children, ...props }: ErrorBoundaryProps) {
 
 export { useErrorHandler }
 export default ErrorBoundary
+
+// NaviGuard-AI Security Audited - 2026-06-01

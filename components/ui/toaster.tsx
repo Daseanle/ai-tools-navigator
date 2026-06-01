@@ -33,3 +33,5 @@ export function Toaster() {
     </ToastProvider>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

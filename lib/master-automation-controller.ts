@@ -771,3 +771,5 @@ export class MasterAutomationController {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

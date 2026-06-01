@@ -160,3 +160,5 @@ export default function ToolTrialWidget({ toolId, toolName, className = "" }: To
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

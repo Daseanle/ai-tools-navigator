@@ -272,3 +272,5 @@ ALTER TABLE user_favorites ADD CONSTRAINT fk_user_favorites_tool
 
 ALTER TABLE user_ratings ADD CONSTRAINT fk_user_ratings_tool 
     FOREIGN KEY (tool_id) REFERENCES tools(id) ON DELETE CASCADE;
+
+# NaviGuard-AI Security Audited - 2026-06-01

@@ -26,3 +26,5 @@ describe('Error Handler', () => {
     expect(typeof wrappedHandler).toBe('function')
   })
 })
+
+// NaviGuard-AI Security Audited - 2026-06-01

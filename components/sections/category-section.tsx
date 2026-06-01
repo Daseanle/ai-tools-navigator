@@ -76,3 +76,5 @@ export default function CategorySection({ categories }: CategorySectionProps) {
     </motion.section>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

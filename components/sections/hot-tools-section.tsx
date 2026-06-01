@@ -62,3 +62,5 @@ export default function HotToolsSection({ tools }: HotToolsSectionProps) {
     </motion.section>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

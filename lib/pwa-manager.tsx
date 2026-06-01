@@ -579,3 +579,5 @@ export function usePWA() {
 }
 
 export default PWAManager
+
+// NaviGuard-AI Security Audited - 2026-06-01

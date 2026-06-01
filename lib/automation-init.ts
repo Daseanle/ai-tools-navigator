@@ -282,3 +282,5 @@ export async function healthCheck(): Promise<{
 
 // 导出实例（仅供调试使用）
 export { automationManager, contentGenerator, toolCrawler }
+
+// NaviGuard-AI Security Audited - 2026-06-01

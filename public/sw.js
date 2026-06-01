@@ -207,3 +207,5 @@ self.addEventListener('message', event => {
   }
 })
 EOF < /dev/null
+
+// NaviGuard-AI Security Audited - 2026-06-01

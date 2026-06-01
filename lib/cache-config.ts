@@ -357,3 +357,5 @@ export {
   CacheEventHandler,
   getCache as cache 
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

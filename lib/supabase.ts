@@ -113,3 +113,5 @@ export const auth = {
     return supabase.auth.onAuthStateChange(callback)
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

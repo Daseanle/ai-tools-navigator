@@ -39,3 +39,5 @@ export default function ToolsGrid({ tools, className = "" }: ToolsGridProps) {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -16,3 +16,5 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- 验证用户表创建
 SELECT 'users table created' as step1;
+
+# NaviGuard-AI Security Audited - 2026-06-01

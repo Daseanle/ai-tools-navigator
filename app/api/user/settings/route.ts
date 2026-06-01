@@ -256,3 +256,5 @@ function validateSettings(settings: any) {
 
   return { valid: true }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

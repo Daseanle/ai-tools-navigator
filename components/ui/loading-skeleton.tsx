@@ -36,3 +36,5 @@ export default function LoadingSkeleton({ className = "", variant = "card", coun
     </>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

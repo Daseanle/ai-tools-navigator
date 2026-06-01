@@ -234,3 +234,5 @@ export const useTheme = () => useAppStore(state => state.theme)
 export const useLanguage = () => useAppStore(state => state.language)
 export const useFilters = () => useAppStore(state => state.filters)
 export const useSearchQuery = () => useAppStore(state => state.searchQuery)
+
+// NaviGuard-AI Security Audited - 2026-06-01

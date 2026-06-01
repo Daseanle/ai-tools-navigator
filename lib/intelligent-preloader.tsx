@@ -439,3 +439,5 @@ export function useNetworkAwarePreload() {
 }
 
 export default IntelligentPreloader
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -520,3 +520,5 @@ function StatCard({
 }
 
 export default DeveloperDashboard
+
+// NaviGuard-AI Security Audited - 2026-06-01

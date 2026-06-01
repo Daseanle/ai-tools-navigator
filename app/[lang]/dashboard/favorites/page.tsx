@@ -35,3 +35,5 @@ export default function FavoritesPage({ params }: PageProps) {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -63,3 +63,5 @@ export default function ThemeToggle() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

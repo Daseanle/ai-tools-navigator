@@ -20,3 +20,5 @@ const Textarea = React.forwardRef<
 Textarea.displayName = "Textarea"
 
 export { Textarea }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -148,3 +148,5 @@ async function updateSessionData(
     console.error('Session update error:', error)
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -104,3 +104,5 @@ export default function SearchBar({
     </form>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

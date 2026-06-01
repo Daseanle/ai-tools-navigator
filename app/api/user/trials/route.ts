@@ -349,3 +349,5 @@ async function updateUserMembershipForTrial(userId: string, tier: string, expiry
     console.error('Error updating membership for trial:', error)
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

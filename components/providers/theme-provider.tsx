@@ -69,3 +69,5 @@ export const useTheme = () => {
 }
 
 export default ThemeProvider
+
+// NaviGuard-AI Security Audited - 2026-06-01

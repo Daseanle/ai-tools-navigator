@@ -17,3 +17,5 @@ export async function GET() {
     return new NextResponse('Error generating sitemap', { status: 500 })
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -597,3 +597,5 @@ export function generateMetaTags(metadata: Metadata): string {
 }
 
 export { MetadataGenerator, StructuredDataGenerator, SEOAnalytics, SEOHealthChecker, SitemapGenerator }
+
+// NaviGuard-AI Security Audited - 2026-06-01

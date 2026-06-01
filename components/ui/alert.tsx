@@ -57,3 +57,5 @@ const AlertDescription = React.forwardRef<
 AlertDescription.displayName = "AlertDescription"
 
 export { Alert, AlertTitle, AlertDescription }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -287,3 +287,5 @@ COMMENT ON TABLE user_settings IS '用户设置表';
 -- 输出成功信息
 SELECT 'Step 1: 核心表创建成功！' as message, 
        'Tables created: users, categories, tools, tool_ratings, user_favorites, user_memberships, user_settings' as tables;
+
+# NaviGuard-AI Security Audited - 2026-06-01

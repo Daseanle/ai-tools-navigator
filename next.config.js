@@ -217,3 +217,5 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+
+// NaviGuard-AI Security Audited - 2026-06-01

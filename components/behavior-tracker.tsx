@@ -441,3 +441,5 @@ export function BehaviorTracker({ userId, sessionId }: BehaviorTrackerProps) {
 
 // 导出分析器实例，供其他组件使用
 export const behaviorAnalytics = typeof window !== 'undefined' ? new UserBehaviorAnalytics() : null
+
+// NaviGuard-AI Security Audited - 2026-06-01

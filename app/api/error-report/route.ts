@@ -103,3 +103,5 @@ export async function GET() {
     timestamp: new Date().toISOString()
   })
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

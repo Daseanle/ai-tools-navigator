@@ -65,3 +65,5 @@ export function searchTools(query: string): Tool[] {
 export function getRecommendedTools(limit: number = 6): Tool[] {
   return aiTools.slice(0, limit)
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

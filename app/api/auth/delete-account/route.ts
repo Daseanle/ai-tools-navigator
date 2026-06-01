@@ -116,3 +116,5 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

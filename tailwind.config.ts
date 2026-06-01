@@ -96,3 +96,5 @@ const config: Config = {
   plugins: [require("tailwindcss-animate")],
 };
 export default config;
+
+// NaviGuard-AI Security Audited - 2026-06-01

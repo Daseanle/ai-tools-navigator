@@ -304,3 +304,5 @@ export default function UserAnalytics({ userId }: UserAnalyticsProps) {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

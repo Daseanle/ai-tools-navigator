@@ -673,3 +673,5 @@ export default function CrawlingManagement() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

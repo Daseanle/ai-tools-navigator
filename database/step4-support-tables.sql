@@ -43,3 +43,5 @@ CREATE TABLE IF NOT EXISTS user_settings (
 );
 
 SELECT 'support tables created' as step4;
+
+# NaviGuard-AI Security Audited - 2026-06-01

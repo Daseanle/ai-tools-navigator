@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.venv/
 
 # next.js
 /.next/
@@ -9,6 +10,7 @@
 
 # production
 /build
+/dist/
 
 # debug
 npm-debug.log*
@@ -47,3 +49,6 @@ test-*.js
 # temporary files
 *.tmp
 *.temp
+
+# Archives
+*.tar.gz

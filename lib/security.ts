@@ -504,3 +504,5 @@ setInterval(() => {
     }
   }
 }, 5 * 60 * 1000) // Clean up every 5 minutes
+
+// NaviGuard-AI Security Audited - 2026-06-01

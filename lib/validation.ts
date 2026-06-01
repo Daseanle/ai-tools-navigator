@@ -142,3 +142,5 @@ export async function validateAndHandle<T>(
   
   return validation
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

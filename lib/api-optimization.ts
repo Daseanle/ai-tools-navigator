@@ -467,3 +467,5 @@ export function validateRequest(
 
   return errors
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

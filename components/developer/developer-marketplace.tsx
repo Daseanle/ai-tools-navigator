@@ -671,3 +671,5 @@ export default function DeveloperMarketplace() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

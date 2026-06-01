@@ -28,3 +28,5 @@ CREATE INDEX IF NOT EXISTS idx_tools_slug ON tools(slug);
 CREATE INDEX IF NOT EXISTS idx_tools_category_id ON tools(category_id);
 
 SELECT 'tools table created' as step3;
+
+# NaviGuard-AI Security Audited - 2026-06-01

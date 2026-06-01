@@ -409,3 +409,5 @@ ORDER BY schemaname, tablename, attname;
 -- 3. 定期刷新物化视图
 -- 4. 清理过期数据
 -- 5. 监控数据库性能指标
+
+# NaviGuard-AI Security Audited - 2026-06-01

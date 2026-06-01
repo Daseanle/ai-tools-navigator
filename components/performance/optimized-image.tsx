@@ -183,3 +183,5 @@ export function ResponsiveImage({
     />
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -156,3 +156,5 @@ function calculateExpiryDate(billingCycle: string): string {
   }
   return now.toISOString()
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

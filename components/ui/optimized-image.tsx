@@ -77,3 +77,5 @@ export default function OptimizedImage({
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

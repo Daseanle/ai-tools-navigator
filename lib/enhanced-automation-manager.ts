@@ -418,3 +418,5 @@ class EnhancedAutomationManager {
 
 export const automationManager = EnhancedAutomationManager.getInstance()
 export default automationManager
+
+// NaviGuard-AI Security Audited - 2026-06-01

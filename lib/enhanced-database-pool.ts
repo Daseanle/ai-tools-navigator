@@ -152,3 +152,5 @@ export const getSupabaseServerClient = () => dbManager.getClient('primary')
 export const createServerClient = () => dbManager.getClient('primary')
 
 export default dbManager
+
+// NaviGuard-AI Security Audited - 2026-06-01

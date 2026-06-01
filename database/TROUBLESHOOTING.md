@@ -71,3 +71,5 @@ SELECT 'test successful' as message;
 4. 如果成功，继续执行 `database/step4-support-tables.sql`
 
 这样可以精确定位错误发生的位置。请从第1步开始测试，并告诉我哪一步失败了。
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

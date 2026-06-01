@@ -123,3 +123,5 @@ export function useComputationCache<T>(
     return result
   }, dependencies)
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

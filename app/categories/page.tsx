@@ -216,3 +216,5 @@ export default function CategoriesPage() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

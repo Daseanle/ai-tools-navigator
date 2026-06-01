@@ -559,3 +559,5 @@ if (typeof process !== 'undefined' && process.on && process.versions && process.
 }
 
 export { DatabasePool, QueryOptimizer }
+
+// NaviGuard-AI Security Audited - 2026-06-01

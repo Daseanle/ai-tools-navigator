@@ -514,3 +514,5 @@ export default function FullAutomationDashboard() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

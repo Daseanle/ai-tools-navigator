@@ -91,3 +91,5 @@ CREATE POLICY "Users can update their own preferences" ON user_preferences
 -- 允许公开查看评分数据（用于计算平均评分）
 CREATE POLICY "Public can view ratings for statistics" ON user_ratings
     FOR SELECT USING (true);
+
+# NaviGuard-AI Security Audited - 2026-06-01

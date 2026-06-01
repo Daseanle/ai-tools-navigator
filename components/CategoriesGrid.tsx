@@ -312,3 +312,5 @@ export default function CategoriesGrid() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

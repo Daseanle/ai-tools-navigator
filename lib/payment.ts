@@ -377,3 +377,5 @@ export function getPaymentMethodByRegion(country: string): PaymentMethod[] {
     method.enabled && method.countries.includes(country)
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

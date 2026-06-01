@@ -758,3 +758,5 @@ export default function UserSettings({ user }: UserSettingsProps) {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

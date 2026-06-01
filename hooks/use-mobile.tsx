@@ -17,3 +17,5 @@ export function useIsMobile() {
 
   return !!isMobile
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

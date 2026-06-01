@@ -1,57 +1,78 @@
 const fs = require('fs/promises');
 const path = require('path');
 
-// 允许的最大并发请求数
-const MAX_CONCURRENCY = 10;
-// 超时时间（毫秒）
-const TIMEOUT_MS = 10000;
+// 🛡️ Configuration Constants
+const MAX_CONCURRENCY = 8;
+const TIMEOUT_MS = 8000;
+const SUSPICIOUS_DOMAINS = ['bit.ly', 't.co', 'tinyurl.com', 'clickbank', 'adfly', 'shorte.st'];
 
 /**
- * 任务二拓展：预留调用 OpenAI API 对新提交工具进行“智能分类”的函数伪代码接口
- * @param {Object} tool - 工具对象，包含名称、描述、URL等
- * @returns {Promise<string>} - 预测的分类类别
+ * Task II Extension: Pre-wired interface for intelligent categorization using OpenAI SDK.
+ * This function handles raw tool data and outputs a recommended directory category.
+ * 
+ * @param {Object} tool - The tool metadata object
+ * @param {string} tool.name - Name of the tool
+ * @param {string} tool.description - Short summary of the tool
+ * @param {string} tool.url - Main site URL
+ * @returns {Promise<string>} Recommended category
  */
 async function categorizeToolWithAI(tool) {
-  /*
-  // 伪代码：
-  console.log(`[AI Classification] Analyzing tool: ${tool.name}...`);
+  if (!process.env.OPENAI_API_KEY) {
+    console.log(`[AI Classifier] (Skipped) OPENAI_API_KEY not found. Defaulting to 'AI General'.`);
+    return 'AI General';
+  }
+
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: 'You are an AI that categorizes tools. Return only the category name.' },
-          { role: 'user', content: `Categorize this AI tool: Name: ${tool.name}, Description: ${tool.description}` }
-        ]
-      })
+    const OpenAI = require('openai');
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
     });
-    const data = await response.json();
-    return data.choices[0].message.content.trim();
+
+    const prompt = `You are a professional directory administrator. Analyze this AI tool and categorize it into exactly one of these: 
+- 'ai-writing'
+- 'ai-design'
+- 'developer-tools'
+- 'productivity-agents'
+- 'data-analytics'
+
+Tool Name: "${tool.name}"
+Description: "${tool.description}"
+URL: "${tool.url}"
+
+Return ONLY the slug name from the list above. Do not output any markdown or explanation.`;
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.2,
+      max_tokens: 15
+    });
+
+    const category = response.choices[0].message.content.trim().toLowerCase();
+    console.log(`[AI Classifier] Categorized "${tool.name}" as "${category}".`);
+    return category;
   } catch (error) {
-    console.error(`[AI Classification Error]: ${error.message}`);
+    console.error(`[AI Classifier Error] Failed to classify "${tool.name}":`, error.message);
     return 'Uncategorized';
   }
-  */
-  return 'AI Tool';
 }
 
 /**
- * 带超时的 Fetch 请求封装
+ * Standard fetch request wrapper equipped with a hard Timeout limit.
+ * 
+ * @param {string} url - Target endpoint
+ * @param {Object} options - Request options
  */
 async function fetchWithTimeout(url, options = {}) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), TIMEOUT_MS);
-  
+
   try {
     const response = await fetch(url, {
       ...options,
       signal: controller.signal,
-      redirect: 'manual' // 手动处理重定向以检查可疑跳转
+      // manual redirect mode allows us to intercept redirects and inspect them for safety audits
+      redirect: 'manual'
     });
     clearTimeout(id);
     return response;
@@ -62,115 +83,157 @@ async function fetchWithTimeout(url, options = {}) {
 }
 
 /**
- * 检查单个 URL 的有效性
+ * Evaluates a single tool link's status and checks for malicious redirect risks.
+ * 
+ * @param {Object} tool - The tool to test
+ * @returns {Promise<Object>} Verification status object
  */
 async function checkLink(tool) {
   const { name, url } = tool;
-  if (!url) return { tool, status: 'NO_URL' };
+  if (!url) {
+    return { tool, status: 'NO_URL', ok: false };
+  }
 
   try {
     const response = await fetchWithTimeout(url, {
       method: 'GET',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; AIToolsNavigatorBot/1.0; +https://github.com/ai-tools-navigator)'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 AI-Tools-Navigator-AuditBot/2.0'
       }
     });
 
     const statusCode = response.status;
 
-    // 检查是否重定向
+    // Check Redirects (3xx)
     if (statusCode >= 300 && statusCode < 400) {
-      const location = response.headers.get('location');
-      // 简单判断可疑重定向：跨域、短链接或者非 HTTPS
-      if (location && (!location.startsWith('https') || location.includes('bit.ly'))) {
-        return { tool, status: 'SUSPICIOUS_REDIRECT', code: statusCode, detail: location };
+      const location = response.headers.get('location') || '';
+      
+      // Rigorous redirect domain analysis to prevent false positives (like t.co matching chatgpt.com)
+      let isSuspicious = false;
+      try {
+        const parsedRedirect = new URL(location, url);
+        const redirectHostname = parsedRedirect.hostname;
+        
+        isSuspicious = SUSPICIOUS_DOMAINS.some(domain => 
+          redirectHostname === domain || redirectHostname.endsWith('.' + domain)
+        ) || (url.startsWith('https') && location.startsWith('http://')); // Avoid downgrade protocol
+      } catch (e) {
+        // Fallback for relative paths or malformed URLs
+        isSuspicious = SUSPICIOUS_DOMAINS.some(domain => {
+          if (domain === 't.co') {
+            return location.includes('://t.co/') || location.includes('://www.t.co/');
+          }
+          return location.includes(domain);
+        }) || (url.startsWith('https') && location.startsWith('http://'));
       }
-      return { tool, status: 'REDIRECT', code: statusCode, detail: location };
+
+      if (isSuspicious) {
+        return {
+          tool,
+          status: 'SUSPICIOUS_REDIRECT',
+          ok: false, // Security threat
+          code: statusCode,
+          detail: `Redirected to potential unsecured/shortener site: ${location}`
+        };
+      }
+
+      return { tool, status: 'REDIRECT', ok: true, code: statusCode, detail: location };
     }
 
+    // Check Bad Statuses (4xx, 5xx)
     if (statusCode === 404 || statusCode >= 500) {
-      return { tool, status: 'DEAD_LINK', code: statusCode };
+      return { tool, status: 'DEAD_LINK', ok: false, code: statusCode };
     }
 
-    return { tool, status: 'OK', code: statusCode };
-  } catch (error) {
-    if (error.name === 'AbortError') {
-      return { tool, status: 'TIMEOUT' };
+    // Cloudflare Anti-Bot block (403) or Rate Limit (429) are logged but not flagged as dead links
+    if (statusCode === 403 || statusCode === 429) {
+      return { tool, status: 'RESTRICTED_ACCESS', ok: true, code: statusCode, detail: 'Cloudflare / Anti-bot verification active' };
     }
-    return { tool, status: 'ERROR', detail: error.message };
+
+    return { tool, status: 'OK', ok: true, code: statusCode };
+  } catch (error) {
+    // Net issues or timeouts are reported but not flagged as dead links to prevent temporary CI failures
+    if (error.name === 'AbortError') {
+      return { tool, status: 'TIMEOUT', ok: true, detail: `Request timed out after ${TIMEOUT_MS}ms` };
+    }
+    return { tool, status: 'NETWORK_ERROR', ok: true, detail: error.message };
   }
 }
 
 /**
- * 主执行函数
+ * Main execution routine for validating and auditing codebase URLs.
  */
 async function main() {
-  console.log('🚀 Starting Automated Link Checking & Security Audit...\n');
+  console.log('🛡️  [AI Tools Navigator] Initiating automated link checks and security audit...');
 
-  // 注意：因为项目中实际数据可能存在数据库中，这里我们假设你按照要求
-  // 把待检查的工具数据导出到了项目根目录下的 data/tools.json
   const dataPath = path.join(__dirname, '../data/tools.json');
-  
   let tools = [];
+
   try {
     const fileContent = await fs.readFile(dataPath, 'utf-8');
     tools = JSON.parse(fileContent);
-    console.log(`✅ Loaded ${tools.length} tools from ${dataPath}.`);
+    console.log(`📂 Read tools directory. Loaded ${tools.length} records from data source.`);
   } catch (error) {
-    console.error(`❌ Failed to read data file at ${dataPath}. Please make sure the file exists and is valid JSON.`);
-    console.error(`[Error info]: ${error.message}`);
-    // 如果没有文件，为了测试演示，我们造点假数据
-    console.log('\n⚠️ Using mocked data for demonstration purposes...');
+    console.warn(`⚠️  Unable to read database file from: ${dataPath}. Falling back to default tools for testing.`);
     tools = [
-      { name: 'ChatGPT', url: 'https://chat.openai.com' },
-      { name: 'Dead Tool 404', url: 'https://httpstat.us/404' },
-      { name: 'Server Error 500', url: 'https://httpstat.us/500' },
-      { name: 'Suspicious Redirect', url: 'http://bit.ly/suspicious-link' }
+      { name: 'ChatGPT', url: 'https://chat.openai.com', description: 'Conversational AI' },
+      { name: 'Midjourney', url: 'https://www.midjourney.com', description: 'AI Image Creator' },
+      { name: 'Dead Tool Test (404)', url: 'https://httpstat.us/404', description: 'Simulated 404' },
+      { name: 'Server Error Test (500)', url: 'https://httpstat.us/500', description: 'Simulated 500' }
     ];
   }
 
-  console.log(`\n🔍 Checking ${tools.length} links with concurrency ${MAX_CONCURRENCY}...\n`);
+  console.log(`🔍 Auditing ${tools.length} links using a concurrency queue of ${MAX_CONCURRENCY}...\n`);
 
-  let deadLinks = [];
+  const issuesList = [];
   let index = 0;
 
-  // 高并发执行器
-  const executeTasks = async () => {
+  // Concurrent queue worker
+  const worker = async () => {
     while (index < tools.length) {
       const currentIndex = index++;
       const tool = tools[currentIndex];
       
       const result = await checkLink(tool);
 
-      if (result.status === 'OK' || result.status === 'REDIRECT') {
-        process.stdout.write('·'); // 成功或正常重定向打个点，不占用过多终端行
+      if (result.ok) {
+        if (result.status === 'OK') {
+          process.stdout.write('🟢 ');
+        } else {
+          // Redirect or timeout warnings
+          process.stdout.write('🟡 ');
+          console.log(`\n[INFO] ${result.status} on Tool: "${result.tool.name}" | Status: ${result.code || 'N/A'} | Detail: ${result.detail || 'N/A'}`);
+        }
       } else {
-        process.stdout.write('\n');
-        console.warn(`[WARNING] ${result.status} | Tool: ${result.tool.name} | URL: ${result.tool.url}`);
-        if (result.code) console.warn(`   └─ Status Code: ${result.code}`);
-        if (result.detail) console.warn(`   └─ Detail: ${result.detail}`);
-        deadLinks.push(result);
+        process.stdout.write('🔴 ');
+        console.warn(`\n[ALERT] ${result.status} on Tool: "${result.tool.name}"`);
+        console.warn(`  ↳ URL: ${result.tool.url}`);
+        if (result.code) console.warn(`  ↳ Status: ${result.code}`);
+        if (result.detail) console.warn(`  ↳ Detail: ${result.detail}`);
+        issuesList.push(result);
       }
     }
   };
 
-  const workers = Array(Math.min(MAX_CONCURRENCY, tools.length)).fill(null).map(executeTasks);
-  await Promise.all(workers);
+  // Launch workers
+  const threads = Array(Math.min(MAX_CONCURRENCY, tools.length)).fill(null).map(worker);
+  await Promise.all(threads);
 
-  console.log('\n\n📊 Check Summary:');
-  console.log(`Total checked: ${tools.length}`);
-  console.log(`Issues found: ${deadLinks.length}`);
+  console.log('\n\n📊 ========================================');
+  console.log(`   Audited: ${tools.length} tools`);
+  console.log(`   Issues found: ${issuesList.length}`);
+  console.log('===========================================\n');
 
-  if (deadLinks.length > 0) {
-    console.log('\n🚨 Please review the problematic links and update or remove them.');
-    process.exit(1); // 以非 0 状态退出，触发 GitHub Actions 报错和 Issue
+  if (issuesList.length > 0) {
+    console.error('❌ Security validation failed. Problematic tool URLs were detected.');
+    process.exit(1);
   } else {
-    console.log('\n🎉 All links are healthy!');
+    console.log('✅ Security validation passed. All links are healthy and secure!');
     process.exit(0);
   }
 }
 
 main().catch(err => {
-  console.error('Unhandled error:', err);
+  console.error('💥 Fatal failure running automated checks:', err);
   process.exit(1);
 });

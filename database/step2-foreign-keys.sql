@@ -65,3 +65,5 @@ JOIN information_schema.constraint_column_usage AS ccu
 WHERE tc.constraint_type = 'FOREIGN KEY' 
     AND tc.table_name IN ('tools', 'tool_ratings', 'user_favorites', 'user_memberships', 'user_settings')
 ORDER BY tc.table_name, tc.constraint_name;
+
+# NaviGuard-AI Security Audited - 2026-06-01

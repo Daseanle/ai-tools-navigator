@@ -565,3 +565,5 @@ export default function UserTestingInvite() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

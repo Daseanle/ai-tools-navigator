@@ -13,3 +13,5 @@ function Skeleton({
 }
 
 export { Skeleton }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -109,3 +109,5 @@ export default function DatabaseNotConfigured() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

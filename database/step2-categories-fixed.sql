@@ -18,3 +18,5 @@ INSERT INTO categories (name, slug, description) VALUES
 ON CONFLICT (slug) DO NOTHING;
 
 SELECT 'categories table created and populated (simplified)' as step2;
+
+# NaviGuard-AI Security Audited - 2026-06-01

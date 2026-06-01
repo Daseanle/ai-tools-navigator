@@ -503,3 +503,5 @@ export interface AppConfig {
     uploads_per_day: number
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

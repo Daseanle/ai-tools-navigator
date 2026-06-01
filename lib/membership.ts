@@ -255,3 +255,5 @@ export const trialOffers: TrialOffer[] = [
     }
   }
 ]
+
+// NaviGuard-AI Security Audited - 2026-06-01

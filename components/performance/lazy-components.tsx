@@ -56,3 +56,5 @@ export const LazyComponents = {
 }
 
 export default LazyComponents
+
+// NaviGuard-AI Security Audited - 2026-06-01

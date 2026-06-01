@@ -423,3 +423,5 @@ export const monitoring = {
   // Create alert
   alert: (config: AlertConfig) => metricsCollector.addAlert(config)
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

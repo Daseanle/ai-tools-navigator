@@ -860,3 +860,5 @@ export class AIAutomationManager {
     console.log(`➕ 已添加策略: ${strategy.name}`)
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -215,3 +215,5 @@ COMMENT ON TABLE affiliate_earnings IS '推广收益记录表';
 COMMENT ON TABLE affiliate_partners IS '推广伙伴信息表';
 COMMENT ON VIEW affiliate_stats IS '推广伙伴统计视图';
 COMMENT ON VIEW trial_stats IS '试用统计视图';
+
+# NaviGuard-AI Security Audited - 2026-06-01

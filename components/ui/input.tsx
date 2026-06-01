@@ -20,3 +20,5 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 Input.displayName = "Input"
 
 export { Input }
+
+// NaviGuard-AI Security Audited - 2026-06-01

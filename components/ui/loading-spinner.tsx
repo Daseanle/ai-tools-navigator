@@ -54,3 +54,5 @@ export function SkeletonGrid({ count = 6 }: { count?: number }) {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

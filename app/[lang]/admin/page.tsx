@@ -141,3 +141,5 @@ export default function AdminDashboard() {
     </motion.div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

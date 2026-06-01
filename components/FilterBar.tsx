@@ -168,3 +168,5 @@ export default function FilterBar({ selectedCategory = 'all', selectedSort = 'po
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

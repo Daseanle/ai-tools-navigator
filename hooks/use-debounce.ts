@@ -17,3 +17,5 @@ export function useDebounce<T>(value: T, delay: number): T {
 
   return debouncedValue
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

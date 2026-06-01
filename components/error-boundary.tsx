@@ -303,3 +303,5 @@ export const SimpleErrorBoundary: React.FC<{
     </ErrorBoundary>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

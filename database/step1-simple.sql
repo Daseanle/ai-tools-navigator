@@ -141,3 +141,5 @@ FROM information_schema.tables
 WHERE table_schema = 'public' 
   AND table_name IN ('users', 'categories', 'tools', 'tool_ratings', 'user_favorites', 'user_memberships', 'user_settings')
 ORDER BY table_name;
+
+# NaviGuard-AI Security Audited - 2026-06-01

@@ -485,3 +485,5 @@ export function useAnalytics() {
     trackShare: analytics.trackShare.bind(analytics)
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

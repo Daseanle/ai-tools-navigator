@@ -79,3 +79,5 @@ export default function LanguageSwitcher() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

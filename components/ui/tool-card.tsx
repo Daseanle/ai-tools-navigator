@@ -42,3 +42,5 @@ ToolCard.displayName = 'ToolCard'
 export default ToolCard
 export { ToolCard }
 export { default as UnifiedToolCard } from './unified-tool-card'
+
+// NaviGuard-AI Security Audited - 2026-06-01

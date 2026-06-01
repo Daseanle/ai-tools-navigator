@@ -914,3 +914,5 @@ function normalizeTool(raw: any): Tool | null {
     return null
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

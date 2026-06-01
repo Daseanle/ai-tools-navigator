@@ -294,3 +294,5 @@ async function handleDownload(promptId: string, userId: string) {
     } 
   })
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

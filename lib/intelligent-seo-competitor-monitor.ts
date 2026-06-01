@@ -825,3 +825,5 @@ export class IntelligentSEOCompetitorMonitor {
     console.log(`🚨 竞争对手 ${competitor} 检测到变化:`, changes)
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

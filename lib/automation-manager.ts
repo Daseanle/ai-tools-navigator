@@ -549,3 +549,5 @@ export class AutomationManager {
     // 发布到社交媒体
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

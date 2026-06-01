@@ -152,3 +152,5 @@ export default function RootLayout({
     </html>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

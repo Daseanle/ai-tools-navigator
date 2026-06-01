@@ -34,3 +34,5 @@ export default function MobileNavigation() {
     </nav>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

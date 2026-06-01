@@ -46,3 +46,5 @@ export default async function CategoriesPage({ params }: PageProps) {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

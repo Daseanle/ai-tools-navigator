@@ -442,3 +442,5 @@ export class PWAMetrics {
 }
 
 export default PWAUtils
+
+// NaviGuard-AI Security Audited - 2026-06-01

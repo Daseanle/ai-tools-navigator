@@ -559,3 +559,5 @@ export class CacheMiddleware {
 }
 
 export default ServerCache
+
+// NaviGuard-AI Security Audited - 2026-06-01

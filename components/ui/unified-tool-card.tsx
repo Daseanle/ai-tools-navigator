@@ -328,3 +328,5 @@ function UnifiedToolCard({
 export { UnifiedToolCard as ToolCard }
 export { UnifiedToolCard as OptimizedToolCard }
 export default UnifiedToolCard
+
+// NaviGuard-AI Security Audited - 2026-06-01

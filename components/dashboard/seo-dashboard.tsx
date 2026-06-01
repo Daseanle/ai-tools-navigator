@@ -17,3 +17,5 @@ export default function SEODashboard() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

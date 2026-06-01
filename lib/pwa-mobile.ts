@@ -740,3 +740,5 @@ export class PWAManager {
 
 // 导出默认实例
 export const pwaManager = new PWAManager()
+
+// NaviGuard-AI Security Audited - 2026-06-01

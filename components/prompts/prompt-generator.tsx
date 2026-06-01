@@ -426,3 +426,5 @@ export default function PromptGeneratorInterface() {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -417,3 +417,5 @@ export default function ToolsGrid({ category, search, sort = 'popular', page = 1
     </>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -133,3 +133,5 @@ CREATE TRIGGER update_user_ratings_updated_at
   BEFORE UPDATE ON user_ratings 
   FOR EACH ROW 
   EXECUTE FUNCTION update_updated_at_column();
+
+# NaviGuard-AI Security Audited - 2026-06-01

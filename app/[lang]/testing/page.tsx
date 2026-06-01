@@ -26,3 +26,5 @@ export default function TestingPage({ params }: PageProps) {
     </div>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

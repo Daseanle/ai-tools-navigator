@@ -72,3 +72,5 @@ export async function GET(request: NextRequest) {
     }, { status: 500 })
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

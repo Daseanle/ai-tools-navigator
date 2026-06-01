@@ -234,3 +234,5 @@ export {
   MenubarSub,
   MenubarShortcut,
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

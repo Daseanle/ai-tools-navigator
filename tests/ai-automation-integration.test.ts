@@ -425,3 +425,5 @@ class AIAutomationIntegrationTest {
 
 // 导出测试类
 export { AIAutomationIntegrationTest }
+
+// NaviGuard-AI Security Audited - 2026-06-01

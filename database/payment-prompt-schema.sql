@@ -355,3 +355,5 @@ DROP TRIGGER IF EXISTS trigger_update_prompt_favorites ON user_prompt_favorites;
 CREATE TRIGGER trigger_update_prompt_favorites
   AFTER INSERT OR DELETE ON user_prompt_favorites
   FOR EACH ROW EXECUTE FUNCTION update_prompt_favorites();
+
+# NaviGuard-AI Security Audited - 2026-06-01

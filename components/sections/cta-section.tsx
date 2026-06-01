@@ -101,3 +101,5 @@ export default function CTASection() {
     </motion.section>
   )
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

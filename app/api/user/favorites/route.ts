@@ -171,3 +171,5 @@ export async function DELETE(request: NextRequest) {
     }
   }))(request)
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

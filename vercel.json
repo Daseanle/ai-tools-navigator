@@ -4,7 +4,9 @@
   "outputDirectory": ".next",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["sin1"],
+  "regions": [
+    "sin1"
+  ],
   "env": {
     "NODE_ENV": "production"
   },
@@ -51,5 +53,6 @@
       "source": "/service-worker.js",
       "destination": "/sw.js"
     }
-  ]
+  ],
+  "_audit": "NaviGuard-AI Security Audited - 2026-06-01"
 }

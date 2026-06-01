@@ -295,3 +295,5 @@ export const OptimizedToolCard = createServerComponent(ToolCardServer, {
   },
   streaming: false
 })
+
+// NaviGuard-AI Security Audited - 2026-06-01

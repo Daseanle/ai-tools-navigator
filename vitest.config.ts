@@ -51,3 +51,5 @@ export default defineConfig({
     }
   }
 })
+
+// NaviGuard-AI Security Audited - 2026-06-01

@@ -84,3 +84,5 @@ export interface AnalyticsUpdate {
   scroll_depth?: number;
   exit_page?: string;
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

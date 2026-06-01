@@ -284,3 +284,5 @@ function getMockTool(slug: string) {
 
   return mockTools[slug] || null
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

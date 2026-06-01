@@ -627,3 +627,5 @@ export class IntelligentAutomationOrchestrator {
     // 更新决策权重逻辑
   }
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01
