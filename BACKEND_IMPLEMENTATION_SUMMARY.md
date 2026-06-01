@@ -191,3 +191,5 @@ psql -f database/prompt-generation-schema.sql
 - 查看个人数据分析
 
 系统已经从"只有前端展示"升级为"完整功能的AI工具导航平台"！
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

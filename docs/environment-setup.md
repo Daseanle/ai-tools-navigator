@@ -202,3 +202,5 @@ npm run test   # 运行测试套件
 - 🔒 永远不要将真实的API密钥提交到版本控制系统
 - 🔄 定期轮换敏感的API密钥
 - 🛡️ 在生产环境中使用强随机密钥
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

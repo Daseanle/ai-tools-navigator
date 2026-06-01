@@ -203,3 +203,5 @@ curl https://your-domain.vercel.app/api/automation/performance-monitoring
 访问您的自动化仪表板：`https://your-domain.vercel.app/automation`
 
 **享受您的自动化收益吧！** 🎯💰
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

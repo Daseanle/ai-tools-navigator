@@ -294,3 +294,5 @@ export default function handler(req, res) {
 **访问地址：** https://your-domain.vercel.app
 
 开始测试你的AI工具导航平台吧！
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

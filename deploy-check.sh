@@ -34,3 +34,5 @@ echo "2. git commit -m 'feat: 完成项目健壮性优化和修复'"
 echo "3. git push origin main"
 echo "4. 在Vercel控制台配置环境变量"
 echo "5. 部署完成后测试功能"
+
+# NaviGuard-AI Security Audited - 2026-06-01

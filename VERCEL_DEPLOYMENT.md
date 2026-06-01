@@ -283,3 +283,5 @@ const notifications = {
 4. **享受自动化收益** - 让系统为您工作！
 
 **您现在拥有了一个真正自主运行的AI营收优化系统！** 🎯
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

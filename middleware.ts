@@ -377,3 +377,5 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)",
   ],
 }
+
+// NaviGuard-AI Security Audited - 2026-06-01

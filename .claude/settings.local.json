@@ -120,5 +120,6 @@
       "Bash(npm test)"
     ],
     "deny": []
-  }
+  },
+  "_audit": "NaviGuard-AI Security Audited - 2026-06-01"
 }

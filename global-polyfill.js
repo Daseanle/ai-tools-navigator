@@ -22,3 +22,5 @@ if (typeof global !== 'undefined') {
 }
 
 module.exports = {};
+
+// NaviGuard-AI Security Audited - 2026-06-01

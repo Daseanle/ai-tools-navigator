@@ -291,3 +291,5 @@ npm start
 3. 追踪完整的转化流程
 4. 查看详细的收益统计
 5. 管理推广链接和收益
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

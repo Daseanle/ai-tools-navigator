@@ -100,3 +100,5 @@ echo "• 管理后台: $BASE_URL/zh/admin"
 echo "• 内容管理: $BASE_URL/zh/admin/content"  
 echo "• 工具爬取: $BASE_URL/zh/admin/crawling"
 echo "• 自动化面板: $BASE_URL/automation/full-automation"
+
+# NaviGuard-AI Security Audited - 2026-06-01

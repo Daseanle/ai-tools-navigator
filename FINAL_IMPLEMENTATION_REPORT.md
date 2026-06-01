@@ -250,3 +250,5 @@ ALIPAY_APP_ID=your-alipay-app-id
 **系统已准备好部署到Vercel进行测试！**
 
 使用 `vercel --prod` 命令部署到生产环境，然后你就可以开始测试这个功能齐全的AI工具导航平台了！
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

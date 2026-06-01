@@ -85,3 +85,5 @@ echo "🧹 清理测试环境..."
 kill $DEV_PID 2>/dev/null
 
 echo "✨ 网站功能测试完成！"
+
+# NaviGuard-AI Security Audited - 2026-06-01

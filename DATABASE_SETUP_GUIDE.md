@@ -98,3 +98,5 @@
 4. 可以分批执行SQL语句
 
 现在请按照上述步骤重新执行数据库创建！
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

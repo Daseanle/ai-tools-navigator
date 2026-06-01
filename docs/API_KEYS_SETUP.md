@@ -132,3 +132,5 @@ WEIBO_ACCESS_TOKEN=xxx
 
 ---
 配置完成后，系统将实现真正的100%自动化运营！
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

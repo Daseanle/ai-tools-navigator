@@ -241,3 +241,5 @@ if (require.main === module) {
 }
 
 module.exports = ComprehensiveTestingSummary;
+
+// NaviGuard-AI Security Audited - 2026-06-01

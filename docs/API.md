@@ -612,3 +612,5 @@ curl -X GET "https://api.example.com/api/user/favorites" \
 ---
 
 如有疑问或需要支持，请联系开发团队或查看我们的[开发者文档](https://docs.example.com)。
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

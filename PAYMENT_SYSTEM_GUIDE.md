@@ -194,3 +194,5 @@ STRIPE_SECRET_KEY=your_stripe_secret_key
 4. 部署到生产环境
 
 系统就可以开始盈利了！🚀
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

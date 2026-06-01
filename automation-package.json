@@ -5,5 +5,6 @@
     "automation:start": "node scripts/start-automation.js",
     "automation:dev": "node scripts/start-automation.js --dev",
     "automation:status": "node scripts/check-status.js"
-  }
+  },
+  "_audit": "NaviGuard-AI Security Audited - 2026-06-01"
 }

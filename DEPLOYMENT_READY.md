@@ -14,9 +14,9 @@
 
 ```bash
 # 数据库配置
-NEXT_PUBLIC_SUPABASE_URL=https://msxadilzanoezfbidzyr.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeGFkaWx6YW5vZXpmYmlkenlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMDA4MjAsImV4cCI6MjA2NjY3NjgyMH0.Wuxn_wHPqGhqMqAMQSgZXlPR2Zrp9myUq3b5CKylx00
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zeGFkaWx6YW5vZXpmYmlkenlyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTEwMDgyMCwiZXhwIjoyMDY2Njc2ODIwfQ.4z2MmLpcMVCOyOgUu2SHkW_UH6mV5UaV6Q_dPE-sjwQ
+NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key-here
 
 # 站点配置
 NEXT_PUBLIC_SITE_URL=https://your-app.vercel.app
@@ -24,11 +24,11 @@ NEXT_PUBLIC_SITE_NAME=AI Navigator Pro
 NEXT_PUBLIC_SITE_DESCRIPTION=发现最新最好的AI工具
 
 # API Keys
-API_KEY=sk-app-1234567890abcdef1234567890abcdef
-OPENROUTER_API_KEY=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
+API_KEY=your-custom-api-key-here
+OPENROUTER_API_KEY=your-openrouter-api-key-here
 
 # 工具同步
-TOOLS_SYNC_API_KEY=f6006b37-1252-4397-a433-9febb30a4051
+TOOLS_SYNC_API_KEY=your-sync-api-key-here
 TOOLS_SYNC_INTERVAL_HOURS=24
 
 # 安全配置
@@ -159,3 +159,5 @@ curl https://your-app.vercel.app/api/monitoring/health
 
 ---
 *部署完成后，请测试主要功能并监控系统状态*
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->

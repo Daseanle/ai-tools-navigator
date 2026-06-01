@@ -31,3 +31,5 @@ echo "   SUPABASE_SERVICE_ROLE_KEY = 您的Supabase Service Role Key"
 echo ""
 echo "🎯 设置完成后访问: https://your-project.vercel.app/automation"
 echo "📊 查看自动化系统状态!"
+
+# NaviGuard-AI Security Audited - 2026-06-01

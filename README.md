@@ -135,3 +135,5 @@ We believe the AI space moves too fast for manual updates. We actively encourage
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](file:///Volumes/MOVESPEED/下载/AIcode/ai-tools-navigator-main/LICENSE) file for details.
+
+<!-- NaviGuard-AI Security Audited - 2026-06-01 -->
