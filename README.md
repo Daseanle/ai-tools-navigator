@@ -80,6 +80,21 @@ To enforce quality and security standards without manual oversight, we built **N
 3. **OpenAI Security Scorecard Audit**: Utilizes GPT models to analyze scraped data, checking for security hazards (e.g. malvertising, fraud, cookie-jacking), validating classification accuracy, and polishing description wording.
 4. **Automated Feedback Loop**: Reports results as a detailed PR review scorecard. If issues are found, it requests changes and halts the PR merge.
 
+---
+
+## 📡 Autopilot Curation: AI Intelligence Gathering
+
+AI Tools Navigator Pro is not just a static catalog. Our native AI Agent operates a global intelligence loop to crawl, curate, and enrich the database without human intervention.
+
+### The Autopilot Loop
+
+1. **Global Source Crawling**: Every morning, the AI Cron scanner probes GitHub API for trending repositories tagged with `ai-agent`, `llm-tool`, and `gemini-plugin`.
+2. **AI Lead Enrichment**: For every new project discovered, the AI automatically reads the repository's description, detects its official landing page, and drafts a polished description.
+3. **Automatic Deduplication**: Discovered tools are dynamically compared against [tools.json](file:///Volumes/MOVESPEED/下载/AIcode/ai-tools-navigator-main/data/tools.json). Only unique, secure, and validated projects are appended.
+4. **Automated Commit Stream**: The catalog is dynamically updated, committing changes directly back to the GitHub repository to keep the directory aligned with the state of the art in real-time.
+
+---
+
 ### Locally Running the Agent
 
 To preview how NaviGuard-AI sees your tool changes before submitting a PR, run:
