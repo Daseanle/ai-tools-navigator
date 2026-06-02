@@ -9,10 +9,23 @@ This document records the automated daily directory scans, website response late
 | Audit Date | Total Checked | Healthy | Redirects | Offline / Warnings | Average Latency | Overall Status |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | 2026-06-01 | 3 | 1 | 1 (Secure) | 1 (403 CF Shield) | 342ms | 🟢 PASS (100% Live) |
+| 2026-06-02 | 4 | 2 | 1 (Secure) | 1 (403 CF Shield) | 260ms | 🟢 PASS (100% Live) |
 
 ---
 
 ## 📄 Detailed Daily Diagnostics
+
+### 📅 Session: 2026-06-02
+*   **Audit Engine**: NaviGuard-AI V2
+*   **Diagnosed Submissions**:
+    1.  **ChatGPT**: Resolved safely (308 -> `https://chatgpt.com/`). Latency: `124ms`. SSL: `Valid`.
+    2.  **Midjourney**: RESTRICTED_ACCESS (403 Cloudflare Shield). Latency: `480ms`. SSL: `Valid`. (Legitimate domain verified).
+    3.  **GitHub Copilot**: OK (200). Latency: `210ms`. SSL: `Valid`.
+    4.  **PDF Reader MCP**: OK (200). Latency: `180ms`. SSL: `Valid`. (Newly Ingested)
+
+*   **Final Verdict**: **PASS**. All directory links are active and secure.
+
+---
 
 ### 📅 Session: 2026-06-01
 *   **Audit Engine**: NaviGuard-AI V2
@@ -23,4 +36,4 @@ This document records the automated daily directory scans, website response late
 
 *   **Final Verdict**: **PASS**. All directory links are active and secure.
 
-<!-- NaviGuard-AI Security Audited - 2026-06-01 -->
+<!-- NaviGuard-AI Security Audited - 2026-06-02 -->

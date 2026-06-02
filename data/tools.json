@@ -17,5 +17,11 @@
     "url": "https://github.com/features/copilot",
     "description": "AI pair programmer",
     "category": "developer-tools"
+  },
+  {
+    "name": "PDF Reader MCP",
+    "url": "https://github.com/SylphxAI/pdf-reader-mcp",
+    "description": "A production-ready Model Context Protocol (MCP) server designed for parallelized, high-speed PDF document processing.",
+    "category": "developer-tools"
   }
 ]
