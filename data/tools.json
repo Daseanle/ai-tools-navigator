@@ -23,5 +23,11 @@
     "url": "https://github.com/SylphxAI/pdf-reader-mcp",
     "description": "A production-ready Model Context Protocol (MCP) server designed for parallelized, high-speed PDF document processing.",
     "category": "developer-tools"
+  },
+  {
+    "name": "Clawbird",
+    "url": "https://github.com/premsagar4us/clawbird",
+    "description": "An AI-native browser automation framework tailored for OpenClaw, LangChain, and AI agents, enabling automated workflows like job applications and web scraping.",
+    "category": "developer-tools"
   }
 ]

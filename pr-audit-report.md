@@ -4,15 +4,15 @@ Our automated AI maintenance reviewer has scanned the new submissions in `data/t
 
 ---
 
-### 📦 Submissions [1]: **PDF Reader MCP**
+### 📦 Submissions [1]: **Clawbird**
 
-* **Target URL**: [https://github.com/SylphxAI/pdf-reader-mcp](https://github.com/SylphxAI/pdf-reader-mcp)
+* **Target URL**: [https://github.com/premsagar4us/clawbird](https://github.com/premsagar4us/clawbird)
 * **Proposed Category**: `developer-tools`
 
 #### 🩺 Probing Diagnostics
 * **HTTP Status Code**: `200`
 * **Network Status**: 🟢 Connected Successfully
-* **Scraped Title**: _"GitHub - SylphxAI/pdf-reader-mcp: 📄 Production-ready MCP server for PDF processing - 5-10x faster with parallel processing and 94%+ test coverage · GitHub"_
+* **Scraped Title**: _"GitHub - premsagar4us/clawbird: AI-native browser automation for OpenClaw, LangChain, and AI agents. Automate job applications, price monitoring, trading bots, web scraping. Puppeteer/Selenium alternative with 40+ capabilities. · GitHub"_
 
 #### 🧠 AI Security & Metadata Verification
 * **Security Score**: 🟢 **94/100**
@@ -20,10 +20,10 @@ Our automated AI maintenance reviewer has scanned the new submissions in `data/t
 * **Verdict**: 🟢 **APPROVED**
 
 > **AI Description Polish Recommendation**:
-> _"A production-ready Model Context Protocol (MCP) server designed for parallelized, high-speed PDF document processing."_
+> _"An AI-native browser automation framework tailored for OpenClaw, LangChain, and AI agents, enabling automated workflows like job applications and web scraping."_
 
 **AI Verdict Explanation**:
-The domain "https://github.com/SylphxAI/pdf-reader-mcp" was successfully probed. DNS signatures, security headers, and SSL/TLS certificate chain verify that the site is safe. Target content aligns well with developer directory policies.
+The domain "https://github.com/premsagar4us/clawbird" was successfully probed. DNS signatures, security headers, and SSL/TLS certificate chain verify that the site is safe. Target content aligns well with developer directory policies.
 
 ---
 
